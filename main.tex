@@ -1,0 +1,149 @@
+% !TeX program = xelatex
+% !TeX encoding = UTF-8
+% 电力电子技术笔记模板：仅包含标题与正文占位符，无封面、无目录。
+% 排版参考“报告 - 数采1/main.tex”；不依赖参考报告的图片或其他文件。
+% 在本文件继续填写内容即可。使用 XeLaTeX（或兼容的 Tectonic）编译。
+
+% ctexrep 会间接加载 fontspec；提前禁止它改写数学字体。
+\PassOptionsToPackage{no-math}{fontspec}
+\documentclass[UTF8,12pt,oneside,openany,a4paper,fontset=fandol]{ctexrep}
+
+% ---------- 页面与正文 ----------
+\usepackage[
+  top=2.54cm,
+  bottom=2.54cm,
+  left=3.18cm,
+  right=3.18cm
+]{geometry}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\linespread{1.3}
+\pagestyle{plain}
+\raggedbottom
+
+% ---------- 字体与数学 ----------
+% 优先沿用参考报告中的 Windows 字体；缺少这些字体时使用 TeX 字体。
+% fontset=fandol 提供完整的中文回退字体，避免只安装了部分字体时出错。
+\IfFontExistsTF{Times New Roman}{
+  \setmainfont{Times New Roman}
+}{
+  \setmainfont{TeX Gyre Termes}
+}
+\IfFontExistsTF{SimSun}{
+  \setCJKmainfont[AutoFakeBold=2]{SimSun}
+  \setCJKfamilyfont{zhsong}[AutoFakeBold=2]{SimSun}
+}{}
+\IfFontExistsTF{SimHei}{
+  \setCJKsansfont[AutoFakeBold=2]{SimHei}
+  \setCJKfamilyfont{zhhei}[AutoFakeBold=2]{SimHei}
+}{}
+\usepackage{amsmath}
+% 使用 XeLaTeX 原生的 OpenType 数学字体，统一数字、字母、运算符和符号。
+% TeX Gyre Termes Math 为 Times 风格，随 TeX Live 提供。
+% unicode-math 已提供所需数学符号，不再叠加 amssymb/newtxmath/mathptmx。
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+% 为传统的 \boldmath / \boldsymbol 提供加粗数学版本。
+\setmathfont[version=bold,FakeBold=1.5]{TeX Gyre Termes Math}
+
+% ---------- 标题 ----------
+% 六级标题：chapter → section → subsection → subsubsection → paragraph → subparagraph。
+% 章标题使用“第一章”样式；每章另起一页，不强制奇数页起章。
+% section 及以下使用 1.1、1.1.1 等分级编号，末尾不加标点。
+% 章标题显示中文数字；内部章号保留阿拉伯数字，供下级编号和交叉引用使用。
+% 日常笔记建议主要使用章、节、小节三个层次。
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+\renewcommand{\theparagraph}{\thesubsubsection.\arabic{paragraph}}
+\renewcommand{\thesubparagraph}{\theparagraph.\arabic{subparagraph}}
+\ctexset{
+  chapter={
+    name={第,章},
+    number=\chinese{chapter},
+    format=\heiti\centering\zihao{2}\bfseries,
+    aftername=\quad,
+    beforeskip=0pt,
+    afterskip=1.5ex,
+    afterindent=true
+  },
+  section={
+    name={,},
+    number=\thesection,
+    format=\heiti\raggedright\zihao{3}\bfseries,
+    aftername=\hspace{0.5em},
+    beforeskip=1ex,
+    afterskip=1ex,
+    afterindent=true
+  },
+  subsection={
+    name={,},
+    number=\thesubsection,
+    format=\heiti\raggedright\zihao{-4}\bfseries,
+    aftername=\hspace{0.5em},
+    beforeskip=0ex,
+    afterskip=0ex,
+    afterindent=true
+  },
+  subsubsection={
+    name={,},
+    number=\thesubsubsection,
+    format=\songti\raggedright\zihao{-4}\bfseries,
+    aftername=\hspace{0.5em},
+    beforeskip=0.5ex,
+    afterskip=0ex,
+    afterindent=true
+  },
+  paragraph={
+    name={,},
+    number=\theparagraph,
+    format=\songti\raggedright\zihao{-4},
+    aftername=\hspace{0.5em},
+    beforeskip=0.5ex,
+    afterskip=0ex,
+    indent=0pt,
+    runin=false,
+    afterindent=true
+  },
+  subparagraph={
+    name={,},
+    number=\thesubparagraph,
+    format=\songti\raggedright\zihao{-4},
+    aftername=\hspace{0.5em},
+    beforeskip=0.5ex,
+    afterskip=0ex,
+    indent=0pt,
+    runin=false,
+    afterindent=true
+  }
+}
+
+% 保留可点击的交叉引用和 PDF 书签，不显示链接边框。
+\usepackage[hidelinks,unicode]{hyperref}
+\hypersetup{pdftitle={电力电子技术笔记模板}}
+
+% ---------- 正文：替换下列占位文字 ----------
+\begin{document}
+
+\chapter{一级标题占位符}
+正文占位符。此处填写本章的概述、学习目标或知识框架。
+
+\section{二级标题占位符}
+正文占位符。此处填写本节的概述、学习目标或主要内容。
+
+\subsection{三级标题占位符}
+正文占位符。此处填写本小节的概念说明与分析过程。
+
+\subsubsection{四级标题占位符}
+正文占位符。此处填写具体知识点的解释与推导。
+
+\paragraph{五级标题占位符}
+正文占位符。此处填写需要进一步细分的说明。
+
+\subparagraph{六级标题占位符}
+正文占位符。此处填写本层次的补充说明。
+
+\end{document}
