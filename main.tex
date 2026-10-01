@@ -2,7 +2,8 @@
 % !TeX encoding = UTF-8
 % 电力电子技术笔记模板：仅包含标题与正文占位符，无封面、无目录。
 % 排版参考“报告 - 数采1/main.tex”；不依赖参考报告的图片或其他文件。
-% 在本文件继续填写内容即可。使用 XeLaTeX（或兼容的 Tectonic）编译。
+% 在本文件继续填写内容即可。使用 XeLaTeX 编译；所有产物写入 out：
+% xelatex -interaction=nonstopmode -halt-on-error -output-directory=out main.tex
 
 % ctexrep 会间接加载 fontspec；提前禁止它改写数学字体。
 \PassOptionsToPackage{no-math}{fontspec}
@@ -15,6 +16,13 @@
   left=3.18cm,
   right=3.18cm
 ]{geometry}
+\usepackage{xcolor}
+\definecolor{reviewgray}{gray}{0.42}
+\newcommand{\reviewnote}[1]{%
+  \par\smallskip
+  {\color{reviewgray}\small\noindent【校核建议：#1】\par}
+  \smallskip
+}
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0pt}
 \linespread{1.3}
@@ -123,27 +131,453 @@
 
 % 保留可点击的交叉引用和 PDF 书签，不显示链接边框。
 \usepackage[hidelinks,unicode]{hyperref}
-\hypersetup{pdftitle={电力电子技术笔记模板}}
+\hypersetup{pdftitle={电力电子技术笔记}}
 
-% ---------- 正文：替换下列占位文字 ----------
+% ---------- 正文 ----------
 \begin{document}
 
-\chapter{一级标题占位符}
-正文占位符。此处填写本章的概述、学习目标或知识框架。
+\chapter{变换器与稳态分析}
 
-\section{二级标题占位符}
-正文占位符。此处填写本节的概述、学习目标或主要内容。
+\section{结构、指标与器件}
 
-\subsection{三级标题占位符}
-正文占位符。此处填写本小节的概念说明与分析过程。
+\subsection{结构}
 
-\subsubsection{四级标题占位符}
-正文占位符。此处填写具体知识点的解释与推导。
+【图：变换器系统框图。功率输入经过变换器形成功率输出；控制器接收参考量、前馈量和反馈量，并向变换器给出控制输入。】
 
-\paragraph{五级标题占位符}
-正文占位符。此处填写需要进一步细分的说明。
+变换器包括：脉宽调制（PWM）变换器、【准／多】谐振变换器、软开关变换器。控制部分包括模拟电路和数字电路。
 
-\subparagraph{六级标题占位符}
-正文占位符。此处填写本层次的补充说明。
+\subsection{指标与效率}
+
+效率与损耗为
+\[
+  \eta=\frac{P_{\mathrm{out}}}{P_{\mathrm{in}}},\qquad
+  P_{\mathrm{loss}}=P_{\mathrm{in}}-P_{\mathrm{out}}.
+\]
+
+损耗来源：导通损耗、开关损耗、驱动损耗，对应开关器件；铜损（热）、铁损（磁滞、涡流），对应电感；导通损耗，对应电容【原文如此】。
+
+\reviewnote{电容损耗更严谨地分为等效串联电阻（ESR）损耗、介质损耗和漏电损耗；电感还可补充集肤效应、邻近效应等高频铜损。}
+
+\subsection{器件种类}
+
+阻、感、容，晶体管（线性），晶体管（开关）。
+
+【图：电阻、电感（含耦合电感／变压器）、电容、线性晶体管和开关晶体管的手绘符号。】
+
+电阻、线性半导体器件不常用于大功率场景，应避免使用损耗器件【原文表述】。
+
+\reviewnote{“应避免使用损耗器件”过于绝对。电阻仍用于采样、阻尼、泄放、均压、缓冲和限流；可改为“应尽量减少主功率通道中不必要的耗散”。}
+
+\subsection{理想开关的功率损耗}
+
+理想开关不耗电（本身）：开通／闭合时 $v(t)=0$；关断／打开时 $i(t)=0$。故任意时刻
+\[
+  p(t)=v(t)i(t)=0.
+\]
+
+\subsection{低通滤波器}
+
+低通滤波器（LPF）的应用：LC 滤波，参考“蓄水池”。频率越高，$L$、$C$ 的值越小【原文表述】。
+
+\reviewnote{“频率越高，$L$、$C$ 越小”只是在功率、纹波和截止频率等指标相同的设计条件下成立，建议补齐这些约束。}
+
+\subsection{应用}
+
+应用包括：含 USB 等的排插、充电宝、适配器、电脑电源、电车充电桩；信息技术设备（主板、超算、基站、物联网）；军工；【LED 驱动、电子设备等】；高铁、磁悬浮、船舶、航空航天；无线充电。
+
+\subsection{强电与弱电}
+
+【强电与弱电的传统划分？】传统强弱电的电力电子为强电，但也有弱的地方【原文大意，字迹不清】。
+
+\subsection{电力电子主要负载与消费端}
+
+电机，尤其是交—直—交变频；电脑，采用交—直—直结构，中间含 DC Link。
+
+\section{电力电子与电力系统}
+
+\subsection{能源与电网}
+
+传统【非清洁／常规】能源与电力电子关系较弱。风能、太阳能等新能源与电力电子强相关，涉及并网与调度要求。另有智慧电网。
+
+\reviewnote{“传统能源与电力电子关系较弱”表述偏宽。励磁、厂用变频传动、HVDC、FACTS、无功补偿和辅助电源等场景同样大量使用电力电子。}
+
+\section{稳态分析原则}
+
+\reviewnote{本节变换比和纹波推导宜统一声明前提：理想器件、固定开关频率、周期稳态、连续导通模式（CCM）、小纹波近似和电阻负载。进入 DCM 或计及损耗后，部分结论需要重推。}
+
+\subsection{平均值}
+
+以 Buck 变换器的开关节点电压 $v_s(t)$ 为例，
+\[
+  \langle v_s\rangle
+  =\frac{1}{T_s}\int_0^{T_s}v_s(t)\,\mathrm{d}t
+  =\frac{1}{T_s}\bigl(DT_sV_{\mathrm{in}}\bigr)
+  =DV_{\mathrm{in}}.
+\]
+
+\subsection{谐波与低通滤波}
+
+谐波：均值以外的、由傅里叶级数展开得到的正弦分量。低通滤波：滤除 $f_s\ne0$ 的谐波【原文表述】。
+
+\reviewnote{建议改为“低通滤波器主要衰减位于 $nf_s$（$n=1,2,\ldots$）附近的开关谐波”。实际截止频率还需兼顾所需动态带宽，不能简单理解为滤除所有非零频率分量。}
+
+\subsection{DC--DC 变换器的变换比}
+
+一般写为
+\[
+  V_o=V_{\mathrm{in}}M(D).
+\]
+几种基本变换器为
+\[
+  \text{Buck: }M(D)=D,\qquad
+  \text{Boost: }M(D)=\frac{1}{1-D},\qquad
+  \text{Buck--Boost: }M(D)=-\frac{D}{1-D}.
+\]
+
+\subsection{小纹波近似}
+
+\[
+  v_o(t)=V_o+v_{\mathrm{ripple}}(t).
+\]
+当 $\lVert v_{\mathrm{ripple}}\rVert\ll V_o$ 时，有 $v_o(t)\approx V_o$，即忽略纹波。
+
+\reviewnote{可进一步说明 $v_{\mathrm{ripple}}(t)$ 的周期平均值为零，并明确范数或改用峰峰值／幅值与 $V_o$ 的比值表示“小”。}
+
+\section{Buck 变换器的稳态分析}
+
+\subsection{两个开关状态}
+
+【图：Buck 变换器。输入电压源 $V_{\mathrm{in}}$ 经过二选一开关和电感 $L$ 接至输出端，输出端为 $C$ 与 $R$ 并联，输出电压为 $v_o(t)$。】
+
+开关接 1 号端时，电感电压
+\[
+  v_L=V_{\mathrm{in}}-v_o(t)\approx V_{\mathrm{in}}-V_o,
+\]
+由本身性质
+\[
+  v_L(t)=L\frac{\mathrm{d}i_L(t)}{\mathrm{d}t}
+  \quad\Longrightarrow\quad
+  \frac{\mathrm{d}i_L(t)}{\mathrm{d}t}
+  =\frac{v_L(t)}{L}
+  \approx\frac{V_{\mathrm{in}}-V_o}{L}.
+\]
+即电感电流以恒定斜率变化（短时间）。
+
+开关接 2 号端时，电感正端接地，
+\[
+  v_L=-v_o\approx -V_o,
+  \qquad
+  \frac{\mathrm{d}i_L(t)}{\mathrm{d}t}
+  \approx-\frac{V_o}{L}.
+\]
+同上，斜率为负且绝对值不一定相同。
+
+\subsection{稳态波形与电感电流纹波}
+
+【图：一个周期内的 Buck 波形。$v_L(t)$ 在 $DT_s$ 内为 $V_{\mathrm{in}}-V_o$，在 $D'T_s$ 内为 $-V_o$；$i_L(t)$ 围绕平均值 $I_L$ 呈三角波，峰峰值为 $2\Delta i_L$。】
+
+电感电流纹波满足
+\begin{align*}
+  2\Delta i_L
+  &=\dot{i}_LDT_s
+    =\frac{V_{\mathrm{in}}-V_o}{L}DT_s,\\
+  \Delta i_L
+  &=\frac{V_{\mathrm{in}}-V_o}{2L}DT_s,\\
+  L&=\frac{V_{\mathrm{in}}-V_o}{2\Delta i_L}DT_s.
+\end{align*}
+电感值增大，纹波减小。【旁注：其余参数已知时，据此设计电感值；原文字迹不清。】
+
+\reviewnote{本文把 $2\Delta i_L$ 定义为峰峰值，因此 $\Delta i_L$ 是纹波幅值。后续所有 $\Delta i$、$\Delta v$ 都应沿用这一约定；很多教材则直接用 $\Delta i_L$ 表示峰峰值。}
+
+疑问：稳态电路分析仅针对 DC--DC 吗？AC--DC 呢？其他呢？为何一定要用电感？电容不行吗？电压纹波是否也可分析？
+
+\reviewnote{伏秒平衡和电荷平衡并不限于 DC--DC，而适用于含电感、电容且达到周期稳态的开关变换器。AC--DC 和 DC--AC 也能使用，但需选定合适的开关周期、基波周期和状态变量。电容电压纹波同样可以分析。}
+
+\subsection{启动瞬态与稳态界定}
+
+【图：$i_L(t)$ 从零逐周期上升，经历启动瞬态后进入周期性三角波稳态；图中标有上升斜率 $(V_{\mathrm{in}}-v_o(t))/L$ 与下降斜率 $-v_o(t)/L$。】
+
+当
+\[
+  i_L\bigl((n+1)T_s\bigr)=i_L(nT_s)
+\]
+时，认为进入稳态。瞬态需由微分方程【迭代或求解】。
+
+\reviewnote{更完整的周期稳态条件是所有状态变量在相同相位满足 $\boldsymbol{x}(t+T_s)=\boldsymbol{x}(t)$；这里只检查 $i_L$ 是针对当前简化示例。}
+
+\subsection{电感伏秒平衡}
+
+由
+\[
+  v_L(t)=L\frac{\mathrm{d}i_L(t)}{\mathrm{d}t}
+\]
+可得
+\begin{align*}
+  \int_0^{T_s}\mathrm{d}i_L(t)
+  &=\frac{1}{L}\int_0^{T_s}v_L(t)\,\mathrm{d}t,\\
+  i_L(T_s)-i_L(0)
+  &=\frac{1}{L}\int_0^{T_s}v_L(t)\,\mathrm{d}t.
+\end{align*}
+稳态时
+\[
+  0=\frac{1}{L}\int_0^{T_s}v_L(t)\,\mathrm{d}t,
+  \qquad
+  \frac{1}{T_s}\int_0^{T_s}v_L(t)\,\mathrm{d}t
+  =\langle v_L\rangle=0.
+\]
+设 $A$ 为一个周期内 $v_L(t)$ 与 $t$ 轴所围波形的有符号面积，则
+\begin{align*}
+  0=A
+  &=\int_0^{T_s}v_L(t)\,\mathrm{d}t\\
+  &=(V_{\mathrm{in}}-V_o)(DT_s)+(-V_o)(D'T_s).
+\end{align*}
+平均电压为
+\[
+  \langle v_L\rangle
+  =\frac{A}{T_s}
+  =D(V_{\mathrm{in}}-V_o)+D'(-V_o).
+\]
+由 $D'=1-D$ 得
+\[
+  V_o=DV_{\mathrm{in}}.
+\]
+
+\subsection{电容电荷平衡}
+
+由
+\[
+  i_C(t)=C\frac{\mathrm{d}v_C(t)}{\mathrm{d}t}
+\]
+可得
+\[
+  v_C(T_s)-v_C(0)=\frac{1}{C}\int_0^{T_s}i_C(t)\,\mathrm{d}t.
+\]
+稳态时
+\[
+  0=\frac{1}{T_s}\int_0^{T_s}i_C(t)\,\mathrm{d}t
+  =\langle i_C\rangle.
+\]
+
+对于电感，两端 $v_L$ 为激励，$i_L$ 为响应；对于电容，$i_C$ 为激励，$v_C$ 为响应。要使响应达到周期性稳态，应使相应激励在一个周期内的平均值为零【原文表述】。
+
+\reviewnote{“激励—响应”是本次建模所选的观察方式，并非绝对因果关系。核心结论应写成：周期稳态下电感平均电压为零、电容平均电流为零。}
+
+\section{Boost 变换器}
+
+\subsection{等效电路与状态方程}
+
+【图：Boost 变换器。输入电压源串联电感，开关节点经开关接地，并经二极管接到 $C\parallel R$ 输出端。旁注：二极管导通时，电感末端可连接 $V_{\mathrm{in}}$ 正负极【字迹不清】。】
+
+接状态 1 时，
+\[
+  v_L(t)=V_{\mathrm{in}},
+  \qquad
+  i_C(t)=-\frac{v_o(t)}{R}\approx-\frac{V_o}{R}.
+\]
+接状态 2 时，
+\[
+  v_L(t)=V_{\mathrm{in}}-V_o,
+  \qquad
+  i_C(t)=i_L(t)-\frac{V_o}{R}
+  \approx I_L-\frac{V_o}{R}.
+\]
+
+\subsection{变换比与平均电感电流}
+
+由伏秒平衡，
+\begin{align*}
+  \frac{1}{T_s}\int_0^{T_s}v_L(t)\,\mathrm{d}t
+  &=DV_{\mathrm{in}}+(1-D)(V_{\mathrm{in}}-V_o)=0,\\
+  V_o&=\frac{1}{1-D}V_{\mathrm{in}}.
+\end{align*}
+由电荷平衡，
+\begin{align*}
+  \frac{1}{T_s}\int_0^{T_s}i_C(t)\,\mathrm{d}t
+  &=-D\frac{V_o}{R}+(1-D)\left(I_L-\frac{V_o}{R}\right)=0,\\
+  V_o&=RI_L(1-D),\\
+  I_L&=\frac{V_o}{R(1-D)}
+      =\frac{V_{\mathrm{in}}}{R(1-D)^2}.
+\end{align*}
+
+\subsection{电感电流与电容电压纹波}
+
+\begin{align*}
+  2\Delta i_L
+  &=\left.\frac{\mathrm{d}i_L(t)}{\mathrm{d}t}\right|_{0\sim DT_s}DT_s
+    =\frac{V_{\mathrm{in}}}{L}DT_s,\\
+  \Delta i_L&=\frac{V_{\mathrm{in}}}{2L}DT_s,\\[0.5ex]
+  -2\Delta v_C
+  &=\left.\frac{\mathrm{d}v_C(t)}{\mathrm{d}t}\right|_{0\sim DT_s}DT_s
+    =-\frac{V_o}{RC}DT_s,\\
+  \Delta v_C&=\frac{V_o}{2RC}DT_s.
+\end{align*}
+
+【图：Boost 的 $i_L$ 三角波。状态 1 的斜率为 $V_{\mathrm{in}}/L$，状态 2 的斜率为 $(V_{\mathrm{in}}-V_o)/L$，峰峰值为 $2\Delta i_L$。】
+
+【图：Boost 的 $v_C$ 纹波。状态 1 的斜率为 $-V_o/(RC)$，状态 2 的斜率为 $I_L/C-V_o/(RC)$，峰峰值为 $2\Delta v_C$。】
+
+疑问：【纹波正负值有影响吗？】默认 $\Delta v_C$、$\Delta i_L$ 为正值，故按增大、减小过程计算【原文大意】。
+
+\section{分析方法总结}
+
+\begin{enumerate}
+  \item 画电路图，明确状态数目与等效电路。
+  \item 划定时间区间，分【开关过程】，根据器件【通断情况】和电路状态列方程；主要针对 $L$、$C$ 的激励与响应。【括号内原式不清，疑似为稳态平均条件。】
+  \item 按实际情况进行小纹波近似，分析伏秒平衡、电荷平衡。
+  \item 求电压增益 $M(D)$ 与其他状态变量（$I_L$ 等）。
+  \item 画图，求纹波；【由第 2 步各状态中的电压或电流极性判定变化方向，原文字迹不清】。
+\end{enumerate}
+
+\section{\texorpdfstring{\'{C}uk}{Cuk} 变换器}
+
+\subsection{电路与两个开关状态}
+
+\reviewnote{本节必须固定参考方向。按原图方向，$V_2$ 和 $I_2$ 可为负值；负号表示实际极性或电流方向与所画参考方向相反，不代表幅值为负。}
+
+【图：\'{C}uk 变换器原电路。$V_{\mathrm{in}}$、$L_1$、$C_1$、$L_2$ 沿上支路相连，中间节点经二选一开关接地，输出端为 $C_2\parallel R$；标有 $v_1$、$v_2$、$i_1$、$i_2$。】
+
+【图：状态 1 等效电路。输入源与 $L_1$ 构成回路；$C_1$、$L_2$ 和输出端构成另一回路。】
+
+【图：状态 2 等效电路。输入源、$L_1$ 和 $C_1$ 构成回路；$L_2$ 与输出端构成另一回路。】
+
+状态 1：
+\begin{align*}
+  v_{L1}&=V_{\mathrm{in}},\\
+  v_{L2}&=-V_1-V_2
+  \quad\text{（来源：环路压降 $V_1+v_{L2}+V_2=0$）},\\
+  i_{C1}&=i_2,\\
+  i_{C2}&=i_2-\frac{V_2}{R}.
+\end{align*}
+
+状态 2：
+\begin{align*}
+  v_{L1}&=V_{\mathrm{in}}-V_1,\\
+  v_{L2}&=-V_2,\\
+  i_{C1}&=i_1,\\
+  i_{C2}&=i_2-\frac{V_2}{R}.
+\end{align*}
+
+以上使用小纹波近似：$v_1$、$v_2$、$i_1$、$i_2$ 以相应平均量代替。
+
+\subsection{平均量关系}
+
+伏秒平衡：
+\begin{align}
+  \langle v_{L1}\rangle
+  &=DV_{\mathrm{in}}+D'(V_{\mathrm{in}}-V_1)=0,\label{eq:cuk-vl1}\\
+  \langle v_{L2}\rangle
+  &=D(-V_1-V_2)+D'(-V_2)=0.\label{eq:cuk-vl2}
+\end{align}
+电荷平衡：
+\begin{align}
+  \langle i_{C1}\rangle
+  &=DI_2+D'I_1=0,\label{eq:cuk-ic1}\\
+  \langle i_{C2}\rangle
+  &=D\left(I_2-\frac{V_2}{R}\right)
+    +D'\left(I_2-\frac{V_2}{R}\right)=0.\label{eq:cuk-ic2}
+\end{align}
+
+由式~\eqref{eq:cuk-vl1} 得
+\[
+  V_1=\frac{V_{\mathrm{in}}}{1-D}
+  \qquad\text{（同 Boost）}.
+\]
+由式~\eqref{eq:cuk-vl2} 得
+\[
+  V_2=-\frac{D}{1-D}V_{\mathrm{in}}
+  \qquad\text{（同 Buck--Boost）}.
+\]
+由式~\eqref{eq:cuk-ic2} 得
+\[
+  I_2=\frac{V_2}{R}
+  =-\frac{D}{1-D}\frac{V_{\mathrm{in}}}{R}.
+\]
+由式~\eqref{eq:cuk-ic1} 得
+\[
+  I_1=\frac{D^2V_{\mathrm{in}}}{(1-D)^2R}
+  \quad\text{（沿用原笔记的参考方向）}.
+\]
+因此
+\[
+  M(D)=-\frac{D}{1-D},
+\]
+即发生极性反转：按图示参考方向，输入上正下负，输出上负下正。
+
+疑问：$D>D'$ 时呢？【原笔记写有“$D\ne D'$ 时，$I_2=V_2/R$，欧姆定律”，上下文不清。】
+
+\subsection{纹波斜率与估算}
+
+状态 1 的斜率：
+\begin{align*}
+  \frac{\mathrm{d}i_1(t)}{\mathrm{d}t}&=\frac{V_{\mathrm{in}}}{L_1},&
+  \frac{\mathrm{d}i_2(t)}{\mathrm{d}t}&=\frac{-V_1-V_2}{L_2},\\
+  \frac{\mathrm{d}v_1(t)}{\mathrm{d}t}&=\frac{I_2}{C_1},&
+  \frac{\mathrm{d}v_2(t)}{\mathrm{d}t}&=\frac{I_2}{C_2}-\frac{V_2}{RC_2}=0.
+\end{align*}
+
+状态 2 的斜率：
+\begin{align*}
+  \frac{\mathrm{d}i_1(t)}{\mathrm{d}t}&=\frac{V_{\mathrm{in}}-V_1}{L_1},&
+  \frac{\mathrm{d}i_2(t)}{\mathrm{d}t}&=-\frac{V_2}{L_1}
+  \quad\text{【原式分母为 $L_1$，疑似应核对】},\\
+  \frac{\mathrm{d}v_1(t)}{\mathrm{d}t}&=\frac{I_1}{C_1},&
+  \frac{\mathrm{d}v_2(t)}{\mathrm{d}t}&=\frac{I_2}{C_2}-\frac{V_2}{RC_2}=0.
+\end{align*}
+
+\reviewnote{由状态 2 中 $L_2$ 所在支路可知，第二式分母应重点核对为 $L_2$，即 $\mathrm{d}i_2/\mathrm{d}t=-V_2/L_2$。此处暂保留手写原式。}
+
+【波形图略。】疑问：$V_2$ 无纹波（理论上）吗？为什么为 0？
+
+\reviewnote{这里的零来自先把 $i_2(t)$ 替换成平均值 $I_2$。平均电容电流为零只说明一个周期内净电荷变化为零，并不表示瞬时电容电流或输出电压纹波恒为零。求纹波时必须保留 $\widetilde{i}_2(t)$。}
+
+原笔记给出的纹波估算为
+\begin{align*}
+  \Delta i_1&=\frac{V_{\mathrm{in}}DT_s}{2L_1},\\
+  \Delta i_2&=\frac{(V_1+V_2)DT_s}{2L_2}
+              =\frac{V_{\mathrm{in}}DT_s}{2L_2},\\
+  \Delta v_1&=-\frac{I_2DT_s}{2C_1}
+              =\frac{V_{\mathrm{in}}D^2T_s}{2(1-D)RC_1}.
+\end{align*}
+
+\section{输出电压纹波与滤波环节}
+
+【关于 \textup{\'{C}uk} 输出侧电压的一段说明字迹不清：大意为在先前的零阶小纹波模型中，输出侧电压纹波被忽略，且两个开关状态给出的电容平均电流相同，不能直接由该近似得到纹波。】
+
+以 Buck 为例，求电容电流时不能忽略电感电流纹波：
+\[
+  i_C(t)=\widetilde{i}_L(t)-\widetilde{i}_o(t)
+  \approx\widetilde{i}_L(t)-I_o
+  =i_L(t)-I_L.
+\]
+
+\reviewnote{符号建议统一为 $i_C(t)=i_L(t)-i_o(t)$；若负载电流纹波可忽略，则 $i_o(t)\approx I_o=I_L$，从而 $i_C(t)\approx i_L(t)-I_L=\widetilde{i}_L(t)$。原式混用了瞬时量和纹波量。}
+
+【图：一个周期内的电感电流三角纹波；以平均值为基准，半个周期内的三角形阴影面积标为电荷 $Q$。】
+
+由三角形面积与电容电荷变化量，
+\[
+  \frac{1}{2}\cdot\frac{T_s}{2}\cdot\Delta i_L
+  =Q=C(2\Delta v_o),
+\]
+得到
+\[
+  \Delta v_o=\frac{\Delta i_LT_s}{8C}.
+\]
+
+\reviewnote{该式沿用“$\Delta$ 为幅值、$2\Delta$ 为峰峰值”的约定，并忽略电容 ESR。实际输出纹波还应叠加近似为 $\Delta i_{C,\mathrm{pp}}\,\mathrm{ESR}$ 的阶跃分量。}
+
+【图：输出电压纹波波形，峰峰值为 $2\Delta v_o$。】
+
+\'{C}uk 变换器略复杂【原文：由于电流中“掺导”，字迹不清】，原笔记写为
+\[
+  \Delta v_2=\frac{\Delta i_2T_s}{8C}=\cdots
+  \quad\text{【原式中的电容下标缺失，待核对】}.
+\]
+
+\reviewnote{若这里对应输出电容，分母应明确写为 $8C_2$；同时仍需说明小纹波和忽略 ESR 的前提。}
+
+\section{小结}
+
+【原笔记此处仅写有“小结（无）”。】
 
 \end{document}
