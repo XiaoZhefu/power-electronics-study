@@ -1,293 +1,379 @@
 % !TeX program = xelatex
 % !TeX encoding = UTF-8
-% 电力电子技术笔记模板：仅包含标题与正文占位符，无封面、无目录。
-% 排版参考“报告 - 数采1/main.tex”；不依赖参考报告的图片或其他文件。
-% 在本文件继续填写内容即可。使用 XeLaTeX 编译；所有产物写入 out：
-% xelatex -interaction=nonstopmode -halt-on-error -output-directory=out main.tex
+% 在 out 目录中运行：xelatex -interaction=nonstopmode -halt-on-error ../main.tex
 
-% ctexrep 会间接加载 fontspec；提前禁止它改写数学字体。
 \PassOptionsToPackage{no-math}{fontspec}
-\documentclass[UTF8,12pt,oneside,openany,a4paper,fontset=fandol]{ctexrep}
+\documentclass[
+  12pt,
+  UTF8,
+  a4paper,
+  fontset=fandol,
+  oneside,
+  openany
+]{ctexrep}
 
-% ---------- 页面与正文 ----------
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{circuitikz}
 \usepackage[
-  top=2.54cm,
   bottom=2.54cm,
   left=3.18cm,
-  right=3.18cm
+  right=3.18cm,
+  top=2.54cm
 ]{geometry}
+\usepackage[hidelinks,unicode]{hyperref}
+\usepackage{unicode-math}
 \usepackage{xcolor}
+
 \definecolor{reviewgray}{gray}{0.42}
+\DeclareCaptionFont{wuhao}{\zihao{5}}
+\DeclareCaptionLabelFormat{figurelabel}{图#2}
+\DeclareCaptionLabelSeparator{figurespace}{\hspace{1em}}
+\captionsetup[figure]{
+  font=wuhao,
+  justification=centering,
+  labelformat=figurelabel,
+  labelsep=figurespace
+}
+\hypersetup{pdftitle={电力电子技术笔记}}
+\linespread{1.3}
+\pagestyle{plain}
+\raggedbottom{}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\setmathfont{XITS Math}
+\setmathfont[version=bold]{XITS Math}
+
 \newcommand{\reviewnote}[1]{%
   \par\smallskip
   {\color{reviewgray}\small\noindent【校核建议：#1】\par}
   \smallskip
 }
-\setlength{\parindent}{2em}
-\setlength{\parskip}{0pt}
-\linespread{1.3}
-\pagestyle{plain}
-\raggedbottom
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\theequation}{\arabic{chapter}-\arabic{equation}}
+\renewcommand{\thefigure}{\arabic{chapter}-\arabic{figure}}
+\renewcommand{\theparagraph}{\thesubsubsection.\arabic{paragraph}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubparagraph}{\theparagraph.\arabic{subparagraph}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
 
-% ---------- 字体与数学 ----------
-% 优先沿用参考报告中的 Windows 字体；缺少这些字体时使用 TeX 字体。
-% fontset=fandol 提供完整的中文回退字体，避免只安装了部分字体时出错。
+\ctexset{
+  chapter={
+    afterindent=true,
+    aftername=\quad,
+    afterskip=1.5ex,
+    beforeskip=0pt,
+    format=\heiti\centering\zihao{2}\bfseries,
+    name={第,章},
+    number=\chinese{chapter}
+  },
+  paragraph={
+    afterindent=true,
+    aftername=\hspace{0.5em},
+    afterskip=0ex,
+    beforeskip=0.5ex,
+    format=\songti\raggedright\zihao{-4},
+    indent=0pt,
+    name={,},
+    number=\theparagraph,
+    runin=false
+  },
+  section={
+    afterindent=true,
+    aftername=\hspace{0.5em},
+    afterskip=1ex,
+    beforeskip=1ex,
+    format=\heiti\raggedright\zihao{3}\bfseries,
+    name={,},
+    number=\thesection
+  },
+  subparagraph={
+    afterindent=true,
+    aftername=\hspace{0.5em},
+    afterskip=0ex,
+    beforeskip=0.5ex,
+    format=\songti\raggedright\zihao{-4},
+    indent=0pt,
+    name={,},
+    number=\thesubparagraph,
+    runin=false
+  },
+  subsection={
+    afterindent=true,
+    aftername=\hspace{0.5em},
+    afterskip=0ex,
+    beforeskip=0.3cm,
+    format=\heiti\raggedright\zihao{-4}\bfseries,
+    name={,},
+    number=\thesubsection
+  },
+  subsubsection={
+    afterindent=true,
+    aftername=\hspace{0.5em},
+    afterskip=0ex,
+    beforeskip=0.3cm,
+    format=\songti\raggedright\zihao{-4}\bfseries,
+    name={,},
+    number=\thesubsubsection
+  }
+}
+
+\IfFontExistsTF{SimHei}{
+  \setCJKfamilyfont{zhhei}[AutoFakeBold=2]{SimHei}
+  \setCJKsansfont[AutoFakeBold=2]{SimHei}
+}{}
+\IfFontExistsTF{SimSun}{
+  \setCJKfamilyfont{zhsong}[AutoFakeBold=2]{SimSun}
+  \setCJKmainfont[AutoFakeBold=2]{SimSun}
+}{}
 \IfFontExistsTF{Times New Roman}{
   \setmainfont{Times New Roman}
 }{
   \setmainfont{TeX Gyre Termes}
-}
-\IfFontExistsTF{SimSun}{
-  \setCJKmainfont[AutoFakeBold=2]{SimSun}
-  \setCJKfamilyfont{zhsong}[AutoFakeBold=2]{SimSun}
 }{}
-\IfFontExistsTF{SimHei}{
-  \setCJKsansfont[AutoFakeBold=2]{SimHei}
-  \setCJKfamilyfont{zhhei}[AutoFakeBold=2]{SimHei}
-}{}
-\usepackage{amsmath}
-% 使用 XeLaTeX 原生的 OpenType 数学字体，统一数字、字母、运算符和符号。
-% TeX Gyre Termes Math 为 Times 风格，随 TeX Live 提供。
-% unicode-math 已提供所需数学符号，不再叠加 amssymb/newtxmath/mathptmx。
-\usepackage{unicode-math}
-\setmathfont{TeX Gyre Termes Math}
-% 为传统的 \boldmath / \boldsymbol 提供加粗数学版本。
-\setmathfont[version=bold,FakeBold=1.5]{TeX Gyre Termes Math}
 
-% ---------- 标题 ----------
-% 六级标题：chapter → section → subsection → subsubsection → paragraph → subparagraph。
-% 章标题使用“第一章”样式；每章另起一页，不强制奇数页起章。
-% section 及以下使用 1.1、1.1.1 等分级编号，末尾不加标点。
-% 章标题显示中文数字；内部章号保留阿拉伯数字，供下级编号和交叉引用使用。
-% 日常笔记建议主要使用章、节、小节三个层次。
-\setcounter{secnumdepth}{5}
-\setcounter{tocdepth}{3}
-\renewcommand{\thechapter}{\arabic{chapter}}
-\renewcommand{\thesection}{\thechapter.\arabic{section}}
-\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
-\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
-\renewcommand{\theparagraph}{\thesubsubsection.\arabic{paragraph}}
-\renewcommand{\thesubparagraph}{\theparagraph.\arabic{subparagraph}}
-\ctexset{
-  chapter={
-    name={第,章},
-    number=\chinese{chapter},
-    format=\heiti\centering\zihao{2}\bfseries,
-    aftername=\quad,
-    beforeskip=0pt,
-    afterskip=1.5ex,
-    afterindent=true
-  },
-  section={
-    name={,},
-    number=\thesection,
-    format=\heiti\raggedright\zihao{3}\bfseries,
-    aftername=\hspace{0.5em},
-    beforeskip=1ex,
-    afterskip=1ex,
-    afterindent=true
-  },
-  subsection={
-    name={,},
-    number=\thesubsection,
-    format=\heiti\raggedright\zihao{-4}\bfseries,
-    aftername=\hspace{0.5em},
-    beforeskip=0ex,
-    afterskip=0ex,
-    afterindent=true
-  },
-  subsubsection={
-    name={,},
-    number=\thesubsubsection,
-    format=\songti\raggedright\zihao{-4}\bfseries,
-    aftername=\hspace{0.5em},
-    beforeskip=0.5ex,
-    afterskip=0ex,
-    afterindent=true
-  },
-  paragraph={
-    name={,},
-    number=\theparagraph,
-    format=\songti\raggedright\zihao{-4},
-    aftername=\hspace{0.5em},
-    beforeskip=0.5ex,
-    afterskip=0ex,
-    indent=0pt,
-    runin=false,
-    afterindent=true
-  },
-  subparagraph={
-    name={,},
-    number=\thesubparagraph,
-    format=\songti\raggedright\zihao{-4},
-    aftername=\hspace{0.5em},
-    beforeskip=0.5ex,
-    afterskip=0ex,
-    indent=0pt,
-    runin=false,
-    afterindent=true
-  }
-}
 
-% 保留可点击的交叉引用和 PDF 书签，不显示链接边框。
-\usepackage[hidelinks,unicode]{hyperref}
-\hypersetup{pdftitle={电力电子技术笔记}}
+
+
 
 % ---------- 正文 ----------
 \begin{document}
 
 \chapter{变换器与稳态分析}
 
-\section{结构、指标与器件}
+\section{概述}
 
 \subsection{结构}
 
-【图：变换器系统框图。功率输入经过变换器形成功率输出；控制器接收参考量、前馈量和反馈量，并向变换器给出控制输入。】
+\begin{figure}[!htbp]
+  \centering
+  \begin{tikzpicture}[
+    block/.style={
+        align=center,
+        draw,
+        minimum height=0.9cm,
+        minimum width=3.2cm
+      },
+    flow/.style={-{Latex[length=2.2mm]}, line width=0.55pt},
+    every node/.style={font=\small}
+    ]
+    \node[block] (converter) at (0,1.05) {变换器};
+    \node[block] (controller) at (0,-0.75) {控制器};
+    \coordinate (input-tap) at (-3.2,1.05);
+    \coordinate (output-tap) at (3.2,1.05);
+    \draw[flow] (-5.0,1.05) -- node[above]{功率输入} (converter.west);
+    \draw[flow] (converter.east) -- node[above]{功率输出} (5.0,1.05);
+    \draw[flow] (input-tap) |- (controller.west);
+    \draw[flow] (output-tap) |- (controller.east);
+    \fill (input-tap) circle[radius=1.4pt];
+    \fill (output-tap) circle[radius=1.4pt];
+    \node[above] at (-2.35,-0.75) {前馈};
+    \node[above] at (2.35,-0.75) {反馈};
+    \draw[flow] (controller.north) -- node[right]{控制信号输入} (converter.south);
+    \draw[flow] (0,-1.85) -- node[right]{参考量} (controller.south);
+  \end{tikzpicture}
+  \vspace{-0.2cm}
+  \caption{变换器系统的基本结构}
+  \vspace{-0.5cm}
+  \label{fig:converter-system-structure}
+\end{figure}
 
-变换器包括：脉宽调制（PWM）变换器、【准／多】谐振变换器、软开关变换器。控制部分包括模拟电路和数字电路。
+功率电路变换器类型：脉宽调制（PWM）变换器、准谐振／多谐振变换器、软开关变换器；控制电路类型：模拟电路和数字电路。
 
-\subsection{指标与效率}
+\subsection{指标}
 
 效率与损耗为
-\[
+\begin{equation}
   \eta=\frac{P_{\mathrm{out}}}{P_{\mathrm{in}}},\qquad
   P_{\mathrm{loss}}=P_{\mathrm{in}}-P_{\mathrm{out}}.
-\]
+\end{equation}
 
-损耗来源：导通损耗、开关损耗、驱动损耗，对应开关器件；铜损（热）、铁损（磁滞、涡流），对应电感；导通损耗，对应电容【原文如此】。
-
-\reviewnote{电容损耗更严谨地分为等效串联电阻（ESR）损耗、介质损耗和漏电损耗；电感还可补充集肤效应、邻近效应等高频铜损。}
+损耗来源：开关器件有通态损耗、开关损耗、驱动损耗；电感、变压器线圈有铜损（线路发热）、铁损（铁芯磁滞、涡流）、磁损（线圈漏磁）；电容损耗，如等效串联电阻、漏电等。
 
 \subsection{器件种类}
 
-阻、感、容，晶体管（线性），晶体管（开关）。
+阻、感、容、晶。
 
-【图：电阻、电感（含耦合电感／变压器）、电容、线性晶体管和开关晶体管的手绘符号。】
+\begin{figure}[!htbp]
+  \centering
+  \begin{circuitikz}[scale=1.0, transform shape, every node/.style={font=\small}]
+    \ctikzset{
+      bipoles/length=0.85cm,
+      transistors/scale=1.5,
+      tripoles/npn/base width=0.42,
+      tripoles/npn/width=0.48,
+      tripoles/nigfete/base width=0.32,
+      tripoles/nigfete/gate width=0.40
+    }
+    \begin{scope}[scale around={1.15:(0.7,0.2)}]
+      \draw (0,0.2) to[american resistor] (1.4,0.2);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(0.7,-0.8)}]
+      \draw (0,-0.8) to[european resistor] (1.4,-0.8);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(3.7,0.2)}]
+      \draw (3.0,0.2) to[L] (4.4,0.2);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(3.7,-0.8)}]
+      \ctikzset{quadpoles style=inline}
+      \node[transformer core, rotate=90] (t) at (3.7,-0.8) {};
+      \node[circ] at (t.outer dot A1) {};
+      \node[circ] at (t.outer dot B1) {};
+    \end{scope}
+    \begin{scope}[scale around={1.15:(6.7,-0.3)}]
+      \draw (6.0,-0.3) to[C] (7.4,-0.3);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(9.7,-0.2)}]
+      \node[npn, nobase, rotate=90, anchor=center] (bjt) at (9.7,-0.2) {};
+      \draw (bjt.nobase) -- ++(0,-0.22);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(12.9,-0.2)}]
+      \node[nigfete, nogate, rotate=90, anchor=center] (mos) at (12.9,-0.2) {};
+      \draw (mos.inner down |- mos.nogate) -- ++(0,-0.22);
+    \end{scope}
+    \node[anchor=north] at (0.7,-1.35) {电阻};
+    \node[anchor=north] at (3.7,-1.35) {电感};
+    \node[anchor=north] at (6.7,-1.35) {电容};
+    \node[anchor=north, align=center] at (9.7,-1.35) {晶体管（线性）};
+    \node[anchor=north, align=center] at (12.9,-1.35) {晶体管（开关）};
+  \end{circuitikz}
+  \vspace{-0.2cm}
+  \caption{常见器件}
+  \vspace{-0.5cm}
+  \label{fig:power-electronic-devices}
+\end{figure}
 
-电阻、线性半导体器件不常用于大功率场景，应避免使用损耗器件【原文表述】。
-
-\reviewnote{“应避免使用损耗器件”过于绝对。电阻仍用于采样、阻尼、泄放、均压、缓冲和限流；可改为“应尽量减少主功率通道中不必要的耗散”。}
+电阻、线性半导体器件不常用于传输电路本身的大功率场景，应尽量减少主功率通道中的损耗性器件，以避免不必要的耗散。
 
 \subsection{理想开关的功率损耗}
 
-理想开关不耗电（本身）：开通／闭合时 $v(t)=0$；关断／打开时 $i(t)=0$。故任意时刻
-\[
+理想本身开关不消耗功率：开通／闭合时 $v(t)=0$；关断／打开时 $i(t)=0$。故任意时刻存在
+\begin{equation}
   p(t)=v(t)i(t)=0.
-\]
+  \label{eq:ideal-switch-power-loss}
+\end{equation}
 
-\subsection{低通滤波器}
+\subsection{输出滤波}
 
-低通滤波器（LPF）的应用：LC 滤波，参考“蓄水池”。频率越高，$L$、$C$ 的值越小【原文表述】。
+低通滤波器（LPF）的应用：LC 输出滤波器保留所需的直流分量或交流基波，并衰减开关频率及其谐波，其电容与电感等储能器件的能量变化可参考“蓄水池”。在功率、纹波和截止频率等指标相同的条件下，开关频率越高，所需的 $L$、$C$ 的值越小，设备总重也更小。
 
-\reviewnote{“频率越高，$L$、$C$ 越小”只是在功率、纹波和截止频率等指标相同的设计条件下成立，建议补齐这些约束。}
+\subsection{其他知识}
 
-\subsection{应用}
+\subsubsection{强电与弱电之分}
 
-应用包括：含 USB 等的排插、充电宝、适配器、电脑电源、电车充电桩；信息技术设备（主板、超算、基站、物联网）；军工；【LED 驱动、电子设备等】；高铁、磁悬浮、船舶、航空航天；无线充电。
+传统强弱电分类存在不足，电力电子为强电，但也有所谓“强电”的功率不“强”，比如USB插头转换器；通信为弱电，但也有所谓“弱电”的功率不“弱”，比如军用微波天线。再者，还需要考虑电压等级、用途等等，不能简单划分。
 
-\subsection{强电与弱电}
+\subsubsection{电力电子的应用}
 
-【强电与弱电的传统划分？】传统强弱电的电力电子为强电，但也有弱的地方【原文大意，字迹不清】。
+日常应用：含 USB 等的排插、充电宝、无线充电、适配器、电脑电源、电车充电桩；
+信息技术设备：PC主板、超算、基站、物联网；
+交通：高铁、磁悬浮、船舶、航空航天；
+军工。
 
-\subsection{电力电子主要负载与消费端}
+\subsubsection{电力电子主要负载与消费端}
 
-电机，尤其是交—直—交变频；电脑，采用交—直—直结构，中间含 DC Link。
+电机，尤其是交—直—交变频；电脑，采用交—直—直结构，中间含 DC link。
 
-\section{电力电子与电力系统}
+\subsubsection{能源与电网}
 
-\subsection{能源与电网}
+传统清洁／非清洁能源的一次电路与电力电子关系较弱，风能、太阳能等新能源与电力电子强相关，涉及并网与调度要求。
 
-传统【非清洁／常规】能源与电力电子关系较弱。风能、太阳能等新能源与电力电子强相关，涉及并网与调度要求。另有智慧电网。
 
-\reviewnote{“传统能源与电力电子关系较弱”表述偏宽。励磁、厂用变频传动、HVDC、FACTS、无功补偿和辅助电源等场景同样大量使用电力电子。}
+
+\newpage{}
 
 \section{稳态分析原则}
 
-\reviewnote{本节变换比和纹波推导宜统一声明前提：理想器件、固定开关频率、周期稳态、连续导通模式（CCM）、小纹波近似和电阻负载。进入 DCM 或计及损耗后，部分结论需要重推。}
+\subsection{分析前提}
+
+本节分析中，只分析理想器件在固定开关频率、周期稳态、连续导通模式（CCM）、满足小纹波近似的条件下的情形，并只针对纯电阻负载进行分析。进入断续导通模式（DCM）或计及损耗后，部分结论需要重推。
 
 \subsection{平均值}
 
-以 Buck 变换器的开关节点电压 $v_s(t)$ 为例，
-\[
-  \langle v_s\rangle
-  =\frac{1}{T_s}\int_0^{T_s}v_s(t)\,\mathrm{d}t
-  =\frac{1}{T_s}\bigl(DT_sV_{\mathrm{in}}\bigr)
+以 Buck 变换器的开关节点电压 $v_{\mathrm{s}}(t)$ 为例，
+\begin{equation*}
+  \langle v_{\mathrm{s}}\rangle
+  =\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}v_{\mathrm{s}}(t)\,\mathrm{d}t
+  =\frac{1}{T_{\mathrm{s}}}\bigl(DT_{\mathrm{s}}V_{\mathrm{in}}\bigr)
   =DV_{\mathrm{in}}.
-\]
+\end{equation*}
 
 \subsection{谐波与低通滤波}
 
-谐波：均值以外的、由傅里叶级数展开得到的正弦分量。低通滤波：滤除 $f_s\ne0$ 的谐波【原文表述】。
+谐波：均值以外的、由傅里叶级数展开得到的正弦分量。低通滤波：滤除 $f_{\mathrm{s}}\ne0$ 的谐波【原文表述】。
 
-\reviewnote{建议改为“低通滤波器主要衰减位于 $nf_s$（$n=1,2,\ldots$）附近的开关谐波”。实际截止频率还需兼顾所需动态带宽，不能简单理解为滤除所有非零频率分量。}
+\reviewnote{建议改为“低通滤波器主要衰减位于 $nf_{\mathrm{s}}$（$n=1,2,\ldots$）附近的开关谐波”。实际截止频率还需兼顾所需动态带宽，不能简单理解为滤除所有非零频率分量。}
 
 \subsection{DC--DC 变换器的变换比}
 
 一般写为
-\[
-  V_o=V_{\mathrm{in}}M(D).
-\]
+\begin{equation*}
+  V_{\mathrm{o}}=V_{\mathrm{in}}M(D).
+\end{equation*}
 几种基本变换器为
-\[
+\begin{equation*}
   \text{Buck: }M(D)=D,\qquad
   \text{Boost: }M(D)=\frac{1}{1-D},\qquad
   \text{Buck--Boost: }M(D)=-\frac{D}{1-D}.
-\]
+\end{equation*}
 
 \subsection{小纹波近似}
 
-\[
-  v_o(t)=V_o+v_{\mathrm{ripple}}(t).
-\]
-当 $\lVert v_{\mathrm{ripple}}\rVert\ll V_o$ 时，有 $v_o(t)\approx V_o$，即忽略纹波。
+\begin{equation*}
+  v_{\mathrm{o}}(t)=V_{\mathrm{o}}+v_{\mathrm{ripple}}(t).
+\end{equation*}
+当 $\lVert v_{\mathrm{ripple}}\rVert\ll V_{\mathrm{o}}$ 时，有 $v_{\mathrm{o}}(t)\approx V_{\mathrm{o}}$，即忽略纹波。
 
-\reviewnote{可进一步说明 $v_{\mathrm{ripple}}(t)$ 的周期平均值为零，并明确范数或改用峰峰值／幅值与 $V_o$ 的比值表示“小”。}
+\reviewnote{可进一步说明 $v_{\mathrm{ripple}}(t)$ 的周期平均值为零，并明确范数或改用峰峰值／幅值与 $V_{\mathrm{o}}$ 的比值表示“小”。}
 
 \section{Buck 变换器的稳态分析}
 
 \subsection{两个开关状态}
 
-【图：Buck 变换器。输入电压源 $V_{\mathrm{in}}$ 经过二选一开关和电感 $L$ 接至输出端，输出端为 $C$ 与 $R$ 并联，输出电压为 $v_o(t)$。】
+【图：Buck 变换器。输入电压源 $V_{\mathrm{in}}$ 经过二选一开关和电感 $L$ 接至输出端，输出端为 $C$ 与 $R$ 并联，输出电压为 $v_{\mathrm{o}}(t)$。】
 
 开关接 1 号端时，电感电压
-\[
-  v_L=V_{\mathrm{in}}-v_o(t)\approx V_{\mathrm{in}}-V_o,
-\]
+\begin{equation*}
+  v_{\mathrm{L}}=V_{\mathrm{in}}-v_{\mathrm{o}}(t)\approx V_{\mathrm{in}}-V_{\mathrm{o}},
+\end{equation*}
 由本身性质
-\[
-  v_L(t)=L\frac{\mathrm{d}i_L(t)}{\mathrm{d}t}
+\begin{equation*}
+  v_{\mathrm{L}}(t)=L\frac{\mathrm{d}i_{\mathrm{L}}(t)}{\mathrm{d}t}
   \quad\Longrightarrow\quad
-  \frac{\mathrm{d}i_L(t)}{\mathrm{d}t}
-  =\frac{v_L(t)}{L}
-  \approx\frac{V_{\mathrm{in}}-V_o}{L}.
-\]
+  \frac{\mathrm{d}i_{\mathrm{L}}(t)}{\mathrm{d}t}
+  =\frac{v_{\mathrm{L}}(t)}{L}
+  \approx\frac{V_{\mathrm{in}}-V_{\mathrm{o}}}{L}.
+\end{equation*}
 即电感电流以恒定斜率变化（短时间）。
 
 开关接 2 号端时，电感正端接地，
-\[
-  v_L=-v_o\approx -V_o,
+\begin{equation*}
+  v_{\mathrm{L}}=-v_{\mathrm{o}}\approx -V_{\mathrm{o}},
   \qquad
-  \frac{\mathrm{d}i_L(t)}{\mathrm{d}t}
-  \approx-\frac{V_o}{L}.
-\]
+  \frac{\mathrm{d}i_{\mathrm{L}}(t)}{\mathrm{d}t}
+  \approx-\frac{V_{\mathrm{o}}}{L}.
+\end{equation*}
 同上，斜率为负且绝对值不一定相同。
 
 \subsection{稳态波形与电感电流纹波}
 
-【图：一个周期内的 Buck 波形。$v_L(t)$ 在 $DT_s$ 内为 $V_{\mathrm{in}}-V_o$，在 $D'T_s$ 内为 $-V_o$；$i_L(t)$ 围绕平均值 $I_L$ 呈三角波，峰峰值为 $2\Delta i_L$。】
+【图：一个周期内的 Buck 波形。$v_{\mathrm{L}}(t)$ 在 $DT_{\mathrm{s}}$ 内为 $V_{\mathrm{in}}-V_{\mathrm{o}}$，在 $D'T_{\mathrm{s}}$ 内为 $-V_{\mathrm{o}}$；$i_{\mathrm{L}}(t)$ 围绕平均值 $I_{\mathrm{L}}$ 呈三角波，峰峰值为 $2\Delta i_{\mathrm{L}}$。】
 
 电感电流纹波满足
 \begin{align*}
-  2\Delta i_L
-  &=\dot{i}_LDT_s
-    =\frac{V_{\mathrm{in}}-V_o}{L}DT_s,\\
-  \Delta i_L
-  &=\frac{V_{\mathrm{in}}-V_o}{2L}DT_s,\\
-  L&=\frac{V_{\mathrm{in}}-V_o}{2\Delta i_L}DT_s.
+  2\Delta i_{\mathrm{L}}
+    & =\dot{i}_{\mathrm{L}}DT_{\mathrm{s}}
+  =\frac{V_{\mathrm{in}}-V_{\mathrm{o}}}{L}DT_{\mathrm{s}},               \\
+  \Delta i_{\mathrm{L}}
+    & =\frac{V_{\mathrm{in}}-V_{\mathrm{o}}}{2L}DT_{\mathrm{s}},          \\
+  L & =\frac{V_{\mathrm{in}}-V_{\mathrm{o}}}{2\Delta i_{\mathrm{L}}}DT_{\mathrm{s}}.
 \end{align*}
 电感值增大，纹波减小。【旁注：其余参数已知时，据此设计电感值；原文字迹不清。】
 
-\reviewnote{本文把 $2\Delta i_L$ 定义为峰峰值，因此 $\Delta i_L$ 是纹波幅值。后续所有 $\Delta i$、$\Delta v$ 都应沿用这一约定；很多教材则直接用 $\Delta i_L$ 表示峰峰值。}
+\reviewnote{本文把 $2\Delta i_{\mathrm{L}}$ 定义为峰峰值，因此 $\Delta i_{\mathrm{L}}$ 是纹波幅值。后续所有 $\Delta i$、$\Delta v$ 都应沿用这一约定；很多教材则直接用 $\Delta i_{\mathrm{L}}$ 表示峰峰值。}
 
 疑问：稳态电路分析仅针对 DC--DC 吗？AC--DC 呢？其他呢？为何一定要用电感？电容不行吗？电压纹波是否也可分析？
 
@@ -295,70 +381,70 @@
 
 \subsection{启动瞬态与稳态界定}
 
-【图：$i_L(t)$ 从零逐周期上升，经历启动瞬态后进入周期性三角波稳态；图中标有上升斜率 $(V_{\mathrm{in}}-v_o(t))/L$ 与下降斜率 $-v_o(t)/L$。】
+【图：$i_{\mathrm{L}}(t)$ 从零逐周期上升，经历启动瞬态后进入周期性三角波稳态；图中标有上升斜率 $(V_{\mathrm{in}}-v_{\mathrm{o}}(t))/L$ 与下降斜率 $-v_{\mathrm{o}}(t)/L$。】
 
 当
-\[
-  i_L\bigl((n+1)T_s\bigr)=i_L(nT_s)
-\]
+\begin{equation*}
+  i_{\mathrm{L}}\bigl((n+1)T_{\mathrm{s}}\bigr)=i_{\mathrm{L}}(nT_{\mathrm{s}})
+\end{equation*}
 时，认为进入稳态。瞬态需由微分方程【迭代或求解】。
 
-\reviewnote{更完整的周期稳态条件是所有状态变量在相同相位满足 $\boldsymbol{x}(t+T_s)=\boldsymbol{x}(t)$；这里只检查 $i_L$ 是针对当前简化示例。}
+\reviewnote{更完整的周期稳态条件是所有状态变量在相同相位满足 $\boldsymbol{x}(t+T_{\mathrm{s}})=\boldsymbol{x}(t)$；这里只检查 $i_{\mathrm{L}}$ 是针对当前简化示例。}
 
 \subsection{电感伏秒平衡}
 
 由
-\[
-  v_L(t)=L\frac{\mathrm{d}i_L(t)}{\mathrm{d}t}
-\]
+\begin{equation*}
+  v_{\mathrm{L}}(t)=L\frac{\mathrm{d}i_{\mathrm{L}}(t)}{\mathrm{d}t}
+\end{equation*}
 可得
 \begin{align*}
-  \int_0^{T_s}\mathrm{d}i_L(t)
-  &=\frac{1}{L}\int_0^{T_s}v_L(t)\,\mathrm{d}t,\\
-  i_L(T_s)-i_L(0)
-  &=\frac{1}{L}\int_0^{T_s}v_L(t)\,\mathrm{d}t.
+  \int_0^{T_{\mathrm{s}}}\,\mathrm{d}i_{\mathrm{L}}(t)
+   & =\frac{1}{L}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t, \\
+  i_{\mathrm{L}}(T_{\mathrm{s}})-i_{\mathrm{L}}(0)
+   & =\frac{1}{L}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t.
 \end{align*}
 稳态时
-\[
-  0=\frac{1}{L}\int_0^{T_s}v_L(t)\,\mathrm{d}t,
+\begin{equation*}
+  0=\frac{1}{L}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t,
   \qquad
-  \frac{1}{T_s}\int_0^{T_s}v_L(t)\,\mathrm{d}t
-  =\langle v_L\rangle=0.
-\]
-设 $A$ 为一个周期内 $v_L(t)$ 与 $t$ 轴所围波形的有符号面积，则
+  \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t
+  =\langle v_{\mathrm{L}}\rangle=0.
+\end{equation*}
+设 $A$ 为一个周期内 $v_{\mathrm{L}}(t)$ 与 $t$ 轴所围波形的有符号面积，则
 \begin{align*}
   0=A
-  &=\int_0^{T_s}v_L(t)\,\mathrm{d}t\\
-  &=(V_{\mathrm{in}}-V_o)(DT_s)+(-V_o)(D'T_s).
+   & =\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t            \\
+   & =(V_{\mathrm{in}}-V_{\mathrm{o}})(DT_{\mathrm{s}})+(-V_{\mathrm{o}})(D'T_{\mathrm{s}}).
 \end{align*}
 平均电压为
-\[
-  \langle v_L\rangle
-  =\frac{A}{T_s}
-  =D(V_{\mathrm{in}}-V_o)+D'(-V_o).
-\]
+\begin{equation*}
+  \langle v_{\mathrm{L}}\rangle
+  =\frac{A}{T_{\mathrm{s}}}
+  =D(V_{\mathrm{in}}-V_{\mathrm{o}})+D'(-V_{\mathrm{o}}).
+\end{equation*}
 由 $D'=1-D$ 得
-\[
-  V_o=DV_{\mathrm{in}}.
-\]
+\begin{equation*}
+  V_{\mathrm{o}}=DV_{\mathrm{in}}.
+\end{equation*}
 
 \subsection{电容电荷平衡}
 
 由
-\[
-  i_C(t)=C\frac{\mathrm{d}v_C(t)}{\mathrm{d}t}
-\]
+\begin{equation*}
+  i_{\mathrm{C}}(t)=C\frac{\mathrm{d}v_{\mathrm{C}}(t)}{\mathrm{d}t}
+\end{equation*}
 可得
-\[
-  v_C(T_s)-v_C(0)=\frac{1}{C}\int_0^{T_s}i_C(t)\,\mathrm{d}t.
-\]
+\begin{equation*}
+  v_{\mathrm{C}}(T_{\mathrm{s}})-v_{\mathrm{C}}(0)=\frac{1}{C}\int_0^{T_{\mathrm{s}}}i_{\mathrm{C}}(t)\,\mathrm{d}t.
+\end{equation*}
 稳态时
-\[
-  0=\frac{1}{T_s}\int_0^{T_s}i_C(t)\,\mathrm{d}t
-  =\langle i_C\rangle.
-\]
+\begin{equation*}
+  0=\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{C}}(t)\,\mathrm{d}t
+  =\langle i_{\mathrm{C}}\rangle.
+\end{equation*}
 
-对于电感，两端 $v_L$ 为激励，$i_L$ 为响应；对于电容，$i_C$ 为激励，$v_C$ 为响应。要使响应达到周期性稳态，应使相应激励在一个周期内的平均值为零【原文表述】。
+对于电感，两端 $v_{\mathrm{L}}$ 为激励，$i_{\mathrm{L}}$ 为响应；对于电容，$i_{\mathrm{C}}$ 为激励，$v_{\mathrm{C}}$ 为响应。要使响应达到周期性稳态，应使相应激励在一个周期内的平均值为零【原文表述】。
 
 \reviewnote{“激励—响应”是本次建模所选的观察方式，并非绝对因果关系。核心结论应写成：周期稳态下电感平均电压为零、电容平均电流为零。}
 
@@ -369,54 +455,54 @@
 【图：Boost 变换器。输入电压源串联电感，开关节点经开关接地，并经二极管接到 $C\parallel R$ 输出端。旁注：二极管导通时，电感末端可连接 $V_{\mathrm{in}}$ 正负极【字迹不清】。】
 
 接状态 1 时，
-\[
-  v_L(t)=V_{\mathrm{in}},
+\begin{equation*}
+  v_{\mathrm{L}}(t)=V_{\mathrm{in}},
   \qquad
-  i_C(t)=-\frac{v_o(t)}{R}\approx-\frac{V_o}{R}.
-\]
+  i_{\mathrm{C}}(t)=-\frac{v_{\mathrm{o}}(t)}{R}\approx-\frac{V_{\mathrm{o}}}{R}.
+\end{equation*}
 接状态 2 时，
-\[
-  v_L(t)=V_{\mathrm{in}}-V_o,
+\begin{equation*}
+  v_{\mathrm{L}}(t)=V_{\mathrm{in}}-V_{\mathrm{o}},
   \qquad
-  i_C(t)=i_L(t)-\frac{V_o}{R}
-  \approx I_L-\frac{V_o}{R}.
-\]
+  i_{\mathrm{C}}(t)=i_{\mathrm{L}}(t)-\frac{V_{\mathrm{o}}}{R}
+  \approx I_{\mathrm{L}}-\frac{V_{\mathrm{o}}}{R}.
+\end{equation*}
 
 \subsection{变换比与平均电感电流}
 
 由伏秒平衡，
 \begin{align*}
-  \frac{1}{T_s}\int_0^{T_s}v_L(t)\,\mathrm{d}t
-  &=DV_{\mathrm{in}}+(1-D)(V_{\mathrm{in}}-V_o)=0,\\
-  V_o&=\frac{1}{1-D}V_{\mathrm{in}}.
+  \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t
+      & =DV_{\mathrm{in}}+(1-D)(V_{\mathrm{in}}-V_{\mathrm{o}})=0, \\
+  V_{\mathrm{o}} & =\frac{1}{1-D}V_{\mathrm{in}}.
 \end{align*}
 由电荷平衡，
 \begin{align*}
-  \frac{1}{T_s}\int_0^{T_s}i_C(t)\,\mathrm{d}t
-  &=-D\frac{V_o}{R}+(1-D)\left(I_L-\frac{V_o}{R}\right)=0,\\
-  V_o&=RI_L(1-D),\\
-  I_L&=\frac{V_o}{R(1-D)}
-      =\frac{V_{\mathrm{in}}}{R(1-D)^2}.
+  \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{C}}(t)\,\mathrm{d}t
+      & =-D\frac{V_{\mathrm{o}}}{R}+(1-D)\left(I_{\mathrm{L}}-\frac{V_{\mathrm{o}}}{R}\right)=0, \\
+  V_{\mathrm{o}} & =RI_{\mathrm{L}}(1-D),                                             \\
+  I_{\mathrm{L}} & =\frac{V_{\mathrm{o}}}{R(1-D)}
+  =\frac{V_{\mathrm{in}}}{R(1-D)^2}.
 \end{align*}
 
 \subsection{电感电流与电容电压纹波}
 
 \begin{align*}
-  2\Delta i_L
-  &=\left.\frac{\mathrm{d}i_L(t)}{\mathrm{d}t}\right|_{0\sim DT_s}DT_s
-    =\frac{V_{\mathrm{in}}}{L}DT_s,\\
-  \Delta i_L&=\frac{V_{\mathrm{in}}}{2L}DT_s,\\[0.5ex]
-  -2\Delta v_C
-  &=\left.\frac{\mathrm{d}v_C(t)}{\mathrm{d}t}\right|_{0\sim DT_s}DT_s
-    =-\frac{V_o}{RC}DT_s,\\
-  \Delta v_C&=\frac{V_o}{2RC}DT_s.
+  2\Delta i_{\mathrm{L}}
+             & =\left.\frac{\mathrm{d}i_{\mathrm{L}}(t)}{\mathrm{d}t}\right|_{0\le t<DT_{\mathrm{s}}}DT_{\mathrm{s}}
+  =\frac{V_{\mathrm{in}}}{L}DT_{\mathrm{s}},                                                  \\
+  \Delta i_{\mathrm{L}} & =\frac{V_{\mathrm{in}}}{2L}DT_{\mathrm{s}},                                    \\[0.5ex]
+  -2\Delta v_{\mathrm{C}}
+             & =\left.\frac{\mathrm{d}v_{\mathrm{C}}(t)}{\mathrm{d}t}\right|_{0\le t<DT_{\mathrm{s}}}DT_{\mathrm{s}}
+  =-\frac{V_{\mathrm{o}}}{RC}DT_{\mathrm{s}},                                                            \\
+  \Delta v_{\mathrm{C}} & =\frac{V_{\mathrm{o}}}{2RC}DT_{\mathrm{s}}.
 \end{align*}
 
-【图：Boost 的 $i_L$ 三角波。状态 1 的斜率为 $V_{\mathrm{in}}/L$，状态 2 的斜率为 $(V_{\mathrm{in}}-V_o)/L$，峰峰值为 $2\Delta i_L$。】
+【图：Boost 的 $i_{\mathrm{L}}$ 三角波。状态 1 的斜率为 $V_{\mathrm{in}}/L$，状态 2 的斜率为 $(V_{\mathrm{in}}-V_{\mathrm{o}})/L$，峰峰值为 $2\Delta i_{\mathrm{L}}$。】
 
-【图：Boost 的 $v_C$ 纹波。状态 1 的斜率为 $-V_o/(RC)$，状态 2 的斜率为 $I_L/C-V_o/(RC)$，峰峰值为 $2\Delta v_C$。】
+【图：Boost 的 $v_{\mathrm{C}}$ 纹波。状态 1 的斜率为 $-V_{\mathrm{o}}/(RC)$，状态 2 的斜率为 $I_{\mathrm{L}}/C-V_{\mathrm{o}}/(RC)$，峰峰值为 $2\Delta v_{\mathrm{C}}$。】
 
-疑问：【纹波正负值有影响吗？】默认 $\Delta v_C$、$\Delta i_L$ 为正值，故按增大、减小过程计算【原文大意】。
+疑问：【纹波正负值有影响吗？】默认 $\Delta v_{\mathrm{C}}$、$\Delta i_{\mathrm{L}}$ 为正值，故按增大、减小过程计算【原文大意】。
 
 \section{分析方法总结}
 
@@ -424,7 +510,7 @@
   \item 画电路图，明确状态数目与等效电路。
   \item 划定时间区间，分【开关过程】，根据器件【通断情况】和电路状态列方程；主要针对 $L$、$C$ 的激励与响应。【括号内原式不清，疑似为稳态平均条件。】
   \item 按实际情况进行小纹波近似，分析伏秒平衡、电荷平衡。
-  \item 求电压增益 $M(D)$ 与其他状态变量（$I_L$ 等）。
+  \item 求电压增益 $M(D)$ 与其他状态变量（$I_{\mathrm{L}}$ 等）。
   \item 画图，求纹波；【由第 2 步各状态中的电压或电流极性判定变化方向，原文字迹不清】。
 \end{enumerate}
 
@@ -442,19 +528,19 @@
 
 状态 1：
 \begin{align*}
-  v_{L1}&=V_{\mathrm{in}},\\
-  v_{L2}&=-V_1-V_2
-  \quad\text{（来源：环路压降 $V_1+v_{L2}+V_2=0$）},\\
-  i_{C1}&=i_2,\\
-  i_{C2}&=i_2-\frac{V_2}{R}.
+  v_{\mathrm{L}1} & =V_{\mathrm{in}},                \\
+  v_{\mathrm{L}2} & =-V_1-V_2
+  \quad\text{（来源：环路压降 $V_1+v_{\mathrm{L}2}+V_2=0$）}, \\
+  i_{\mathrm{C}1} & =i_2,                            \\
+  i_{\mathrm{C}2} & =i_2-\frac{V_2}{R}.
 \end{align*}
 
 状态 2：
 \begin{align*}
-  v_{L1}&=V_{\mathrm{in}}-V_1,\\
-  v_{L2}&=-V_2,\\
-  i_{C1}&=i_1,\\
-  i_{C2}&=i_2-\frac{V_2}{R}.
+  v_{\mathrm{L}1} & =V_{\mathrm{in}}-V_1, \\
+  v_{\mathrm{L}2} & =-V_2,                \\
+  i_{\mathrm{C}1} & =i_1,                 \\
+  i_{\mathrm{C}2} & =i_2-\frac{V_2}{R}.
 \end{align*}
 
 以上使用小纹波近似：$v_1$、$v_2$、$i_1$、$i_2$ 以相应平均量代替。
@@ -463,44 +549,44 @@
 
 伏秒平衡：
 \begin{align}
-  \langle v_{L1}\rangle
-  &=DV_{\mathrm{in}}+D'(V_{\mathrm{in}}-V_1)=0,\label{eq:cuk-vl1}\\
-  \langle v_{L2}\rangle
-  &=D(-V_1-V_2)+D'(-V_2)=0.\label{eq:cuk-vl2}
+  \langle v_{\mathrm{L}1}\rangle
+   & =DV_{\mathrm{in}}+D'(V_{\mathrm{in}}-V_1)=0,\label{eq:cuk-vl1} \\
+  \langle v_{\mathrm{L}2}\rangle
+   & =D(-V_1-V_2)+D'(-V_2)=0.\label{eq:cuk-vl2}
 \end{align}
 电荷平衡：
 \begin{align}
-  \langle i_{C1}\rangle
-  &=DI_2+D'I_1=0,\label{eq:cuk-ic1}\\
-  \langle i_{C2}\rangle
-  &=D\left(I_2-\frac{V_2}{R}\right)
-    +D'\left(I_2-\frac{V_2}{R}\right)=0.\label{eq:cuk-ic2}
+  \langle i_{\mathrm{C}1}\rangle
+   & =DI_2+D'I_1=0,\label{eq:cuk-ic1} \\
+  \langle i_{\mathrm{C}2}\rangle
+   & =D\left(I_2-\frac{V_2}{R}\right)
+  +D'\left(I_2-\frac{V_2}{R}\right)=0.\label{eq:cuk-ic2}
 \end{align}
 
 由式~\eqref{eq:cuk-vl1} 得
-\[
+\begin{equation*}
   V_1=\frac{V_{\mathrm{in}}}{1-D}
   \qquad\text{（同 Boost）}.
-\]
+\end{equation*}
 由式~\eqref{eq:cuk-vl2} 得
-\[
+\begin{equation*}
   V_2=-\frac{D}{1-D}V_{\mathrm{in}}
   \qquad\text{（同 Buck--Boost）}.
-\]
+\end{equation*}
 由式~\eqref{eq:cuk-ic2} 得
-\[
+\begin{equation*}
   I_2=\frac{V_2}{R}
   =-\frac{D}{1-D}\frac{V_{\mathrm{in}}}{R}.
-\]
+\end{equation*}
 由式~\eqref{eq:cuk-ic1} 得
-\[
+\begin{equation*}
   I_1=\frac{D^2V_{\mathrm{in}}}{(1-D)^2R}
   \quad\text{（沿用原笔记的参考方向）}.
-\]
+\end{equation*}
 因此
-\[
+\begin{equation*}
   M(D)=-\frac{D}{1-D},
-\]
+\end{equation*}
 即发生极性反转：按图示参考方向，输入上正下负，输出上负下正。
 
 疑问：$D>D'$ 时呢？【原笔记写有“$D\ne D'$ 时，$I_2=V_2/R$，欧姆定律”，上下文不清。】
@@ -509,19 +595,19 @@
 
 状态 1 的斜率：
 \begin{align*}
-  \frac{\mathrm{d}i_1(t)}{\mathrm{d}t}&=\frac{V_{\mathrm{in}}}{L_1},&
-  \frac{\mathrm{d}i_2(t)}{\mathrm{d}t}&=\frac{-V_1-V_2}{L_2},\\
-  \frac{\mathrm{d}v_1(t)}{\mathrm{d}t}&=\frac{I_2}{C_1},&
-  \frac{\mathrm{d}v_2(t)}{\mathrm{d}t}&=\frac{I_2}{C_2}-\frac{V_2}{RC_2}=0.
+  \frac{\mathrm{d}i_1(t)}{\mathrm{d}t} & =\frac{V_{\mathrm{in}}}{L_1},        &
+  \frac{\mathrm{d}i_2(t)}{\mathrm{d}t} & =\frac{-V_1-V_2}{L_2},                 \\
+  \frac{\mathrm{d}v_1(t)}{\mathrm{d}t} & =\frac{I_2}{C_1},                    &
+  \frac{\mathrm{d}v_2(t)}{\mathrm{d}t} & =\frac{I_2}{C_2}-\frac{V_2}{RC_2}=0.
 \end{align*}
 
 状态 2 的斜率：
 \begin{align*}
-  \frac{\mathrm{d}i_1(t)}{\mathrm{d}t}&=\frac{V_{\mathrm{in}}-V_1}{L_1},&
-  \frac{\mathrm{d}i_2(t)}{\mathrm{d}t}&=-\frac{V_2}{L_1}
-  \quad\text{【原式分母为 $L_1$，疑似应核对】},\\
-  \frac{\mathrm{d}v_1(t)}{\mathrm{d}t}&=\frac{I_1}{C_1},&
-  \frac{\mathrm{d}v_2(t)}{\mathrm{d}t}&=\frac{I_2}{C_2}-\frac{V_2}{RC_2}=0.
+  \frac{\mathrm{d}i_1(t)}{\mathrm{d}t} & =\frac{V_{\mathrm{in}}-V_1}{L_1},    &
+  \frac{\mathrm{d}i_2(t)}{\mathrm{d}t} & =-\frac{V_2}{L_1}
+  \quad\text{【原式分母为 $L_1$，疑似应核对】},                                              \\
+  \frac{\mathrm{d}v_1(t)}{\mathrm{d}t} & =\frac{I_1}{C_1},                    &
+  \frac{\mathrm{d}v_2(t)}{\mathrm{d}t} & =\frac{I_2}{C_2}-\frac{V_2}{RC_2}=0.
 \end{align*}
 
 \reviewnote{由状态 2 中 $L_2$ 所在支路可知，第二式分母应重点核对为 $L_2$，即 $\mathrm{d}i_2/\mathrm{d}t=-V_2/L_2$。此处暂保留手写原式。}
@@ -532,11 +618,11 @@
 
 原笔记给出的纹波估算为
 \begin{align*}
-  \Delta i_1&=\frac{V_{\mathrm{in}}DT_s}{2L_1},\\
-  \Delta i_2&=\frac{(V_1+V_2)DT_s}{2L_2}
-              =\frac{V_{\mathrm{in}}DT_s}{2L_2},\\
-  \Delta v_1&=-\frac{I_2DT_s}{2C_1}
-              =\frac{V_{\mathrm{in}}D^2T_s}{2(1-D)RC_1}.
+  \Delta i_1 & =\frac{V_{\mathrm{in}}DT_{\mathrm{s}}}{2L_1}, \\
+  \Delta i_2 & =\frac{(V_1+V_2)DT_{\mathrm{s}}}{2L_2}
+  =\frac{V_{\mathrm{in}}DT_{\mathrm{s}}}{2L_2},              \\
+  \Delta v_1 & =-\frac{I_2DT_{\mathrm{s}}}{2C_1}
+  =\frac{V_{\mathrm{in}}D^2T_{\mathrm{s}}}{2(1-D)RC_1}.
 \end{align*}
 
 \section{输出电压纹波与滤波环节}
@@ -544,35 +630,35 @@
 【关于 \textup{\'{C}uk} 输出侧电压的一段说明字迹不清：大意为在先前的零阶小纹波模型中，输出侧电压纹波被忽略，且两个开关状态给出的电容平均电流相同，不能直接由该近似得到纹波。】
 
 以 Buck 为例，求电容电流时不能忽略电感电流纹波：
-\[
-  i_C(t)=\widetilde{i}_L(t)-\widetilde{i}_o(t)
-  \approx\widetilde{i}_L(t)-I_o
-  =i_L(t)-I_L.
-\]
+\begin{equation*}
+  i_{\mathrm{C}}(t)=\widetilde{i}_{\mathrm{L}}(t)-\widetilde{i}_{\mathrm{o}}(t)
+  \approx\widetilde{i}_{\mathrm{L}}(t)-I_{\mathrm{o}}
+  =i_{\mathrm{L}}(t)-I_{\mathrm{L}}.
+\end{equation*}
 
-\reviewnote{符号建议统一为 $i_C(t)=i_L(t)-i_o(t)$；若负载电流纹波可忽略，则 $i_o(t)\approx I_o=I_L$，从而 $i_C(t)\approx i_L(t)-I_L=\widetilde{i}_L(t)$。原式混用了瞬时量和纹波量。}
+\reviewnote{符号建议统一为 $i_{\mathrm{C}}(t)=i_{\mathrm{L}}(t)-i_{\mathrm{o}}(t)$；若负载电流纹波可忽略，则 $i_{\mathrm{o}}(t)\approx I_{\mathrm{o}}=I_{\mathrm{L}}$，从而 $i_{\mathrm{C}}(t)\approx i_{\mathrm{L}}(t)-I_{\mathrm{L}}=\widetilde{i}_{\mathrm{L}}(t)$。原式混用了瞬时量和纹波量。}
 
 【图：一个周期内的电感电流三角纹波；以平均值为基准，半个周期内的三角形阴影面积标为电荷 $Q$。】
 
 由三角形面积与电容电荷变化量，
-\[
-  \frac{1}{2}\cdot\frac{T_s}{2}\cdot\Delta i_L
-  =Q=C(2\Delta v_o),
-\]
+\begin{equation*}
+  \frac{1}{2}\cdot\frac{T_{\mathrm{s}}}{2}\cdot\Delta i_{\mathrm{L}}
+  =Q=C(2\Delta v_{\mathrm{o}}),
+\end{equation*}
 得到
-\[
-  \Delta v_o=\frac{\Delta i_LT_s}{8C}.
-\]
+\begin{equation*}
+  \Delta v_{\mathrm{o}}=\frac{\Delta i_{\mathrm{L}}T_{\mathrm{s}}}{8C}.
+\end{equation*}
 
-\reviewnote{该式沿用“$\Delta$ 为幅值、$2\Delta$ 为峰峰值”的约定，并忽略电容 ESR。实际输出纹波还应叠加近似为 $\Delta i_{C,\mathrm{pp}}\,\mathrm{ESR}$ 的阶跃分量。}
+\reviewnote{该式沿用“$\Delta$ 为幅值、$2\Delta$ 为峰峰值”的约定，并忽略电容 ESR。实际输出纹波还应叠加近似为 $\Delta i_{\mathrm{C},\mathrm{pp}}\,\mathrm{ESR}$ 的阶跃分量。}
 
-【图：输出电压纹波波形，峰峰值为 $2\Delta v_o$。】
+【图：输出电压纹波波形，峰峰值为 $2\Delta v_{\mathrm{o}}$。】
 
 \'{C}uk 变换器略复杂【原文：由于电流中“掺导”，字迹不清】，原笔记写为
-\[
-  \Delta v_2=\frac{\Delta i_2T_s}{8C}=\cdots
+\begin{equation*}
+  \Delta v_2=\frac{\Delta i_2T_{\mathrm{s}}}{8C}=\cdots
   \quad\text{【原式中的电容下标缺失，待核对】}.
-\]
+\end{equation*}
 
 \reviewnote{若这里对应输出电容，分母应明确写为 $8C_2$；同时仍需说明小纹波和忽略 ESR 的前提。}
 
