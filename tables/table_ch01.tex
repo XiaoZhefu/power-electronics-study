@@ -1,0 +1,61 @@
+\DefineTable{tab0101}{
+  \begingroup
+  \small
+  \addtolength{\abovecaptionskip}{-0.2cm}
+  \setlength{\tabcolsep}{3pt}
+  \setlength{\dashlinedash}{1.5pt}
+  \setlength{\dashlinegap}{1.5pt}
+  \renewcommand{\arraystretch}{1.10}
+  % 使用 hline 让竖虚线计入横线厚度，避免分区边界累积错位。
+  \edef\symboltablearrayrulewidth{\the\arrayrulewidth}
+  \newcommand{\symboltablerule}[1]{%
+    \noalign{\global\arrayrulewidth=#1\relax}%
+    \hline
+    \noalign{\global\arrayrulewidth=\symboltablearrayrulewidth\relax}%
+  }
+  \begin{longtable}{
+    >{\centering\arraybackslash}p{0.160\textwidth}
+    >{\centering\arraybackslash}p{0.300\textwidth}:
+    >{\centering\arraybackslash}p{0.160\textwidth}
+    >{\centering\arraybackslash}p{0.300\textwidth}}
+    \caption{第一章符号汇总}\label{tab0101}                                                                                                                                                                                  \\
+    \symboltablerule{\heavyrulewidth}
+    \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{时间}}                                                                                                                                                                \\
+    \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+    \symboltablerule{\lightrulewidth}
+    $T_{\mathrm{s}}$                                   & 开关周期                                               & $f_{\mathrm{s}}$                                   & 开关频率                                               \\
+    $D$                                                & 占空比                                                & $D'$                                               & 互补占空比                                              \\
+    $DT_{\mathrm{s}}$                                  & 状态 1 时长                                            & $D'T_{\mathrm{s}}$                                 & 状态 2 时长                                            \\
+    \symboltablerule{\heavyrulewidth}
+    \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电压}}                                                                                                                                                                \\
+    \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+    \symboltablerule{\lightrulewidth}
+    $V_x$                                              & 直流分量或平均值                                           & $v_x(t)$                                           & 瞬时量                                                \\
+    $v'_x(t)$                                          & 变化率                                                & $\widetilde{v}_x(t)$                               & 纹波分量                                               \\
+    $\Delta v_{x,\mathrm{pp}}$                         & 纹波峰峰值                                              & $\Delta v_{x,\mathrm{pk}}$                         & 单边纹波幅值                                             \\
+    \symboltablerule{\heavyrulewidth}
+    \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电流}}                                                                                                                                                                \\
+    \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+    \symboltablerule{\lightrulewidth}
+    $I_x$                                              & 直流分量或平均值                                           & $i_x(t)$                                           & 瞬时量                                                \\
+    $i'_x(t)$                                          & 变化率                                                & $\widetilde{i}_x(t)$                               & 纹波分量                                               \\
+    $\Delta i_{x,\mathrm{pp}}$                         & 纹波峰峰值                                              & $\Delta i_{x,\mathrm{pk}}$                         & 单边纹波幅值                                             \\
+    \symboltablerule{\heavyrulewidth}
+    \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{功率}}                                                                                                                                                                \\
+    \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+    \symboltablerule{\lightrulewidth}
+    $P_x$                                              & 平均功率                                               & $p_x(t)$                                           & 瞬时功率                                               \\
+    \symboltablerule{\heavyrulewidth}
+    \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{下标}}                                                                                                                                                                \\
+    \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+    \symboltablerule{\lightrulewidth}
+    $\mathrm{in}$                                      & 输入                                                 & $\mathrm{out}$                                     & 输出                                                 \\
+    $\mathrm{L}$                                       & 电感                                                 & $\mathrm{C}$                                       & 电容                                                 \\
+    $\mathrm{pp}$                                      & 峰峰值                                                & $\mathrm{pk}$                                      & 单边幅值                                               \\
+    $\mathrm{s}$                                       & 开关                                                 & $\mathrm{loss}$                                    & 损耗                                                 \\
+    $1,2$                                              & 量、元器件或时刻的序号                                        &                                                    &                                                    \\
+    \symboltablerule{\heavyrulewidth}
+  \end{longtable}
+
+  \endgroup
+}

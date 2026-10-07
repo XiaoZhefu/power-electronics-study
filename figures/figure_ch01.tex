@@ -1,0 +1,989 @@
+\DefineFigure{pic0101}{
+\begin{figure}[!htbp]
+  \vspace{-0.1cm}
+  \centering
+  \begin{tikzpicture}[
+    block/.style={
+        align=center,
+        draw,
+        minimum height=0.9cm,
+        minimum width=3.2cm
+      },
+    flow/.style={-{Latex[length=2.2mm]}, line width=0.55pt},
+    every node/.style={font=\small}
+    ]
+    \node[block] (converter) at (0,1.05) {变换器};
+    \node[block] (controller) at (0,-0.75) {控制器};
+    \coordinate (input-tap) at (-3.2,1.05);
+    \coordinate (output-tap) at (3.2,1.05);
+    \draw[flow] (-5.0,1.05) -- node[above]{功率输入} (converter.west);
+    \draw[flow] (converter.east) -- node[above]{功率输出} (5.0,1.05);
+    \draw[flow] (input-tap) |- (controller.west);
+    \draw[flow] (output-tap) |- (controller.east);
+    \fill (input-tap) circle[radius=1.4pt];
+    \fill (output-tap) circle[radius=1.4pt];
+    \node[above] at (-2.35,-0.75) {前馈};
+    \node[above] at (2.35,-0.75) {反馈};
+    \draw[flow] (controller.north) -- node[right]{控制信号输入} (converter.south);
+    \draw[flow] (0,-1.85) -- node[right]{参考量} (controller.south);
+  \end{tikzpicture}
+  \vspace{-0.2cm}
+  \caption{变换器系统的基本结构}
+  \vspace{-0.5cm}
+  \label{pic0101}
+\end{figure}
+}
+
+\DefineFigure{pic0102}{
+\begin{figure}[!htbp]
+  \vspace{-0.1cm}
+  \centering
+  \begin{circuitikz}[scale=1.0, transform shape, every node/.style={font=\small}, line width=0.8pt]
+    \ctikzset{
+      bipoles/length=0.85cm,
+      transistors/scale=1.5,
+      tripoles/npn/base width=0.42,
+      tripoles/npn/width=0.48,
+      tripoles/nigfete/base width=0.32,
+      tripoles/nigfete/gate width=0.40
+    }
+    \begin{scope}[scale around={1.15:(0.7,0.2)}]
+      \draw (0,0.2) to[american resistor] (1.4,0.2);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(0.7,-0.8)}]
+      \draw (0,-0.8) to[european resistor] (1.4,-0.8);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(3.7,0.2)}]
+      \draw (3.0,0.2) to[L] (4.4,0.2);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(3.7,-0.8)}]
+      \ctikzset{quadpoles style=inline}
+      \node[transformer core, rotate=90] (t) at (3.7,-0.8) {};
+      \node[circ] at (t.outer dot A1) {};
+      \node[circ] at (t.outer dot B1) {};
+    \end{scope}
+    \begin{scope}[scale around={1.15:(6.7,-0.3)}]
+      \draw (6.0,-0.3) to[C] (7.4,-0.3);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(9.7,-0.2)}]
+      \node[npn, nobase, rotate=90, anchor=center] (bjt) at (9.7,-0.2) {};
+      \draw (bjt.nobase) -- ++(0,-0.22);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(12.9,-0.2)}]
+      \node[nigfete, nogate, rotate=90, anchor=center] (mos) at (12.9,-0.2) {};
+      \draw (mos.inner down |- mos.nogate) -- ++(0,-0.22);
+    \end{scope}
+    \node[anchor=north] at (0.7,-1.35) {电阻};
+    \node[anchor=north] at (3.7,-1.35) {电感};
+    \node[anchor=north] at (6.7,-1.35) {电容};
+    \node[anchor=north, align=center] at (9.7,-1.35) {晶体管（线性）};
+    \node[anchor=north, align=center] at (12.9,-1.35) {晶体管（开关）};
+  \end{circuitikz}
+  \vspace{-0.2cm}
+  \caption{常见器件}
+  \vspace{-0.5cm}
+  \label{pic0102}
+\end{figure}
+}
+
+\DefineFigure{pic0103}{
+\begin{figure}[!htbp]
+  \centering
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{
+        bipoles/length=0.8cm,
+        transistors/scale=1.5,
+        tripoles/nigfete/base width=0.32,
+        tripoles/nigfete/gate width=0.40
+      }
+      \coordinate (gnd-a) at (0,0);
+      \node[
+        nigfete,
+        nogate,
+        rotate=90,
+        anchor=center
+      ] (q-a) at (1.55,2.0) {};
+      \draw (gnd-a)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-a] (0,2.0)
+      -- (q-a.D);
+      \node[left=1pt] at (0,1.35) {$+$};
+      \node[left=1pt] at (0,0.65) {$-$};
+      \draw (q-a.inner down |- q-a.nogate) -- ++(0,-0.22);
+      \node[above] at (q-a.center) {$Q$};
+      \draw (q-a.S) -- ++(0.35,0) coordinate (sw-a)
+      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-a] ++(2.2,0) coordinate (out-a)
+      -- ++(1.05,0) coordinate (load-a);
+      \node[below=4pt] at (ind-a.center)
+      {$+\;v_{\mathrm{L}}\;-$};
+      \draw (sw-a |- gnd-a) to[D-, l_=$D$] (sw-a);
+      \draw (out-a) to[C, l_=$C$] (out-a |- gnd-a);
+      \draw (load-a) to[european resistor, l_=$R$] (load-a |- gnd-a);
+      \draw (load-a |- gnd-a) -- (gnd-a);
+      \node[right] at (load-a) {$+$};
+      \node[right] at (load-a |- gnd-a) {$-$};
+      \path (load-a) -- node[right] {$v_{\mathrm{out}}$} (load-a |- gnd-a);
+    \end{circuitikz}
+    \caption{原电路}
+    \label{pic0103a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-b) at (0,0);
+      \coordinate (throw-one) at (1.45,2.0);
+      \coordinate (throw-two) at (1.83,1.25);
+      \coordinate (pole) at (2.2,2.0);
+      \draw (gnd-b)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-b] (0,2.0)
+      -- (throw-one);
+      \node[left=1pt] at (0,1.35) {$+$};
+      \node[left=1pt] at (0,0.65) {$-$};
+      \draw (throw-two) -- (throw-two |- gnd-b) -- (gnd-b);
+      \node[ocirc] at (throw-one) {};
+      \node[ocirc] at (throw-two) {};
+      \draw (pole) -- (1.58,1.58);
+      \node[above] at (throw-one) {$1$};
+      \node[left] at (throw-two) {$2$};
+      \draw (pole) -- ++(0.35,0)
+      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-b] ++(2.2,0) coordinate (out-b)
+      -- ++(1.05,0) coordinate (load-b);
+      \node[below=4pt] at (ind-b.center)
+      {$+\;v_{\mathrm{L}}\;-$};
+      \node[ocirc] at (pole) {};
+      \draw (out-b) to[C, l_=$C$] (out-b |- gnd-b);
+      \draw (load-b) to[european resistor, l_=$R$] (load-b |- gnd-b);
+      \draw (load-b |- gnd-b) -- (gnd-b);
+      \node[right] at (load-b) {$+$};
+      \node[right] at (load-b |- gnd-b) {$-$};
+      \path (load-b) -- node[right] {$v_{\mathrm{out}}$} (load-b |- gnd-b);
+    \end{circuitikz}
+    \caption{等效电路}
+    \label{pic0103b}
+  \end{subfigure}
+  \medskip
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-c) at (0,0);
+      \draw (gnd-c)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-c] (0,1.8)
+      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-c] (2.55,1.8) coordinate (out-c)
+      -- ++(1.05,0) coordinate (load-c);
+      \node[left=1pt] at (0,1.25) {$+$};
+      \node[left=1pt] at (0,0.55) {$-$};
+      \node[below=4pt] at (ind-c.center)
+      {$+\;v_{\mathrm{L}}\;-$};
+      \draw (out-c) to[C, l_=$C$] (out-c |- gnd-c);
+      \draw (load-c) to[european resistor, l_=$R$] (load-c |- gnd-c);
+      \draw (load-c |- gnd-c) -- (gnd-c);
+      \node[right] at (load-c) {$+$};
+      \node[right] at (load-c |- gnd-c) {$-$};
+      \path (load-c) -- node[right] {$v_{\mathrm{out}}$} (load-c |- gnd-c);
+    \end{circuitikz}
+    \caption{状态 1}
+    \label{pic0103c}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-d) at (0,0);
+      \draw (gnd-d)
+      -- (0,1.8)
+      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-d] (2.55,1.8) coordinate (out-d)
+      -- ++(1.05,0) coordinate (load-d);
+      \node[below=4pt] at (ind-d.center)
+      {$+\;v_{\mathrm{L}}\;-$};
+      \draw (out-d) to[C, l_=$C$] (out-d |- gnd-d);
+      \draw (load-d) to[european resistor, l_=$R$] (load-d |- gnd-d);
+      \draw (load-d |- gnd-d) -- (gnd-d);
+      \node[right] at (load-d) {$+$};
+      \node[right] at (load-d |- gnd-d) {$-$};
+      \path (load-d) -- node[right] {$v_{\mathrm{out}}$} (load-d |- gnd-d);
+    \end{circuitikz}
+    \caption{状态 2}
+    \label{pic0103d}
+  \end{subfigure}
+  \vspace{-0.5cm}
+  \caption{Buck 变换器及其开关状态等效电路}
+  \vspace{-0.5cm}
+  \label{pic0103}
+\end{figure}
+}
+
+\DefineFigure{pic0104}{
+\begin{figure}[!htbp]
+  \centering
+  \begin{tikzpicture}[
+    axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
+    guide/.style={densely dashed, draw=black, line width=0.4pt},
+    waveform/.style={line width=0.9pt},
+    every node/.style={font=\small}
+    ]
+    \def\xzero{1.7}
+    \def\xduty{5.34}
+    \def\xperiod{10.8}
+    \def\xend{11.8}
+    \def\ytiming{6.9125}
+    % 电感电压波形
+    \fill[gray!30]
+    (\xzero,4.9) rectangle (\xduty,6.4);
+    \fill[gray!30]
+    (\xduty,4.2) rectangle (\xperiod,4.9);
+    \draw[axis] (\xzero,4.9) -- (\xend,4.9) node[right] {$t$};
+    \draw[axis] (\xzero,3.7) -- (\xzero,7.3)
+    node[left] {$v_{\mathrm{L}}(t)$};
+    \draw[waveform]
+    (\xzero,6.4) -- (\xduty,6.4)
+    -- (\xduty,4.2) -- (\xperiod,4.2)
+    -- (\xperiod,6.4);
+    \node[left] at (\xzero,6.4) {$V_{\mathrm{in}}-V_{\mathrm{out}}$};
+    \node[left] at (\xzero,4.9) {$0$};
+    \node[left] at (\xzero,4.2) {$-V_{\mathrm{out}}$};
+    \draw[guide] (\xzero,6.4) -- (\xduty,6.4);
+    \draw[guide] (\xzero,4.2) -- (\xduty,4.2);
+    \draw[guide] (\xduty,0) -- (\xduty,\ytiming);
+    \draw[guide] (\xperiod,0) -- (\xperiod,\ytiming);
+    % 电感电流波形
+    \draw[axis] (\xzero,0) -- (\xend,0) node[right] {$t$};
+    \draw[axis] (\xzero,0) -- (\xzero,3.2)
+    node[left] {$i_{\mathrm{L}}(t)$};
+    \draw[guide] (\xzero,1.6) -- (\xperiod,1.6);
+    \node[left] at (\xzero,1.6) {$I_{\mathrm{L}}$};
+    \draw[waveform]
+    (\xzero,0.9) -- (\xduty,2.3) -- (\xperiod,0.9);
+    \node at ({(\xzero+\xduty)/2},0.7)
+    {$i'_{\mathrm{L}}\approx\dfrac{V_{\mathrm{in}}-V_{\mathrm{out}}}{L}$};
+    \node at ({(\xduty+\xperiod)/2},0.7)
+    {$i'_{\mathrm{L}}\approx-\dfrac{V_{\mathrm{out}}}{L}$};
+    \draw[guide] (\xduty,2.3) -- (11.25,2.3);
+    \draw[guide] (\xperiod,0.9) -- (11.25,0.9);
+    \draw[{Latex[length=1.8mm]}-{Latex[length=1.8mm]}, line width=0.6pt]
+    (11.25,0.9) -- node[right] {$\Delta i_{\mathrm{L,pp}}$} (11.25,2.3);
+    % 一个开关周期内的时间分段
+    \node[left] at (\xzero,0) {$0$};
+    \node[below] at (\xperiod,0) {$T_{\mathrm{s}}$};
+    \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
+    (\xzero,\ytiming) -- node[above] {$DT_{\mathrm{s}}$} (\xduty,\ytiming);
+    \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
+    (\xduty,\ytiming) -- node[above] {$D'T_{\mathrm{s}}$} (\xperiod,\ytiming);
+  \end{tikzpicture}
+  \vspace{-0.2cm}
+  \caption{Buck 变换器一个开关周期内的电感电压和电流波形}
+  \vspace{-0.5cm}
+  \label{pic0104}
+\end{figure}
+}
+
+\DefineFigure{pic0105}{
+\begin{figure}[!htbp]
+  \centering
+  \begin{tikzpicture}[
+    axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
+    guide/.style={densely dashed, draw=black, line width=0.4pt},
+    waveform/.style={line width=0.9pt},
+    annotation/.style={-{Latex[length=1.7mm]}, line width=0.5pt},
+    every node/.style={font=\small}
+    ]
+    \def\xzero{1.2}
+    \def\xsteady{6.9}
+    \def\xend{12.0}
+    % 坐标轴
+    \draw[axis] (\xzero,0.6) -- (\xend,0.6) node[right] {$t$};
+    \draw[axis] (\xzero,0.6) -- (\xzero,5.0)
+    node[left] {$i_{\mathrm{L}}(t)$};
+    \node[below left] at (\xzero,0.6) {$0$};
+    % 启动瞬态及其逐周期抬升的电感电流
+    \draw[waveform]
+    (\xzero,0.6)
+    -- (1.76,1.55) -- (2.6,1.45)
+    -- (3.16,2.30) -- (4.0,2.08)
+    -- (4.56,2.82) -- (5.4,2.45)
+    -- (6.0,3.15) -- (\xsteady,2.65)
+    -- (7.46,3.35) -- (8.3,2.65)
+    -- (8.86,3.35) -- (9.7,2.65)
+    -- (10.26,3.35) -- (11.1,2.65);
+    % 电流平均值由启动过程逐渐收敛到稳态值
+    \draw[guide]
+    plot[smooth] coordinates {
+        (1.2,0.6) (2.25,1.45) (3.65,2.12)
+        (5.05,2.62) (6.45,2.96) (\xsteady,3.0)
+      };
+    \draw[guide] (\xzero,3.0) -- (11.1,3.0);
+    \node[left] at (\xzero,3.0) {$I_{\mathrm{L}}$};
+    % 瞬态与周期稳态的分界
+    \draw[guide] (\xsteady,0.6) -- (\xsteady,4.55);
+    \node at (4.05,4.9) {启动瞬态};
+    \node at (9.0,4.9) {周期稳态};
+    % 两个开关状态对应的电感电流斜率
+    \node at (9.25,4.0)
+    {$i'_{\mathrm{L}}(t)\approx\dfrac{V_{\mathrm{in}}-V_{\mathrm{out}}(t)}{L}$};
+    \draw[annotation] (7.85,3.72) -- (8.77,3.12);
+    \node at (8.85,1.55)
+    {$i'_{\mathrm{L}}(t)\approx-\dfrac{V_{\mathrm{out}}(t)}{L}$};
+    \draw[annotation] (7.80,1.83) -- (9.35,3.00);
+    % 稳态纹波
+    \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+    (11.55,2.65) -- node[right] {$\Delta i_{\mathrm{L,pp}}$} (11.55,3.35);
+    \draw[guide] (\xsteady,2.65) -- (11.55,2.65);
+    \draw[guide] (\xsteady,3.35) -- (11.55,3.35);
+  \end{tikzpicture}
+  \vspace{-0.2cm}
+  \caption{Buck 变换器电感电流的启动瞬态与周期稳态}
+  \vspace{-0.5cm}
+  \label{pic0105}
+\end{figure}
+}
+
+\DefineFigure{pic0106}{
+\begin{figure}[!htbp]
+  \vspace{-0.5cm}
+  \centering
+  \begin{tikzpicture}[
+    yscale=1.4,
+    axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
+    guide/.style={densely dashed, draw=black, line width=0.4pt},
+    waveform/.style={line width=0.9pt},
+    every node/.style={font=\small}
+    ]
+    \def\xzero{1.5}
+    \def\xquarter{3.30}
+    \def\xhalf{5.10}
+    \def\xthreequarter{7.80}
+    \def\xperiod{10.5}
+    \def\xend{11.8}
+    % 电容电流的正半周期面积，即电容获得的电荷 Q
+    \fill[gray!30]
+    (\xquarter,4.5) -- (\xhalf,5.35) -- (\xthreequarter,4.5) -- cycle;
+    \node at (\xhalf,4.78) {$Q$};
+    % 电流过零点同时也是输出电压纹波的极值点
+    \draw[guide] (\xquarter,0.95) -- (\xquarter,5.55);
+    \draw[guide] (\xthreequarter,0.95) -- (\xthreequarter,5.55);
+    \draw[guide] (\xperiod,0.95) -- (\xperiod,5.55);
+    % 电容电流（近似等于电感电流纹波）
+    \draw[axis] (\xzero,4.5) -- (\xend,4.5) node[right] {$t$};
+    \draw[axis] (\xzero,3.55) -- (\xzero,6.05)
+    node[left] {$i_{\mathrm{C}}(t)$};
+    \node[left] at (\xzero,4.5) {$0$};
+    \draw[waveform]
+    (\xzero,3.65) -- (\xquarter,4.5)
+    -- (\xhalf,5.35) -- (\xthreequarter,4.5)
+    -- (\xperiod,3.65) -- (\xend,4.14);
+    \node[below] at (\xquarter,0.95) {$t_1$};
+    \node[below] at (\xthreequarter,0.95) {$t_2$};
+    \draw[guide] (\xhalf,5.35) -- (11.05,5.35);
+    \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+    (11.05,4.5) -- node[right] {$\Delta i_{\mathrm{L,pk}}$} (11.05,5.35);
+    \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
+    (\xquarter,3.25) -- node[below] {$T_{\mathrm{s}}/2$} (\xthreequarter,3.25);
+    % 输出电压纹波；极值出现在电容电流过零时刻
+    \draw[axis] (\xzero,0.95) -- (\xend,0.95) node[right] {$t$};
+    \draw[axis] (\xzero,0.95) -- (\xzero,3.05)
+    node[left] {$v_{\mathrm{out}}(t)$};
+    \node[left] at (\xzero,0.95) {$0$};
+    \draw[guide] (\xzero,1.7) -- (\xperiod,1.7);
+    \node[left] at (\xzero,1.7) {$V_{\mathrm{out}}$};
+    \draw[waveform]
+    (\xzero,1.7)
+    .. controls (2.10,1.58) and (2.70,1.475) .. (\xquarter,1.475)
+    .. controls (3.90,1.475) and (4.50,1.58) .. (\xhalf,1.7)
+    .. controls (6.00,1.88) and (6.90,1.925) .. (\xthreequarter,1.925)
+    .. controls (8.70,1.925) and (9.60,1.88) .. (\xperiod,1.7)
+    .. controls (10.95,1.61) and (11.35,1.54) .. (\xend,1.52);
+    \draw[guide] (\xquarter,1.475) -- (11.05,1.475);
+    \draw[guide] (\xthreequarter,1.925) -- (11.05,1.925);
+    \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+    (11.05,1.475) -- node[right] {$\Delta v_{\mathrm{out,pp}}$} (11.05,1.925);
+    \node[below] at (\xperiod,0.95) {$T_{\mathrm{s}}$};
+  \end{tikzpicture}
+  \vspace{-0.2cm}
+  \caption{Buck 变换器的电容电流与输出电压纹波}
+  \vspace{-0.2cm}
+  \label{pic0106}
+\end{figure}
+}
+
+\DefineFigure{pic0107}{
+\begin{figure}[!htbp]
+  \vspace{-0.5cm}
+  \centering
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{
+        bipoles/length=0.8cm,
+        transistors/scale=1.5,
+        tripoles/nigfete/base width=0.32,
+        tripoles/nigfete/gate width=0.40
+      }
+      \coordinate (gnd-ba) at (0,0);
+      \node[nigfete, nogate, anchor=center] (q-ba) at (2.25,0.95) {};
+      \draw (gnd-ba)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-ba] (0,2.0)
+      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-ba] (2.25,2.0) coordinate (sw-ba)
+      to[D-, l=$D$] (3.55,2.0) coordinate (out-ba)
+      -- ++(1.05,0) coordinate (load-ba);
+      \draw (sw-ba) -- (q-ba.D);
+      \draw (q-ba.S) -- (q-ba.S |- gnd-ba);
+      \draw (q-ba.inner down -| q-ba.nogate) -- ++(-0.22,0);
+      \node[left=11pt] at (q-ba.center) {$Q$};
+      \node[left=1pt] at (0,1.35) {$+$};
+      \node[left=1pt] at (0,0.65) {$-$};
+      \node[below=4pt] at (ind-ba.center)
+      {$+\;v_{\mathrm{L}}\;-$};
+      \draw (out-ba) to[C, l_=$C$] (out-ba |- gnd-ba);
+      \draw (load-ba) to[european resistor, l_=$R$] (load-ba |- gnd-ba);
+      \draw (load-ba |- gnd-ba) -- (gnd-ba);
+      \node[right] at (load-ba) {$+$};
+      \node[right] at (load-ba |- gnd-ba) {$-$};
+      \path (load-ba) -- node[right] {$v_{\mathrm{out}}$} (load-ba |- gnd-ba);
+    \end{circuitikz}
+    \caption{原电路}
+    \label{pic0107a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-bb) at (0,0);
+      \coordinate (pole-bb) at (2.15,2.0);
+      \coordinate (throw-one-bb) at (2.55,1.25);
+      \coordinate (throw-two-bb) at (2.90,2.0);
+      \draw (gnd-bb)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-bb] (0,2.0)
+      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bb] (pole-bb);
+      \node[ocirc] at (pole-bb) {};
+      \node[ocirc] at (throw-one-bb) {};
+      \node[ocirc] at (throw-two-bb) {};
+      \draw (pole-bb) -- (2.78,1.60);
+      \draw (throw-one-bb) -- (throw-one-bb |- gnd-bb) -- (gnd-bb);
+      \draw (throw-two-bb) -- ++(0.65,0) coordinate (out-bb)
+      -- ++(1.05,0) coordinate (load-bb);
+      \node[left] at (throw-one-bb) {$1$};
+      \node[above] at (throw-two-bb) {$2$};
+      \node[left=1pt] at (0,1.35) {$+$};
+      \node[left=1pt] at (0,0.65) {$-$};
+      \node[below=4pt] at (ind-bb.center)
+      {$+\;v_{\mathrm{L}}\;-$};
+      \draw (out-bb) to[C, l_=$C$] (out-bb |- gnd-bb);
+      \draw (load-bb) to[european resistor, l_=$R$] (load-bb |- gnd-bb);
+      \draw (load-bb |- gnd-bb) -- (gnd-bb);
+      \node[right] at (load-bb) {$+$};
+      \node[right] at (load-bb |- gnd-bb) {$-$};
+      \path (load-bb) -- node[right] {$v_{\mathrm{out}}$} (load-bb |- gnd-bb);
+    \end{circuitikz}
+    \caption{等效电路}
+    \label{pic0107b}
+  \end{subfigure}
+  \medskip
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-bc) at (0,0);
+      \draw (gnd-bc)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-bc] (0,1.8)
+      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bc] (2.20,1.8)
+      -- (2.20,0);
+      \draw (3.10,1.8) coordinate (out-bc)
+      -- ++(1.05,0) coordinate (load-bc);
+      \draw (out-bc) to[C, l_=$C$] (out-bc |- gnd-bc);
+      \draw (load-bc) to[european resistor, l_=$R$] (load-bc |- gnd-bc);
+      \draw (load-bc |- gnd-bc) -- (gnd-bc);
+      \node[left=1pt] at (0,1.25) {$+$};
+      \node[left=1pt] at (0,0.55) {$-$};
+      \node[below=4pt] at (ind-bc.center)
+      {$+\;v_{\mathrm{L}}\;-$};
+      \node[right] at (load-bc) {$+$};
+      \node[right] at (load-bc |- gnd-bc) {$-$};
+      \path (load-bc) -- node[right] {$v_{\mathrm{out}}$} (load-bc |- gnd-bc);
+    \end{circuitikz}
+    \caption{状态 1}
+    \label{pic0107c}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-bd) at (0,0);
+      \draw (gnd-bd)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-bd] (0,1.8)
+      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bd] (2.55,1.8) coordinate (out-bd)
+      -- ++(1.05,0) coordinate (load-bd);
+      \draw (out-bd) to[C, l_=$C$] (out-bd |- gnd-bd);
+      \draw (load-bd) to[european resistor, l_=$R$] (load-bd |- gnd-bd);
+      \draw (load-bd |- gnd-bd) -- (gnd-bd);
+      \node[left=1pt] at (0,1.25) {$+$};
+      \node[left=1pt] at (0,0.55) {$-$};
+      \node[below=4pt] at (ind-bd.center)
+      {$+\;v_{\mathrm{L}}\;-$};
+      \node[right] at (load-bd) {$+$};
+      \node[right] at (load-bd |- gnd-bd) {$-$};
+      \path (load-bd) -- node[right] {$v_{\mathrm{out}}$} (load-bd |- gnd-bd);
+    \end{circuitikz}
+    \caption{状态 2}
+    \label{pic0107d}
+  \end{subfigure}
+  \vspace{-0.5cm}
+  \caption{Boost 变换器及其开关状态等效电路}
+  \vspace{-0.5cm}
+  \label{pic0107}
+\end{figure}
+}
+
+\DefineFigure{pic0108}{
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
+    guide/.style={densely dashed, draw=black, line width=0.4pt},
+    waveform/.style={line width=0.9pt},
+    every node/.style={font=\small}
+    ]
+    \def\xzero{1.5}
+    \def\xduty{5.10}
+    \def\xperiod{10.5}
+    \def\xend{11.8}
+    \def\ytiming{5.85}
+    % 两个开关状态的时间分段；竖直参考线贯穿上下两幅波形
+    \draw[guide] (\xduty,0.35) -- (\xduty,\ytiming);
+    \draw[guide] (\xperiod,0.35) -- (\xperiod,\ytiming);
+    \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
+    (\xzero,\ytiming) -- node[above] {$DT_{\mathrm{s}}$} (\xduty,\ytiming);
+    \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
+    (\xduty,\ytiming) -- node[above] {$D'T_{\mathrm{s}}$} (\xperiod,\ytiming);
+    % Boost 电感电流纹波
+    \draw[axis] (\xzero,3.55) -- (\xend,3.55) node[right] {$t$};
+    \draw[axis] (\xzero,3.55) -- (\xzero,6.25)
+    node[left] {$i_{\mathrm{L}}(t)$};
+    \node[left] at (\xzero,3.55) {$0$};
+    \draw[guide] (\xzero,4.85) -- (\xperiod,4.85);
+    \node[left] at (\xzero,4.85) {$I_{\mathrm{L}}$};
+    \draw[waveform]
+    (\xzero,4.20) -- (\xduty,5.50) -- (\xperiod,4.20) -- (\xend,4.58);
+    \node at ({(\xzero+\xduty)/2},4.10)
+    {$i'_{\mathrm{L}}\approx\dfrac{V_{\mathrm{in}}}{L}$};
+    \node at ({(\xduty+\xperiod)/2},4.10)
+    {$i'_{\mathrm{L}}\approx\dfrac{V_{\mathrm{in}}-V_{\mathrm{out}}}{L}$};
+    \draw[guide] (\xduty,5.50) -- (11.05,5.50);
+    \draw[guide] (\xperiod,4.20) -- (11.05,4.20);
+    \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+    (11.05,4.20) -- node[right] {$\Delta i_{\mathrm{L,pp}}$} (11.05,5.50);
+    % Boost 电容电压纹波
+    \draw[axis] (\xzero,0.35) -- (\xend,0.35) node[right] {$t$};
+    \draw[axis] (\xzero,0.35) -- (\xzero,2.85)
+    node[left] {$v_{\mathrm{C}}(t)$};
+    \node[left] at (\xzero,0.35) {$0$};
+    \draw[guide] (\xzero,1.55) -- (\xperiod,1.55);
+    \node[left] at (\xzero,1.55) {$V_{\mathrm{out}}$};
+    \draw[waveform]
+    (\xzero,1.95) -- (\xduty,1.15) -- (\xperiod,1.95) -- (\xend,1.72);
+    \node at ({(\xzero+\xduty)/2},2.35)
+    {$v'_{\mathrm{C}}\approx-\dfrac{V_{\mathrm{out}}}{RC}$};
+    \node at ({(\xduty+\xperiod)/2},2.35)
+    {$v'_{\mathrm{C}}\approx\dfrac{I_{\mathrm{L}}}{C}-\dfrac{V_{\mathrm{out}}}{RC}$};
+    \draw[guide] (\xduty,1.15) -- (11.05,1.15);
+    \draw[guide] (\xperiod,1.95) -- (11.05,1.95);
+    \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+    (11.05,1.15) -- node[right] {$\Delta v_{\mathrm{C,pp}}$} (11.05,1.95);
+    \node[below] at (\xperiod,0.35) {$T_{\mathrm{s}}$};
+  \end{tikzpicture}
+  \vspace{-0.2cm}
+  \caption{Boost 变换器的电感电流与电容电压纹波}
+  \vspace{-0.5cm}
+  \label{pic0108}
+\end{figure}
+}
+
+\DefineFigure{pic0109}{
+\begin{figure}[!htbp]
+  \centering
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{
+        bipoles/length=0.8cm,
+        transistors/scale=1.5,
+        tripoles/nigfete/base width=0.32,
+        tripoles/nigfete/gate width=0.40
+      }
+      \coordinate (gnd-ca) at (0,0);
+      \node[nigfete, nogate, anchor=center] (q-ca) at (2.05,0.95) {};
+      \draw (gnd-ca)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-ca] (0,2.0)
+      to[L, l=$L_1$, i>^=$i_1$, name=ind1-ca] (2.05,2.0) coordinate (sw-ca)
+      to[C, l=$C_1$, name=cap1-ca] (3.25,2.0) coordinate (diode-ca)
+      to[L, l=$L_2$, i>^=$i_2$, name=ind2-ca] (4.65,2.0) coordinate (out-ca)
+      -- ++(1.00,0) coordinate (load-ca);
+      \draw (sw-ca) -- (q-ca.D);
+      \draw (q-ca.S) -- (q-ca.S |- gnd-ca);
+      \draw (q-ca.inner down -| q-ca.nogate) -- ++(-0.22,0);
+      \node[left=11pt] at (q-ca.center) {$Q$};
+      \draw (diode-ca) to[D-, l_=$D$] (diode-ca |- gnd-ca);
+      \node[left=1pt] at (0,1.35) {$+$};
+      \node[left=1pt] at (0,0.65) {$-$};
+      \node[below=4pt] at (ind1-ca.center)
+      {$+\;v_{\mathrm{L}1}\;-$};
+      \node[below=4pt] at (cap1-ca.center)
+      {$+\;v_1\;-$};
+      \node[below=4pt] at (ind2-ca.center)
+      {$+\;v_{\mathrm{L}2}\;-$};
+      \draw (out-ca) to[C, l_=$C_2$] (out-ca |- gnd-ca);
+      \draw (load-ca) to[european resistor, l_=$R$] (load-ca |- gnd-ca);
+      \draw (load-ca |- gnd-ca) -- (gnd-ca);
+      \node[right] at (load-ca) {$+$};
+      \node[right] at (load-ca |- gnd-ca) {$-$};
+      \path (load-ca) -- node[right] {$v_2$} (load-ca |- gnd-ca);
+    \end{circuitikz}
+    \caption{原电路}
+    \label{pic0109a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-cb) at (0,0);
+      \coordinate (node-one-cb) at (1.45,2.0);
+      \coordinate (node-two-cb) at (3.05,2.0);
+      \coordinate (drop-one-cb) at (1.45,1.20);
+      \coordinate (drop-two-cb) at (3.05,1.20);
+      \coordinate (throw-one-cb) at (1.85,1.20);
+      \coordinate (throw-two-cb) at (2.65,1.20);
+      \coordinate (pole-cb) at (2.25,0.65);
+      \draw (gnd-cb)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-cb] (0,2.0)
+      to[L, l=$L_1$, i>^=$i_1$, name=ind1-cb] (node-one-cb)
+      to[C, l=$C_1$, name=cap1-cb] (node-two-cb)
+      to[L, l=$L_2$, i>^=$i_2$, name=ind2-cb] (4.65,2.0) coordinate (out-cb)
+      -- ++(1.00,0) coordinate (load-cb);
+      \draw (node-one-cb) -- (drop-one-cb) -- (throw-one-cb);
+      \draw (node-two-cb) -- (drop-two-cb) -- (throw-two-cb);
+      \node[ocirc] at (throw-one-cb) {};
+      \node[ocirc] at (throw-two-cb) {};
+      \node[ocirc] at (pole-cb) {};
+      \draw (pole-cb) -- (2.08,1.31);
+      \draw (pole-cb) -- (pole-cb |- gnd-cb);
+      \node[below=2pt] at (throw-one-cb) {$1$};
+      \node[below=2pt] at (throw-two-cb) {$2$};
+      \node[left=1pt] at (0,1.35) {$+$};
+      \node[left=1pt] at (0,0.65) {$-$};
+      \node[below=4pt] at (ind1-cb.center)
+      {$+\;v_{\mathrm{L}1}\;-$};
+      \node[below=4pt] at (cap1-cb.center)
+      {$+\;v_1\;-$};
+      \node[below=4pt] at (ind2-cb.center)
+      {$+\;v_{\mathrm{L}2}\;-$};
+      \draw (out-cb) to[C, l_=$C_2$] (out-cb |- gnd-cb);
+      \draw (load-cb) to[european resistor, l_=$R$] (load-cb |- gnd-cb);
+      \draw (load-cb |- gnd-cb) -- (gnd-cb);
+      \node[right] at (load-cb) {$+$};
+      \node[right] at (load-cb |- gnd-cb) {$-$};
+      \path (load-cb) -- node[right] {$v_2$} (load-cb |- gnd-cb);
+    \end{circuitikz}
+    \caption{等效电路}
+    \label{pic0109b}
+  \end{subfigure}
+  \medskip
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-cc) at (0,0);
+      \draw (gnd-cc)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-cc] (0,1.8)
+      to[L, l=$L_1$, i>^=$i_1$, name=ind1-cc] (1.75,1.8)
+      -- (1.75,0);
+      \draw (2.75,0)
+      to[C, name=cap1-cc] (2.75,1.8)
+      to[L, l=$L_2$, i>^=$i_2$, name=ind2-cc] (4.45,1.8) coordinate (out-cc)
+      -- ++(1.00,0) coordinate (load-cc);
+      \draw (out-cc) to[C, l_=$C_2$] (out-cc |- gnd-cc);
+      \draw (load-cc) to[european resistor, l_=$R$] (load-cc |- gnd-cc);
+      \draw (load-cc |- gnd-cc) -- (gnd-cc);
+      \node[left=1pt] at (0,1.25) {$+$};
+      \node[left=1pt] at (0,0.55) {$-$};
+      \node[below=4pt] at (ind1-cc.center)
+      {$+\;v_{\mathrm{L}1}\;-$};
+      \node[below=4pt] at (ind2-cc.center)
+      {$+\;v_{\mathrm{L}2}\;-$};
+      \node[right=3pt] at (2.75,0.90) {$C_1$};
+      \node[left=2pt] at (2.75,1.28) {$-$};
+      \node[left=2pt] at (2.75,0.52) {$+$};
+      \path (2.75,1.8) -- node[left=10pt] {$v_1$} (2.75,0);
+      \node[right] at (load-cc) {$+$};
+      \node[right] at (load-cc |- gnd-cc) {$-$};
+      \path (load-cc) -- node[right] {$v_2$} (load-cc |- gnd-cc);
+    \end{circuitikz}
+    \caption{状态 1}
+    \label{pic0109c}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{circuitikz}[
+        scale=0.9,
+        transform shape,
+        every node/.style={font=\footnotesize},
+        line width=0.8pt
+      ]
+      \ctikzset{bipoles/length=0.8cm}
+      \coordinate (gnd-cd) at (0,0);
+      \draw (gnd-cd)
+      to[V, l_=$V_{\mathrm{in}}$, name=vin-cd] (0,1.8)
+      to[L, l=$L_1$, i>^=$i_1$, name=ind1-cd] (2.05,1.8)
+      to[C, name=cap1-cd] (2.05,0);
+      \draw (3.05,0) -- (3.05,1.8)
+      to[L, l=$L_2$, i>^=$i_2$, name=ind2-cd] (4.75,1.8) coordinate (out-cd)
+      -- ++(1.00,0) coordinate (load-cd);
+      \draw (out-cd) to[C, l_=$C_2$] (out-cd |- gnd-cd);
+      \draw (load-cd) to[european resistor, l_=$R$] (load-cd |- gnd-cd);
+      \draw (load-cd |- gnd-cd) -- (gnd-cd);
+      \node[left=1pt] at (0,1.25) {$+$};
+      \node[left=1pt] at (0,0.55) {$-$};
+      \node[below=4pt] at (ind1-cd.center)
+      {$+\;v_{\mathrm{L}1}\;-$};
+      \node[below=4pt] at (ind2-cd.center)
+      {$+\;v_{\mathrm{L}2}\;-$};
+      \node[left=3pt] at (2.05,0.90) {$C_1$};
+      \node[right=2pt] at (2.05,1.28) {$+$};
+      \node[right=2pt] at (2.05,0.52) {$-$};
+      \path (2.05,1.8) -- node[right=10pt] {$v_1$} (2.05,0);
+      \node[right] at (load-cd) {$+$};
+      \node[right] at (load-cd |- gnd-cd) {$-$};
+      \path (load-cd) -- node[right] {$v_2$} (load-cd |- gnd-cd);
+    \end{circuitikz}
+    \caption{状态 2}
+    \label{pic0109d}
+  \end{subfigure}
+  \vspace{-0.5cm}
+  \caption{\textup{\'{C}uk} 变换器及其开关状态等效电路}
+  \vspace{-0.5cm}
+  \label{pic0109}
+\end{figure}
+}
+
+\DefineFigure{pic0110}{
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    yscale=0.92,
+    axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
+    guide/.style={densely dashed, draw=black, line width=0.4pt},
+    waveform/.style={line width=0.9pt},
+    every node/.style={font=\small}
+    ]
+    \def\xzero{1.5}
+    \def\xonmid{3.30}
+    \def\xduty{5.10}
+    \def\xoffmid{7.80}
+    \def\xperiod{10.5}
+    \def\xwaveend{11.45}
+    \def\xmeasure{11.95}
+    \def\xaxisend{13.0}
+    \def\ytiming{7.45}
+    % 两个开关状态的时间分段
+    \draw[guide] (\xduty,-0.55) -- (\xduty,\ytiming);
+    \draw[guide] (\xperiod,-0.55) -- (\xperiod,\ytiming);
+    \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
+    (\xzero,\ytiming) -- node[above] {$DT_{\mathrm{s}}$} (\xduty,\ytiming);
+    \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
+    (\xduty,\ytiming) -- node[above] {$D'T_{\mathrm{s}}$} (\xperiod,\ytiming);
+    % 输入电感电流 i_1
+    \draw[axis] (\xzero,6.00) -- (\xaxisend,6.00) node[right] {$t$};
+    \draw[axis] (\xzero,6.00) -- (\xzero,7.80) node[left] {$i_1(t)$};
+    \node[left] at (\xzero,6.00) {$0$};
+    \draw[guide] (\xzero,6.75) -- (\xperiod,6.75);
+    \node[left] at (\xzero,6.75) {$I_1$};
+    \draw[waveform]
+    (\xzero,6.47) -- (\xduty,7.03) -- (\xperiod,6.47) -- (\xwaveend,6.59);
+    \draw[guide] (\xduty,7.03) -- (\xmeasure,7.03);
+    \draw[guide] (\xperiod,6.47) -- (\xmeasure,6.47);
+    \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+    (\xmeasure,6.47) -- node[right] {$\Delta i_{1,\mathrm{pp}}$} (\xmeasure,7.03);
+    % 输出电感电流 i_2；按图示参考方向，其平均值可为负
+    \begin{scope}[shift={(0,-0.40)}]
+      \draw[axis] (\xzero,5.25) -- (\xaxisend,5.25) node[right] {$t$};
+      \draw[axis] (\xzero,4.05) -- (\xzero,5.75) node[left] {$i_2(t)$};
+      \node[left] at (\xzero,5.25) {$0$};
+      \draw[guide] (\xzero,4.65) -- (\xperiod,4.65);
+      \node[left] at (\xzero,4.65) {$I_2$};
+      \draw[waveform]
+      (\xzero,4.92) -- (\xduty,4.38) -- (\xperiod,4.92) -- (\xwaveend,4.81);
+      \draw[guide] (\xduty,4.38) -- (\xmeasure,4.38);
+      \draw[guide] (\xperiod,4.92) -- (\xmeasure,4.92);
+      \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+      (\xmeasure,4.38) -- node[right] {$\Delta i_{2,\mathrm{pp}}$} (\xmeasure,4.92);
+    \end{scope}
+    % 能量传递电容 C_1 的电压纹波
+    \begin{scope}[shift={(0,-0.40)}]
+      \draw[axis] (\xzero,2.20) -- (\xaxisend,2.20) node[right] {$t$};
+      \draw[axis] (\xzero,2.20) -- (\xzero,3.55) node[left] {$v_1(t)$};
+      \node[left] at (\xzero,2.20) {$0$};
+      \draw[guide] (\xzero,2.85) -- (\xperiod,2.85);
+      \node[left] at (\xzero,2.85) {$V_1$};
+      \draw[waveform]
+      (\xzero,3.10) -- (\xduty,2.60) -- (\xperiod,3.10) -- (\xwaveend,3.00);
+      \draw[guide] (\xduty,2.60) -- (\xmeasure,2.60);
+      \draw[guide] (\xperiod,3.10) -- (\xmeasure,3.10);
+      \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+      (\xmeasure,2.60) -- node[right] {$\Delta v_{1,\mathrm{pp}}$} (\xmeasure,3.10);
+    \end{scope}
+    % 输出电容 C_2 的电压纹波示意
+    \begin{scope}[shift={(0,-0.80)}]
+      \draw[axis] (\xzero,1.45) -- (\xaxisend,1.45) node[right] {$t$};
+      \draw[axis] (\xzero,0.25) -- (\xzero,1.95) node[left] {$v_2(t)$};
+      \node[left] at (\xzero,1.45) {$0$};
+      \draw[guide] (\xzero,0.85) -- (\xperiod,0.85);
+      \node[left] at (\xzero,0.85) {$V_2$};
+      \draw[waveform]
+      (\xzero,0.85)
+      .. controls (2.10,0.934) and (2.70,1.00) .. (\xonmid,1.00)
+      .. controls (3.90,1.00) and (4.50,0.934) .. (\xduty,0.85)
+      .. controls (6.00,0.724) and (6.90,0.70) .. (\xoffmid,0.70)
+      .. controls (8.70,0.70) and (9.60,0.724) .. (\xperiod,0.85)
+      .. controls (10.82,0.895) and (11.20,0.95) .. (\xwaveend,0.96);
+      \draw[guide] (\xoffmid,0.70) -- (\xmeasure,0.70);
+      \draw[guide] (\xonmid,1.00) -- (\xmeasure,1.00);
+      \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+      (\xmeasure,0.70) -- node[right] {$\Delta v_{2,\mathrm{pp}}$} (\xmeasure,1.00);
+      \node[above, xshift=7pt] at (\xperiod,1.45) {$T_{\mathrm{s}}$};
+    \end{scope}
+  \end{tikzpicture}
+  \vspace{-0.2cm}
+  \caption{\textup{\'{C}uk} 变换器各状态量的稳态纹波示意}
+  \vspace{-0.5cm}
+  \label{pic0110}
+\end{figure}
+}
+
+\DefineFigure{pic0111}{
+\begin{figure}[!htbp]
+  \vspace{-0.5cm}
+  \centering
+  \begin{tikzpicture}[
+    yscale=1.4,
+    axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
+    guide/.style={densely dashed, draw=black, line width=0.4pt},
+    waveform/.style={line width=0.9pt},
+    every node/.style={font=\small}
+    ]
+    \def\xzero{1.5}
+    \def\xquarter{3.30}
+    \def\xhalf{5.10}
+    \def\xthreequarter{7.80}
+    \def\xperiod{10.5}
+    \def\xend{11.8}
+    % 输出电容电流负半周对应的电荷变化量幅值 Q
+    \fill[gray!30]
+    (\xquarter,4.5) -- (\xhalf,3.65) -- (\xthreequarter,4.5) -- cycle;
+    \node at (\xhalf,4.18) {$Q$};
+    % 电容电流过零时，输出电压取得极值
+    \draw[guide] (\xquarter,0.95) -- (\xquarter,5.55);
+    \draw[guide] (\xthreequarter,0.95) -- (\xthreequarter,5.55);
+    \draw[guide] (\xperiod,0.95) -- (\xperiod,5.55);
+    % 输出电容电流，近似等于输出电感电流的纹波分量
+    \draw[axis] (\xzero,4.5) -- (\xend,4.5) node[right] {$t$};
+    \draw[axis] (\xzero,3.55) -- (\xzero,6.05)
+    node[left] {$i_{\mathrm{C}2}(t)$};
+    \node[left] at (\xzero,4.5) {$0$};
+    \draw[waveform]
+    (\xzero,5.35) -- (\xquarter,4.5)
+    -- (\xhalf,3.65) -- (\xthreequarter,4.5)
+    -- (\xperiod,5.35) -- (\xend,4.86);
+    \node[below, xshift=6pt] at (\xquarter,2.70) {$t_1$};
+    \node[below, xshift=6pt] at (\xthreequarter,2.70) {$t_2$};
+    \draw[guide] (\xhalf,3.65) -- (11.05,3.65);
+    \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+    (11.05,3.65) -- node[right] {$\Delta i_{2,\mathrm{pk}}$} (11.05,4.5);
+    \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
+    (\xquarter,3.25) -- node[below] {$T_{\mathrm{s}}/2$} (\xthreequarter,3.25);
+    % 输出电压纹波
+    \draw[axis] (\xzero,2.70) -- (\xend,2.70) node[right] {$t$};
+    \draw[axis] (\xzero,0.95) -- (\xzero,3.05)
+    node[left] {$v_2(t)$};
+    \node[left] at (\xzero,2.70) {$0$};
+    \draw[guide] (\xzero,1.7) -- (\xperiod,1.7);
+    \node[left] at (\xzero,1.7) {$V_2$};
+    \draw[waveform]
+    (\xzero,1.7)
+    .. controls (2.10,1.82) and (2.70,1.925) .. (\xquarter,1.925)
+    .. controls (3.90,1.925) and (4.50,1.82) .. (\xhalf,1.7)
+    .. controls (6.00,1.52) and (6.90,1.475) .. (\xthreequarter,1.475)
+    .. controls (8.70,1.475) and (9.60,1.52) .. (\xperiod,1.7)
+    .. controls (10.95,1.79) and (11.35,1.86) .. (\xend,1.88);
+    \draw[guide] (\xthreequarter,1.475) -- (11.05,1.475);
+    \draw[guide] (\xquarter,1.925) -- (11.05,1.925);
+    \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
+    (11.05,1.475) -- node[right] {$\Delta v_{2,\mathrm{pp}}$} (11.05,1.925);
+    \node[below, xshift=6pt] at (\xperiod,2.70) {$T_{\mathrm{s}}$};
+  \end{tikzpicture}
+  \vspace{-0.2cm}
+  \caption{\textup{\'{C}uk} 变换器的输出电容电流与输出电压纹波}
+  \vspace{-0.2cm}
+  \label{pic0111}
+\end{figure}
+}

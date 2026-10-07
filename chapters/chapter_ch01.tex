@@ -1,0 +1,295 @@
+\chapter{变换器与稳态分析}
+
+\section{概述}
+
+\subsection{结构}
+
+\InsertFigure{pic0101}
+
+功率电路变换器类型：脉宽调制（PWM）变换器、准谐振／多谐振变换器、软开关变换器；控制电路类型：模拟电路和数字电路。
+
+\subsection{指标}
+
+效率与损耗为
+\InsertEquation{equ0101}
+
+损耗来源：开关器件有通态损耗、开关损耗、驱动损耗；电感、变压器线圈有铜损（线路发热）、铁损（铁芯磁滞、涡流）、磁损（线圈漏磁）；电容损耗，如等效串联电阻、漏电等。
+
+\subsection{器件种类}
+
+阻、感、容、晶。
+
+\InsertFigure{pic0102}
+
+电阻、线性半导体器件不常用于传输电路本身的大功率场景，应尽量减少主功率通道中的损耗性器件，以避免不必要的耗散。
+
+\subsection{理想开关的功率损耗}
+
+理想开关本身不消耗功率：开通／闭合时 $v(t)=0$；关断／打开时 $i(t)=0$。故任意时刻存在
+\InsertEquation{equ0103}
+
+\subsection{输出滤波}
+
+低通滤波器（LPF）的应用：LC 输出滤波器保留所需的直流分量或交流基波，并衰减开关频率及其谐波，其电容与电感等储能元器件的能量变化可类比为蓄水池的储能与释能过程。在功率、纹波和截止频率等指标相同的条件下，开关频率越高，所需的 $L$、$C$ 的值越小，设备总重也更小。
+
+\subsection{其他知识}
+
+\subsubsection{强电与弱电之分}
+
+传统强弱电分类存在不足，电力电子为强电，但也有所谓“强电”的功率不“强”，比如USB插头转换器；通信为弱电，但也有所谓“弱电”的功率不“弱”，比如军用微波天线。再者，还需要考虑电压等级、用途等等，不能简单划分。
+
+\subsubsection{电力电子的应用}
+
+日常应用：含 USB 等的排插、充电宝、无线充电、适配器、电脑电源、电车充电桩；
+信息技术设备：PC主板、超算、基站、物联网；
+交通：高铁、磁悬浮、船舶、航空航天；
+军工。
+
+\subsubsection{电力电子主要负载与消费端}
+
+电机，尤其是交-直-交变频；电脑，采用交-直-直结构，中间含 DC link。
+
+\subsubsection{能源与电网}
+
+传统清洁／非清洁能源的一次电路与电力电子关系较弱，风能、太阳能等新能源与电力电子强相关，涉及并网与调度要求。
+
+
+
+\newpage{}
+
+\section{稳态分析方法}
+
+\subsection{分析前提}
+
+本节分析中，只分析 DC-DC 变换器在固定开关频率、周期稳态、连续导通模式（CCM）、满足小纹波近似的条件下的情形，并只针对纯电阻负载进行分析。
+
+进入断续导通模式（DCM）或计及损耗后，部分结论需要重推；伏秒平衡、电荷平衡和状态平均方法也可以推广到 AC-DC、DC-AC 和 AC-AC 变换器。
+
+\subsection{分析要求}
+\subsubsection{直流输出平均值}
+
+以 Buck 变换器为例，
+\InsertEquation{equ0104}
+推导方法且听下文分解。
+
+\subsubsection{谐波与低通滤波}
+
+谐波：均值以外的、由傅里叶级数展开得到的正弦分量。
+
+低通滤波：主要衰减位于 $nf_{\mathrm{s}}$（$n=1,2,\ldots$）附近的开关谐波。
+
+\subsubsection{变换器变换比}
+
+一般写为
+\InsertEquation{equ0105}
+若令 $D'=1-D$，几种基本 DC-DC 变换器为
+\InsertEquation{equ0106}
+推导方法且听下文分解。
+
+\subsubsection{小纹波近似}
+
+将输出电压写为 $v_{\mathrm{out}}(t)=V_{\mathrm{out}}+\widetilde{v}_{\mathrm{out}}(t)$，则小纹波近似的条件为
+\InsertEquation{equ0109}
+在此条件下，有 $v_{\mathrm{out}}(t)\approx V_{\mathrm{out}}$，即忽略纹波。后续为设计储能元器件的大小，还需要另外计算纹波。
+
+\newpage{}
+
+\subsection{分析方法}
+
+下面以 Buck 变换器开头，进行一次全流程稳态分析，接着再总结通用方法，最后再使用该方法，对其他拓扑进行实战分析。
+
+\exampletitle[ex:buck-steady-state]{Buck 变换器稳态分析}
+
+\examplesubheading{两个开关状态}
+
+\InsertFigure{pic0103}
+
+开关接 1 号端时，考虑小纹波近似，电感电压
+\InsertEquation{equ0110}
+由电感的伏安关系
+\InsertEquation{equ0111}
+得
+\InsertEquation{equ0112}
+即短时间内、在小纹波近似下，各状态内电感电压近似恒定，因此电感电流近似线性变化。
+
+开关接 2 号端时，电感正端接地，有
+\InsertEquation{equ0113}
+得
+\InsertEquation{equ0114}
+同上，斜率为负且绝对值一般不同。
+
+\examplesubheading{稳态波形与电感电流纹波}
+
+\textbf{符号约定：}$\widetilde{i}_{\mathrm{L}}(t)$ 表示纹波波形，$\Delta i_{\mathrm{L,pk}}$ 表示纹波幅值，$\Delta i_{\mathrm{L,pp}}$ 表示纹波峰峰值；当纹波关于平均值对称时，$\Delta i_{\mathrm{L,pp}}=2\Delta i_{\mathrm{L,pk}}$。电压纹波采用相同约定。
+
+\InsertFigure{pic0104}
+
+电感电流纹波满足
+\InsertEquation{equ0115}
+电感值增大，纹波减小；其余参数已知时，可据此设计电感值（大于临界值）。
+
+\textbf{疑问：}稳态电路分析仅针对 DC-DC 吗？AC-DC 呢？其他呢？为何一定要用电感？电容不行吗？电压纹波是否也可分析？
+
+\textbf{答：}伏秒平衡和电荷平衡并不限于 DC-DC，而适用于含电感、电容且达到周期稳态的开关变换器。AC-DC 和 DC-AC 也能使用，但需选定合适的开关周期、基波周期和状态变量。电容电压纹波同样可以分析（见后文）。
+
+\examplesubheading{启动瞬态与稳态界定}
+
+\InsertFigure{pic0105}
+
+当所有状态变量均满足周期性条件时，例如
+\InsertEquation{equ0118}
+时，认为进入稳态；瞬态需通过求解状态微分方程获得。
+
+\examplesubheading{电感伏秒平衡}
+
+由公式 \eqref{equ0111} 可得
+\InsertEquation{equ0119}
+稳态时
+\InsertEquation{equ0120}
+故
+\InsertEquation{equ0121}
+
+设 $A$ 为一个周期内 $v_{\mathrm{L}}(t)$ 与 $t$ 轴所围波形的有符号面积，则由图 \ref{pic0104} 得
+\InsertEquation{equ0122}
+平均电压为
+\InsertEquation{equ0123}
+联立公式 \eqref{equ0121} 与公式 \eqref{equ0123} 得
+\InsertEquation{equ0124}
+
+\examplesubheading{电容电荷平衡}
+
+由
+\InsertEquation{equ0125}
+可得稳态时
+\InsertEquation{equ0126}
+故
+\InsertEquation{equ0127}
+
+对于电感，两端 $v_{\mathrm{L}}(t)$ 为激励，$i_{\mathrm{L}}(t)$ 为响应；对于电容，$i_{\mathrm{C}}(t)$ 为激励，$v_{\mathrm{C}}(t)$ 为响应。周期稳态下电感平均电压为零、电容平均电流为零。
+
+\examplesubheading{电容电压纹波}
+
+求电容电流时，可忽略负载电流纹波，但不能忽略电感电流纹波：
+\InsertEquation{equ0128}
+
+\newpage{}
+
+\InsertFigure{pic0106}
+
+由积分（三角形面积）得电容电荷变化量为
+\InsertEquation{equ0129}
+再与公式 \eqref{equ0125} 联立得到
+\InsertEquation{equ0130}
+
+上述推导忽略了电容 ESR；若计及 ESR，实际输出纹波还需叠加近似为 $\Delta i_{\mathrm{C,pp}}\,\mathrm{ESR}$ 的阶跃分量。
+
+\vspace{1cm}
+
+\subsubsection*{\heiti{}分析方法总结}
+
+\begin{enumerate}
+  \setlength{\itemsep}{-0.25\baselineskip}
+  \setlength{\parsep}{0pt}
+  \item 画电路图，明确状态数目与等效电路。
+  \item 划定时间区间，分电路状态与器件，主要针对 $L$、$C$ 的激励与响应来列方程。比如有 2 种状态和 2 个器件就应该列 4 条方程。
+  \item 按实际情况进行小纹波近似，分析伏秒平衡、电荷平衡。
+  \item 求变换比 $M(D)$ 与其他状态变量（$I_{\mathrm{L}}$ 等）。
+  \item 画图，求纹波。虽然有些纹波在第 2 步就可以求出，但建议统一放到最后去求，原因且听下文分解。
+\end{enumerate}
+
+\newpage{}
+
+\exampletitle[ex:boost-steady-state]{Boost 变换器稳态分析}
+
+\examplesubheading{等效电路}
+
+\InsertFigure{pic0107}
+
+共有 2 个状态与 2 个储能元器件，因此共 4 条方程。
+
+\examplesubheading{状态方程}
+\examplesubheading{小纹波近似}
+
+接状态 1 时，
+\InsertEquation{equ0131}
+
+\examplesubheading{变换比与平均状态量}
+
+由伏秒平衡，
+\InsertEquation{equ0133}
+
+\examplesubheading{电感电流与电容电压纹波}
+
+\InsertFigure{pic0108}
+
+状态 1 的斜率：
+\InsertEquation{equ0139}
+
+由电感得电流纹波：
+\InsertEquation{equ0141}
+
+在 Boost 电路中，$v_{\mathrm{C}}(t)=v_{\mathrm{out}}(t)$。图 \ref{pic0108} 中，斜率的正负表示纹波在相应开关状态内的变化方向；$\Delta i_{\mathrm{L,pk}}$ 与 $\Delta v_{\mathrm{C,pk}}$ 均表示相对平均值的单边纹波幅值，按非负量定义。对于图示的三角形纹波，单边峰值等于相应峰峰值的一半。因此，计算时应根据各状态下的斜率判断波形增减，再以正值表示纹波幅值。
+
+\newpage{}
+
+\exampletitle[ex:cuk-steady-state]{\textup{\'{C}uk} 变换器稳态分析}
+
+\examplesubheading{等效电路}
+
+\InsertFigure{pic0109}
+
+共有 2 个开关状态与 4 个储能元器件，因此共需列写 8 条状态方程。
+
+\examplesubheading{状态方程}
+\examplesubheading{小纹波近似}
+
+接状态 1 时，
+\InsertEquation{equ0145}
+
+以上使用小纹波近似：$v_1(t)$、$v_2(t)$、$i_1(t)$、$i_2(t)$ 以相应平均量代替。
+
+\examplesubheading{变换比与平均状态量}
+
+由伏秒平衡，
+\begingroup
+\allowdisplaybreaks[4]
+\InsertEquation{equ0147}
+\endgroup
+
+即发生极性反转：按图示参考方向，输入上正下负，输出上负下正。
+
+\examplesubheading{电感电流与电容电压纹波}
+
+\InsertFigure{pic0110}
+
+状态 1 的斜率：
+\InsertEquation{equ0156}
+
+\textbf{疑问：}$V_2$ 无纹波（理论上）吗？为什么为 0？
+
+\textbf{答：}这里由于第2、3步采用了小纹波近似，与 $V_2$ 纹波有关的信息被忽略，因此由该近似直接得到的公式不具备分析 $V_2$ 纹波的能力。若要求取 $V_2$ 的纹波，需要另行分析其瞬时变化；在 Buck 电路中也是一样的，就是那个三角形面积的积分。
+
+其余三个状态量的纹波为：
+\InsertEquation{equ0158}
+
+下面仿照 Buck 电路特别分析 $V_2$ 的纹波。求输出电容电流时，可忽略负载电流纹波，但不能忽略输出电感电流纹波：
+\InsertEquation{equ0164}
+
+\InsertFigure{pic0111}
+
+由积分（三角形面积）得输出电容的电荷变化量为
+\InsertEquation{equ0165}
+因此
+\InsertEquation{equ0166}
+
+上述推导结果类似 Buck 电路，请注意推导基于连续导通模式和小纹波近似，并忽略了电容 ESR；若计及 ESR，实际输出纹波还需叠加由输出电感电流纹波产生的 ESR 电压分量（这部分后面涉及器件建模的时候再讨论）。
+
+因此，先前总结方法时提出的最后再算纹波就是这个道理，因为不是每个拓扑都和 Boost 电路一样，能一下求出所有纹波，有的需要折腾一下。
+
+\clearpage
+
+\section{本章符号汇总}
+
+本节汇总本章主要符号。大写表示直流分量或平均值，小写表示瞬时量。
+
+\InsertTable{tab0101}
