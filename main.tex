@@ -127,6 +127,11 @@
   {\color{reviewgray}\small\noindent【校核建议：#1】\par}
   \smallskip
 }
+\newcommand{\figureplaceholder}[2]{%
+  \par\smallskip
+  {\color{reviewgray}\small\noindent【图像预留 #1：#2】\par}
+  \vspace{0.5cm}
+}
 \newcommand{\timescircled}[1]{%
   \raisebox{0.5pt}{%
     \tikz[
@@ -303,5 +308,1085 @@
 \begin{document}
 
 \input{chapters/chapter_ch01}
+
+% 手稿 1：MsgID=3147700285048442938，文件修改时间 2026-10-07 17:25:44。
+\chapter{稳态等效模型}
+
+\reviewnote{原稿章标题在“稳态等效模型”之后有划改，后半部分未能明确辨认，暂保留能够确认的标题。原稿输出记号混用 $V_{\mathrm{o}}$ 与 $V_{\mathrm{out}}$，个别手写下标 $o/0$ 难以区分，以下统一用 $V_{\mathrm{out}}$、$I_{\mathrm{out}}$ 表示输出平均电压和电流。}
+
+\section{引入模型的必要性}
+
+即使是理想电路，在瞬态过程中，滤波器的储能元器件也可能吸收或释放能量，因此输入功率与输出功率可能不相等，即 $P_{\mathrm{in}}\neq P_{\mathrm{out}}$。
+
+\reviewnote{这里的功率不等主要针对瞬态的能量变化。若讨论瞬时功率，建议写为 $p_{\mathrm{in}}(t)\neq p_{\mathrm{out}}(t)$；理想周期稳态下，一个周期内净储能变化为零，输入与输出的周期平均功率相等。暂保留原稿的 $P$ 记号。}
+
+\section{理想稳态模型}
+
+理想稳态下，输入功率与输出功率相等：
+\begin{align}
+  P_{\mathrm{in}}&=P_{\mathrm{out}},\\
+  V_{\mathrm{in}}I_{\mathrm{in}}&=V_{\mathrm{out}}I_{\mathrm{out}}.
+\end{align}
+若直流电压变换比为 $M(D)$，则
+\begin{align}
+  V_{\mathrm{out}}&=M(D)V_{\mathrm{in}},\\
+  I_{\mathrm{in}}&=M(D)I_{\mathrm{out}}.
+\end{align}
+
+\reviewnote{上述 $VI$ 写法采用直流端口模型。若端口电压、电流含有明显纹波，平均功率应由 $\langle v(t)i(t)\rangle$ 求得，通常不能直接用两个平均值的乘积代替。}
+
+\subsection{受控电流源模型}
+
+输入端以受控电流源表示，其电流为 $M(D)I_{\mathrm{out}}$；输出端以受控电压源表示，其电压为 $M(D)V_{\mathrm{in}}$。输入端接收功率，输出端向负载提供功率。
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.9,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,2.5) node[ocirc] {} -- (2.3,2.5) to[cI,l=$M(D)I_{\mathrm{out}}$] (2.3,0) -- (0,0) node[ocirc] {};
+\draw[-{Latex[length=1.7mm]}] (0.4,2.5) -- (1.3,2.5) node[midway,above] {$I_{\mathrm{in}}$};
+\node[left] at (0,2.5) {$+$};
+\node[left] at (0,0) {$-$};
+\path (0,2.5) -- node[left=6pt] {$V_{\mathrm{in}}$} (0,0);
+\draw (6.2,0) to[cV,l_=$M(D)V_{\mathrm{in}}$] (6.2,2.5) -- (8.7,2.5) node[ocirc] {};
+\draw (6.2,0) -- (8.7,0) node[ocirc] {};
+\draw[-{Latex[length=1.7mm]}] (7.0,2.5) -- (8.0,2.5) node[midway,above] {$I_{\mathrm{out}}$};
+\node at (1.1,-0.55) {功率输入};
+\node at (7.5,-0.55) {功率输出};
+\node[right] at (8.85,2.5) {$+$};
+\node[right] at (8.85,0) {$-$};
+\path (8.85,2.5) -- node[right=5pt] {$V_{\mathrm{out}}$} (8.85,0);
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{理想变换器的受控源稳态模型}
+\label{pic0201}
+\end{figure}
+
+\subsection{直流“变压器”模型}
+
+上述端口关系也可以用变比为 $1:M(D)$ 的直流“变压器”表示，$D$ 为控制输入。
+
+若原边源电压记作 $V_1$，原边等效内阻为 $R_1$，副边负载为 $R$，将原边折算到副边后，电压按变比缩放，电阻按变比的平方缩放：
+\begin{equation}
+  V_{\mathrm{out}}
+  =M(D)V_1\frac{R}{R+M^2(D)R_1}.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\begin{circuitikz}[scale=0.74,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[transformer] (tr) at (3.0,1.3) {};
+\node[circ] at (tr.outer dot A1) {};
+\node[circ] at (tr.outer dot B1) {};
+\node[above] at (3.0,3.05) {$1:M(D)$};
+\draw (0,0) to[V,l_=$V_1$] (0,2.6);
+\draw (0,2.6) to[european resistor,l=$R_1$] (2.0,2.6) -| (tr.A1);
+\draw (tr.A2) |- (0,0);
+\draw (tr.B1) -| (5.3,2.6);
+\draw (5.3,2.6) to[european resistor,l_=$R$] (5.3,0) -| (tr.B2);
+\node[right] at (5.4799999999999995,2.6) {$+$};
+\node[right] at (5.4799999999999995,0) {$-$};
+\path (5.4799999999999995,2.6) -- node[right=5pt] {$V_{\mathrm{out}}$} (5.4799999999999995,0);
+\draw[-{Latex[length=1.7mm]}] (0.3,2.6) -- (1.15,2.6) node[midway,above] {$I_{\mathrm{in}}$};
+\draw[-{Latex[length=1.7mm]}] (3.0,-1.0) -- (tr.south) node[pos=0.25,left] {$D$};
+\end{circuitikz}
+\caption{原边模型}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\begin{circuitikz}[scale=0.83,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$M(D)V_1$] (0,2.6)
+  to[european resistor,l=$M^2(D)R_1$] (3.6,2.6)
+  to[european resistor,l_=$R$] (3.6,0) -- (0,0);
+\node[right] at (3.78,2.6) {$+$};
+\node[right] at (3.78,0) {$-$};
+\path (3.78,2.6) -- node[right=5pt] {$V_{\mathrm{out}}$} (3.78,0);
+\end{circuitikz}
+\caption{折算到副边}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{直流“变压器”模型及阻抗折算}
+\label{pic0202}
+\end{figure}
+
+\reviewnote{原图输入源旁同时出现 $V_{\mathrm{in}}$ 与 $V_1$，需明确哪个表示源电压、哪个表示变换器输入端电压。本式暂按右侧折算图中的源电压 $V_1$ 整理。直流“变压器”是端口关系的等效模型，不表示普通磁性变压器能够直接传输恒定直流。}
+
+\section{含电感铜损的直流稳态分析}
+
+电容损耗可作类似处理。与前文理想元器件分析的主要区别，是在电感模型中加入等效串联电阻 $R_{\mathrm{L}}$。以下以 Boost 电路为例。
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.96,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0.6) node[ocirc] {} to[L,l=$L$] (2.8,0.6)
+  to[european resistor,l=$R_{\mathrm{L}}$] (5.6,0.6) node[ocirc] {};
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{电感及其铜损等效电阻}
+\label{pic0203}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.9,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.5)
+  to[L,l=$L$,i>^=$i_{\mathrm{L}}$] (2.1,2.5)
+  to[european resistor,l=$R_{\mathrm{L}}$] (3.7,2.5) -- (4.1,2.5);
+\node[ocirc] at (4.1,2.5) {};
+\node[ocirc] at (4.75,2.5) {};
+\node[ocirc] at (4.7,1.3) {};
+\draw (4.1,2.5) -- (4.52,1.53);
+\draw (4.7,1.3) -- (4.7,0);
+\draw (4.75,2.5) -- (7.3,2.5);
+\draw (5.8,2.5) to[C,l_=$C$] (5.8,0);
+\draw (7.3,2.5) to[european resistor,l_=$R$] (7.3,0) -- (0,0);
+\node[left] at (4.7,1.3) {$1$};
+\node[above] at (4.75,2.5) {$2$};
+\node[right] at (7.48,2.5) {$+$};
+\node[right] at (7.48,0) {$-$};
+\path (7.48,2.5) -- node[right=5pt] {$V_{\mathrm{out}}$} (7.48,0);
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{含电感铜损的 Boost 等效开关电路}
+\label{pic0204}
+\end{figure}
+
+\subsection{状态方程与小纹波近似}
+
+状态 1 时，
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    v_{\mathrm{L}}(t)&=V_{\mathrm{in}}-i_{\mathrm{L}}(t)R_{\mathrm{L}},\\
+    i_{\mathrm{C}}(t)&=-\frac{v_{\mathrm{out}}(t)}{R}.
+  \end{aligned}
+  \right.
+\end{equation}
+作小纹波近似，有
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    v_{\mathrm{L}}(t)&\approx V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}},\\
+    i_{\mathrm{C}}(t)&\approx-\frac{V_{\mathrm{out}}}{R}.
+  \end{aligned}
+  \right.
+\end{equation}
+
+状态 2 时，
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    v_{\mathrm{L}}(t)&=V_{\mathrm{in}}-i_{\mathrm{L}}(t)R_{\mathrm{L}}-v_{\mathrm{out}}(t),\\
+    i_{\mathrm{C}}(t)&=i_{\mathrm{L}}(t)-\frac{v_{\mathrm{out}}(t)}{R}.
+  \end{aligned}
+  \right.
+\end{equation}
+作小纹波近似，有
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    v_{\mathrm{L}}(t)&\approx V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-V_{\mathrm{out}},\\
+    i_{\mathrm{C}}(t)&\approx I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}.
+  \end{aligned}
+  \right.
+\end{equation}
+
+\reviewnote{原稿状态 2 近似式中输出电压的时间记号不够清晰，暂按此处取平均量的上下文整理为 $V_{\mathrm{out}}$，待核对。以下推导沿用前章的 CCM、周期稳态和小纹波近似条件。}
+
+\subsection{电感伏秒平衡}
+
+由伏秒平衡，
+\begin{align}
+  \langle v_{\mathrm{L}}\rangle
+  &=\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t\\
+  &\approx D(V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}})
+  +D'(V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-V_{\mathrm{out}})=0.
+\end{align}
+因此
+\begin{equation}
+  V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-D'V_{\mathrm{out}}=0.
+\end{equation}
+
+% 手稿 2：MsgID=1010991380693890795，文件修改时间 2026-10-07 17:25:48。
+\subsection{电容电荷平衡与变换比}
+
+由电荷平衡，
+\begin{align}
+  \langle i_{\mathrm{C}}\rangle
+  &=\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{C}}(t)\,\mathrm{d}t\\
+  &\approx-D\frac{V_{\mathrm{out}}}{R}
+  +D'\left(I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}\right)=0.
+\end{align}
+因此
+\begin{equation}
+  D'I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}=0.
+\end{equation}
+联立两个平衡关系，得
+\begin{equation}
+  \frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}
+  =\frac{1}{D'\left(1+\dfrac{R_{\mathrm{L}}}{(D')^2R}\right)}.
+\end{equation}
+
+\section{等效电路模型的建立}
+
+\subsection{由平衡关系建立模型}
+
+回到受控源模型，仅考虑直流稳态时，电感伏秒平衡关系可以写成输入侧等效回路的 KVL，电容电荷平衡关系可以写成输出侧等效回路的 KCL：
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-D'V_{\mathrm{out}}&=0,\\
+    D'I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}&=0.
+  \end{aligned}
+  \right.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.7,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.5)
+  to[european resistor,l=$R_{\mathrm{L}}$] (2.8,2.5);
+\draw (2.8,0) to[cV,l_=$D'V_{\mathrm{out}}$] (2.8,2.5);
+\draw (2.8,0) -- (0,0);
+\draw[-{Latex[length=1.7mm]}] (0.2,2.5) -- (0.9,2.5) node[midway,above] {$I_{\mathrm{L}}$};
+\draw (5.1,0) to[cI,l_=$D'I_{\mathrm{L}}$] (5.1,2.5)
+  -- (7.6,2.5) to[european resistor,l_=$R$] (7.6,0) -- (5.1,0);
+\node[right] at (7.8,2.5) {$+$};
+\node[right] at (7.8,0) {$-$};
+\path (7.8,2.5) -- node[right=5pt] {$V_{\mathrm{out}}$} (7.8,0);
+\end{circuitikz}
+}
+\caption{受控源模型}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.74,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[transformer] (tr) at (3.0,1.3) {};
+\node[circ] at (tr.outer dot A1) {};
+\node[circ] at (tr.outer dot B1) {};
+\node[above] at (3.0,3.05) {$D':1$};
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.6);
+\draw (0,2.6) to[european resistor,l=$R_{\mathrm{L}}$] (2.0,2.6) -| (tr.A1);
+\draw (tr.A2) |- (0,0);
+\draw (tr.B1) -| (5.3,2.6);
+\draw (5.3,2.6) to[european resistor,l_=$R$] (5.3,0) -| (tr.B2);
+\node[right] at (5.4799999999999995,2.6) {$+$};
+\node[right] at (5.4799999999999995,0) {$-$};
+\path (5.4799999999999995,2.6) -- node[right=5pt] {$V_{\mathrm{out}}$} (5.4799999999999995,0);
+\draw[-{Latex[length=1.7mm]}] (0.3,2.6) -- (1.15,2.6) node[midway,above] {$I_{\mathrm{in}}$};
+\end{circuitikz}
+}
+\caption{直流“变压器”模型}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{Boost 变换器的直流稳态等效模型}
+\label{pic0205}
+\end{figure}
+
+\subsection{原边折算到副边}
+
+折算到副边后，等效电压源为 $V_{\mathrm{in}}/D'$，串联电阻为 $R_{\mathrm{L}}/(D')^2$，故
+\begin{equation}
+  V_{\mathrm{out}}
+  =\frac{V_{\mathrm{in}}}{D'}\frac{R}{R+\dfrac{R_{\mathrm{L}}}{(D')^2}}
+  =\frac{V_{\mathrm{in}}}{D'+\dfrac{R_{\mathrm{L}}}{D'R}}.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.95,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}/D'$] (0,2.6)
+  to[european resistor,l=$R_{\mathrm{L}}/(D')^2$,i>^=$D'I_{\mathrm{L}}$] (4.0,2.6)
+  to[european resistor,l_=$R$] (4.0,0) -- (0,0);
+\node[right] at (4.18,2.6) {$+$};
+\node[right] at (4.18,0) {$-$};
+\path (4.18,2.6) -- node[right=5pt] {$V_{\mathrm{out}}$} (4.18,0);
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{Boost 稳态模型折算到输出侧}
+\label{pic0206}
+\end{figure}
+
+本质上是利用平衡方程直接得到稳态等效模型，也可以直接使用上述直流“变压器”模型求平均量。
+
+\textbf{疑问：}纹波如何分析？
+
+\reviewnote{这里的等效模型由周期平均关系建立，只保留直流量。若要求纹波，需要回到各开关状态下的瞬时方程，并保留相应纹波分量；不能直接用纯直流模型求纹波。}
+
+\section{输入端口模型}
+
+这是对前述等效电路的补充。以 Buck 为例，电容平均电压记为 $V_{\mathrm{C}}$，且 $V_{\mathrm{C}}=V_{\mathrm{out}}$。计及电感铜损后，有
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    \langle v_{\mathrm{L}}\rangle&=DV_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-V_{\mathrm{C}}=0,\\
+    \langle i_{\mathrm{C}}\rangle&=I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}=0.
+  \end{aligned}
+  \right.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.74,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[cV,l_=$DV_{\mathrm{in}}$] (0,2.5)
+  to[L,l=$L$,name=ind] (2.0,2.5)
+  to[european resistor,l=$R_{\mathrm{L}}$] (3.6,2.5) -- (5.4,2.5);
+\draw (3.9,2.5) to[C,l_=$C$] (3.9,0);
+\draw (5.4,2.5) to[european resistor,l_=$R$] (5.4,0) -- (0,0);
+\node[below=4pt] at (ind.center) {$\langle v_{\mathrm{L}}\rangle=0$};
+\draw[-{Latex[length=1.7mm]}] (2.1,2.5) -- (2.6,2.5) node[midway,above] {$I_{\mathrm{L}}$};
+\node[right] at (5.58,2.5) {$+$};
+\node[right] at (5.58,0) {$-$};
+\path (5.58,2.5) -- node[right=5pt] {$V_{\mathrm{out}}$} (5.58,0);
+\end{circuitikz}
+}
+\caption{输出侧平均模型}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.68,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.5) -- (1.2,2.5);
+\draw (1.2,1.25) -- (1.2,0) -- (0,0);
+\node[ocirc] at (1.2,2.5) {};
+\node[ocirc] at (1.2,1.25) {};
+\node[ocirc] at (2.1,2.5) {};
+\draw (2.1,2.5) -- (1.40,1.48);
+\node[above] at (1.2,2.5) {$1$};
+\node[left] at (1.2,1.25) {$2$};
+\draw (2.1,2.5) to[L,l=$L$] (3.8,2.5)
+  to[european resistor,l=$R_{\mathrm{L}}$] (5.4,2.5) -- (7.0,2.5);
+\draw (5.5,2.5) to[C,l_=$C$] (5.5,0);
+\draw (7.0,2.5) to[european resistor,l_=$R$] (7.0,0) -- (0,0);
+\node[right] at (7.18,2.5) {$+$};
+\node[right] at (7.18,0) {$-$};
+\path (7.18,2.5) -- node[right=5pt] {$V_{\mathrm{out}}$} (7.18,0);
+\end{circuitikz}
+}
+\caption{对应的开关电路}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{含电感铜损的 Buck 输出侧模型}
+\label{pic0207}
+\end{figure}
+
+输入端口电流的周期平均值为
+\begin{equation}
+  I_{\mathrm{in}}
+  =\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{in}}(t)\,\mathrm{d}t
+  \approx DI_{\mathrm{L}}.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.9,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.6) -- (3.0,2.6)
+  to[cI,l=$DI_{\mathrm{L}}$] (3.0,0) -- (0,0);
+\draw[-{Latex[length=1.7mm]}] (0.3,2.6) -- (1.5,2.6) node[midway,above] {$I_{\mathrm{in}}$};
+\end{circuitikz}
+}
+\caption{输入端口模型}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.74,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[transformer] (tr) at (3.0,1.3) {};
+\node[circ] at (tr.outer dot A1) {};
+\node[circ] at (tr.outer dot B1) {};
+\node[above] at (3.0,3.05) {$1:D$};
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.6);
+\draw (0,2.6) -- (2.0,2.6) -| (tr.A1);
+\draw (tr.A2) |- (0,0);
+\draw (tr.B1) |- (4.0,2.6) to[european resistor,l=$R_{\mathrm{L}}$] (6.0,2.6);
+\draw (6.0,2.6) to[european resistor,l_=$R$] (6.0,0) -| (tr.B2);
+\node[right] at (6.18,2.6) {$+$};
+\node[right] at (6.18,0) {$-$};
+\path (6.18,2.6) -- node[right=5pt] {$V_{\mathrm{out}}$} (6.18,0);
+\draw[-{Latex[length=1.7mm]}] (0.3,2.6) -- (1.15,2.6) node[midway,above] {$I_{\mathrm{in}}$};
+\end{circuitikz}
+}
+\caption{完整直流模型}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{Buck 变换器的输入端口与直流“变压器”模型}
+\label{pic0208}
+\end{figure}
+\reviewnote{原稿“左”“右”的模型对应标记较乱，本图按旁注 $I_{\mathrm{in}}=DI_{\mathrm{L}}$ 和变比 $1:D$ 整理；各端口的参考方向及对应关系仍待核对。}
+
+\reviewnote{原稿输入电流积分关系末尾直接写等号 $I_{\mathrm{in}}=DI_{\mathrm{L}}$。从瞬时电流积分替换为周期平均电感电流时采用了小纹波近似，这里暂用约等号；后续若证明所取波形下导通区间均值恰等于 $I_{\mathrm{L}}$，再恢复等号。}
+
+\section{计及半导体导通损耗的稳态建模}
+
+\subsection{导通损耗模型}
+
+以 Boost 为例，进一步考虑半导体器件的导通损耗：MOSFET 的通态损耗用 $R_{\mathrm{on}}$ 表示；二极管的通态损耗用电阻 $R_{\mathrm{D}}$ 和压降 $V_{\mathrm{D}}$ 表示。
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.9,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.7)
+  to[L,l=$L$,i>^=$i_{\mathrm{L}}$] (3.3,2.7)
+  to[D-,l=$D$,name=diode] (6.0,2.7) -- (7.5,2.7);
+\node[nigfete,nogate] (q) at (3.3,1.25) {};
+\draw (3.3,2.7) -- (q.D);
+\draw (q.S) -- (q.S |- 0,0);
+\draw (q.nogate) -- ++(-0.30,0);
+\node[left=12pt,align=center] at (q.center) {$Q$\\$R_{\mathrm{on}}$};
+\node[below=5pt] at (diode.center) {$R_{\mathrm{D}},\ V_{\mathrm{D}}$};
+\node[below=5pt] at (1.65,2.7) {铜损 $R_{\mathrm{L}}$};
+\draw (6.0,2.7) to[C,l_=$C$,i>^=$i_{\mathrm{C}}$] (6.0,0);
+\draw (7.5,2.7) to[european resistor,l_=$R$] (7.5,0) -- (0,0);
+\node[right] at (7.68,2.7) {$+$};
+\node[right] at (7.68,0) {$-$};
+\path (7.68,2.7) -- node[right=5pt] {$V_{\mathrm{out}}$} (7.68,0);
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{Boost 电路的电感与半导体导通损耗参数}
+\label{pic0209}
+\end{figure}
+\reviewnote{原稿此图没有单独展开电感铜损电阻，本图仅在 $L$ 旁注明 $R_{\mathrm{L}}$，没有重复串入另一份铜损。MOSFET 的栅极驱动细节原稿不够清晰，暂保留驱动端短线，后续再明确 $u_{\mathrm{GS}}$ 的参考端。}
+
+% 手稿 3：MsgID=5068655239876220775，文件修改时间 2026-10-07 17:25:53。
+\subsection{状态等效电路与平衡方程}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.75,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.6)
+  to[L,l=$L$,i>^=$i_{\mathrm{L}}$] (1.8,2.6)
+  to[european resistor,l=$R_{\mathrm{L}}$] (3.3,2.6)
+  to[european resistor,l_=$R_{\mathrm{on}}$] (3.3,0) -- (0,0);
+\draw (4.4,2.6) node[ocirc] {} -- (5.9,2.6)
+  to[european resistor,l_=$R$] (5.9,0) -- (0,0);
+\draw (4.4,2.6) to[C,l_=$C$,i>^=$i_{\mathrm{C}}$] (4.4,0);
+\node[right] at (6.08,2.6) {$+$};
+\node[right] at (6.08,0) {$-$};
+\path (6.08,2.6) -- node[right=5pt] {$V_{\mathrm{out}}$} (6.08,0);
+\end{circuitikz}
+}
+\caption{状态 1}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.65,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.6)
+  to[L,l=$L$,i>^=$i_{\mathrm{L}}$] (1.6,2.6)
+  to[european resistor,l=$R_{\mathrm{L}}$] (3.1,2.6)
+  to[V,invert,l=$V_{\mathrm{D}}$] (4.6,2.6)
+  to[european resistor,l=$R_{\mathrm{D}}$] (6.1,2.6) -- (7.5,2.6);
+\draw (6.1,2.6) to[C,l_=$C$,i>^=$i_{\mathrm{C}}$] (6.1,0);
+\draw (7.5,2.6) to[european resistor,l_=$R$] (7.5,0) -- (0,0);
+\node[right] at (7.68,2.6) {$+$};
+\node[right] at (7.68,0) {$-$};
+\path (7.68,2.6) -- node[right=5pt] {$V_{\mathrm{out}}$} (7.68,0);
+\end{circuitikz}
+}
+\caption{状态 2}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{计及导通损耗的 Boost 两个开关状态}
+\label{pic0210}
+\end{figure}
+
+按小纹波近似，由伏秒平衡和电荷平衡分别得
+\begin{align}
+  \langle v_{\mathrm{L}}\rangle
+  &\approx D(V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-I_{\mathrm{L}}R_{\mathrm{on}})\notag\\
+  &\quad+D'(V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-V_{\mathrm{D}}
+  -I_{\mathrm{L}}R_{\mathrm{D}}-V_{\mathrm{out}})=0,\\
+  \langle i_{\mathrm{C}}\rangle
+  &\approx D\left(-\frac{V_{\mathrm{out}}}{R}\right)
+  +D'\left(I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}\right)=0.
+\end{align}
+
+\reviewnote{原稿状态 2 的伏秒平衡式中，二极管通态电阻的下标写法与 $R_{\mathrm{D}}$ 不够一致，已按前页的二极管损耗参数统一；二极管压降源的极性仍需在补图时逐一核对。}
+
+\subsection{平均等效电路}
+
+分别把上述两个平衡方程整理为输入侧 KVL 与输出侧 KCL：
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    V_{\mathrm{in}}
+    -I_{\mathrm{L}}(R_{\mathrm{L}}+DR_{\mathrm{on}}+D'R_{\mathrm{D}})
+    -D'V_{\mathrm{D}}-D'V_{\mathrm{out}}&=0,\\
+    D'I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}&=0.
+  \end{aligned}
+  \right.
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{1.0\textwidth}
+\centering
+\begin{circuitikz}[scale=0.85,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.5)
+  to[european resistor,l=$DR_{\mathrm{on}}$] (1.8,2.5)
+  to[european resistor,l=$R_{\mathrm{L}}$] (3.3,2.5)
+  to[V,invert,l=$D'V_{\mathrm{D}}$] (4.8,2.5)
+  to[european resistor,l=$D'R_{\mathrm{D}}$] (6.3,2.5);
+\draw (6.3,0) to[cV,l_=$D'V_{\mathrm{out}}$] (6.3,2.5);
+\draw (6.3,0) -- (0,0);
+\draw[-{Latex[length=1.7mm]}] (0.15,2.5) -- (0.7,2.5) node[midway,above] {$I_{\mathrm{L}}$};
+\draw (8.4,0) to[cI,l_=$D'I_{\mathrm{L}}$] (8.4,2.5)
+  -- (11.2,2.5) to[european resistor,l_=$R$] (11.2,0) -- (8.4,0);
+\node[right] at (11.399999999999999,2.5) {$+$};
+\node[right] at (11.399999999999999,0) {$-$};
+\path (11.399999999999999,2.5) -- node[right=5pt] {$V_{\mathrm{out}}$} (11.399999999999999,0);
+\end{circuitikz}
+\caption{受控源模型}
+\end{subfigure}
+\medskip
+\begin{subfigure}[t]{1.0\textwidth}
+\centering
+\begin{circuitikz}[scale=0.85,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[transformer] (tr) at (8.0,1.3) {};
+\node[circ] at (tr.outer dot A1) {};
+\node[circ] at (tr.outer dot B1) {};
+\node[above] at (8.0,3.05) {$D':1$};
+\draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.6)
+  to[european resistor,l=$DR_{\mathrm{on}}$] (1.8,2.6)
+  to[european resistor,l=$R_{\mathrm{L}}$] (3.3,2.6)
+  to[V,invert,l=$D'V_{\mathrm{D}}$] (4.8,2.6)
+  to[european resistor,l=$D'R_{\mathrm{D}}$] (6.3,2.6) -| (tr.A1);
+\draw (tr.A2) |- (0,0);
+\draw (tr.B1) -| (10.6,2.6)
+  to[european resistor,l_=$R$] (10.6,0) -| (tr.B2);
+\draw[-{Latex[length=1.7mm]}] (0.15,2.6) -- (0.7,2.6) node[midway,above] {$I_{\mathrm{L}}$};
+\node[right] at (10.78,2.6) {$+$};
+\node[right] at (10.78,0) {$-$};
+\path (10.78,2.6) -- node[right=5pt] {$V_{\mathrm{out}}$} (10.78,0);
+\end{circuitikz}
+\caption{直流“变压器”模型}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{含电感铜损及半导体导通损耗的平均模型}
+\label{pic0211}
+\end{figure}
+
+\subsection{效率与高效率条件}
+
+在该直流平均模型中，
+\begin{align}
+  P_{\mathrm{in}}
+  &=V_{\mathrm{in}}I_{\mathrm{in}}=V_{\mathrm{in}}I_{\mathrm{L}},\\
+  P_{\mathrm{out}}
+  &=V_{\mathrm{out}}I_{\mathrm{out}}=V_{\mathrm{out}}D'I_{\mathrm{L}}.
+\end{align}
+因此
+\begin{align}
+  \eta
+  &=D'\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}\\
+  &=\frac{1-\dfrac{D'V_{\mathrm{D}}}{V_{\mathrm{in}}}}
+  {1+\dfrac{R_{\mathrm{L}}+DR_{\mathrm{on}}+D'R_{\mathrm{D}}}{(D')^2R}}.
+\end{align}
+
+效率较高时，原稿给出的条件为
+\begin{equation}
+  \frac{V_{\mathrm{in}}}{D'}\gg V_{\mathrm{D}},
+  \qquad
+  (D')^2R\gg R_{\mathrm{L}}+DR_{\mathrm{on}}+D'R_{\mathrm{D}}.
+\end{equation}
+原稿随后写为
+\begin{equation}
+  \eta\approx
+  \frac{V_{\mathrm{in}}-D'V_{\mathrm{D}}}{V_{\mathrm{in}}}
+  \frac{(D')^2R}{(D')^2R+R_{\mathrm{L}}+DR_{\mathrm{on}}+D'R_{\mathrm{D}}},
+\end{equation}
+并在第二个因子下标注了“折算至原边”。
+
+\reviewnote{本行右侧与上一条效率表达式代数等价，尚未实际使用“高效率”条件作近似，原稿的约等号暂保留。若需要一阶近似，可进一步写为 $\eta\approx1-D'V_{\mathrm{D}}/V_{\mathrm{in}}-(R_{\mathrm{L}}+DR_{\mathrm{on}}+D'R_{\mathrm{D}})/[(D')^2R]$，并忽略小量乘积。“折算至原边”的箭头指向范围不够明确，需结合后续等效电路图核对。}
+
+\textbf{疑问：}准确性如何？
+
+用均方根值（有效值，即 RMS）估算电阻的功率损耗，对比纯直流与含纹波两种情况的影响。原稿指出，当 $I_{\mathrm{L}}$ 的纹波较大时，该模型的准确性不足；进入 DCM 时问题更明显。
+
+\reviewnote{电阻损耗应按 $P_R=RI_{\mathrm{rms}}^2$ 计算，直接以平均电流平方代替会忽略纹波的均方值。上述模型还未计入开关损耗等因素；进入 DCM 后应加入零电感电流区间，不能直接沿用这里只有两个状态的 CCM 模型。}
+
+% 手稿 4：MsgID=8828863936512054781，文件修改时间 2026-10-07 17:26:06。
+\chapter{电力电子器件}
+
+\section{从“开关”模型到具体器件}
+
+现实中不太可能依靠机械开关完成所讨论电路的快速通断。机械开关在高压下易拉弧，造成损耗，且不利于快速控制，寿命也受限，因此应用半导体器件进行替代。
+
+\reviewnote{“不太可能用机械开关”应限定在这里讨论的高频、快速控制场景。机械开关仍可用于接触器、断路器等场合，不宜将这句话理解为所有电力电路都不能使用机械开关。}
+
+以 Buck 为例，可以把一个单刀双掷（SPDT）开关分解为一对互斥的单刀单掷（SPST）开关 $A$、$B$。
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.98,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,2.4) node[ocirc] {} -- (1.0,2.4) node[ocirc] {};
+\draw (0,0) -- (1.0,0) -- (1.0,1.1) node[ocirc] {};
+\draw (2.0,2.4) node[ocirc] {} -- (3.0,2.4) node[ocirc] {};
+\draw (2.0,2.4) -- (1.22,1.35);
+\node[above] at (1.0,2.4) {$1$};
+\node[left] at (1.0,1.1) {$2$};
+\node[left] at (0,2.4) {$V_{\mathrm{in}}$};
+\end{circuitikz}
+}
+\caption{SPDT 模型}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.92,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,2.4) node[ocirc] {} to[nos,l=$A$] (2.2,2.4) -- (3.0,2.4) node[ocirc] {};
+\draw (2.2,2.4) to[nos,l_=$B$] (2.2,0) -- (0,0);
+\draw[-{Latex[length=1.5mm]}] (0.2,2.92) -- (1.1,2.92) node[midway,above] {$i_A$};
+\draw[-{Latex[length=1.5mm]}] (1.55,0.3) -- (1.55,1.0) node[midway,left] {$i_B$};
+\node at (0.2,1.98) {$+$};
+\node at (2.0,1.98) {$-$};
+\node at (1.1,1.98) {$v_A$};
+\node[right] at (2.2,1.95) {$-$};
+\node[right] at (2.2,0.25) {$+$};
+\node[right] at (2.2,1.2) {$v_B$};
+\end{circuitikz}
+}
+\caption{两个互斥 SPST}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.92,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[nigfete,nogate,rotate=90] (q) at (1.2,2.4) {};
+\draw (0,2.4) node[ocirc] {} -- (q.D);
+\draw (q.S) -- (2.5,2.4) -- (3.2,2.4) node[ocirc] {};
+\draw (q.nogate) -- ++(0,-0.25);
+\draw (2.5,0) to[D-,l_=$D$] (2.5,2.4);
+\draw (0,0) -- (2.5,0);
+\node[above=5pt] at (q.center) {$Q$};
+\end{circuitikz}
+}
+\caption{半导体实现}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{Buck 等效开关的分解与器件替代}
+\label{pic0301}
+\end{figure}
+
+$A$、$B$ 除了互斥，还应满足各自的通态电流和断态电压要求：$A$ 导通时承载 $i_A(t)$，截止时承受 $v_A(t)$；$B$ 导通时承载 $i_B(t)$，截止时承受 $v_B(t)$。
+
+那么，用哪些器件最适合呢？
+
+\subsection{器件类型}
+
+原稿列举了晶闸管、三极管、IGBT、MOSFET 和二极管，并在 MOSFET 旁注明“传统硅、GaN、SiC”。
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.88,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,1.4) to[thyristor] (0,-0.5);
+\node[npn] (bjt) at (2.8,0.5) {};
+\draw (bjt.C) -- ++(0,0.4);
+\draw (bjt.E) -- ++(0,-0.4);
+\draw (bjt.B) -- ++(-0.3,0);
+\node[nigbt] (igbt) at (5.6,0.5) {};
+\draw (igbt.C) -- ++(0,0.4);
+\draw (igbt.E) -- ++(0,-0.4);
+\draw (igbt.G) -- ++(-0.3,0);
+\node[nigfete] (mos) at (8.4,0.5) {};
+\draw (mos.D) -- ++(0,0.4);
+\draw (mos.S) -- ++(0,-0.4);
+\draw (mos.G) -- ++(-0.3,0);
+\draw (11.2,1.4) to[D-] (11.2,-0.5);
+\node at (0,-1.15) {晶闸管};
+\node at (2.8,-1.15) {三极管};
+\node at (5.6,-1.15) {IGBT};
+\node at (8.4,-1.15) {MOSFET};
+\node at (11.2,-1.15) {二极管};
+\node[align=center] at (8.4,-1.9) {Si、GaN、SiC\\（原稿注记，待核）};
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{原稿列举的功率半导体器件符号}
+\label{pic0302}
+\end{figure}
+
+\reviewnote{GaN 功率器件常采用 HEMT 结构，不能把全部 GaN 器件直接归为 MOSFET；GaN HEMT 的反向导通机理也与硅、SiC MOSFET 的体二极管不同。原稿材料注记先保留，后续建议分开整理器件结构与材料分类，参见\href{https://www.infineon.com/product-information/gan-hemt-structure-architecture-physics-operation}{Infineon 器件说明}。}
+
+\subsection{通态电流、断态电压与象限}
+
+暂不考虑损耗，只考虑器件功能，即其允许的电压、电流方向，以及通断是否可控。原稿用通态、断态的“容量”分别衡量器件。
+
+\begin{samepage}
+象限图的横轴为断态电压，纵轴为通态电流。按图示参考方向，各象限的符号组合为
+\begin{equation}
+  \begin{aligned}
+    \mathrm{I}:&\quad v>0,\quad i>0,\\
+    \mathrm{II}:&\quad v<0,\quad i>0,\\
+    \mathrm{III}:&\quad v<0,\quad i<0,\\
+    \mathrm{IV}:&\quad v>0,\quad i<0.
+  \end{aligned}
+\end{equation}
+\end{samepage}
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.95,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw[-{Latex[length=2.0mm]},line width=0.6pt] (-3.2,0) -- (3.35,0) node[right] {断态电压 $v$};
+\draw[-{Latex[length=2.0mm]},line width=0.6pt] (0,-2.1) -- (0,2.45) node[above] {通态电流 $i$};
+\node[below left] at (0,0) {$0$};
+\node[align=center] at (1.8,1.2) {I\\$v>0,\ i>0$};
+\node[align=center] at (-1.8,1.2) {II\\$v<0,\ i>0$};
+\node[align=center] at (-1.8,-1.2) {III\\$v<0,\ i<0$};
+\node[align=center] at (1.8,-1.2) {IV\\$v>0,\ i<0$};
+\draw (5.6,1.45) node[ocirc] {} to[nos] (5.6,-1.0) node[ocirc] {};
+\node[above] at (5.6,1.45) {$1$};
+\node[below] at (5.6,-1.0) {$0$};
+\draw[-{Latex[length=1.7mm]}] (5.2,1.3) -- (5.2,0.7) node[midway,left] {$i$};
+\node[right] at (6.0,1.1) {$+$};
+\node[right] at (6.0,-0.7) {$-$};
+\node[right] at (6.0,0.2) {$v$};
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{开关通态电流与断态电压的方向能力象限}
+\label{pic0303}
+\end{figure}
+
+原稿给出的分类为：
+\begin{itemize}
+  \item I：单象限器件；
+  \item I、II：电压双向；
+  \item I、IV：电流双向；
+  \item I、II、III、IV：四象限器件。
+\end{itemize}
+象限定义具有相对性，应以下文给出的参考方向为准。
+
+\reviewnote{这里考察的是通态电流与断态电压的方向能力，二者对应不同状态，不能把象限图当作器件在同一时刻的静态伏安特性曲线。“单象限”也不限于第 I 象限，原稿的 I 应理解为示例；器件符号和参考极性明确后还需统一核对。}
+
+\subsection{控制能力}
+
+按控制能力，分为全控、不控、半控。
+
+\reviewnote{建议后续补充判据：不控器件的通断由外部电路条件决定；半控器件通常只能控制开通；全控器件可控制开通和关断。普通晶闸管与可关断晶闸管应分别讨论，不宜仅凭“晶闸管”这一总称判断控制类型。}
+
+\subsection{器件及其组合}
+
+\subsubsection{二极管}
+
+二极管为不控器件。按原稿的端口参考方向，属于 II 象限：正向导通，反向阻断。
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.96,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\draw (0,0) node[ocirc] {} to[D-] (3.6,0) node[ocirc] {};
+\node[left] at (0,0) {$1$};
+\node[right] at (3.6,0) {$0$};
+\draw[-{Latex[length=1.7mm]}] (1.0,0.65) -- (2.3,0.65) node[midway,above] {$i$};
+\node at (0.4,-0.65) {$+$};
+\node at (3.2,-0.65) {$-$};
+\node at (1.8,-0.65) {$v$};
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{二极管的端口参考方向}
+\label{pic0304}
+\end{figure}
+
+\subsubsection{三极管、IGBT 与 MOSFET}
+
+原稿将三极管、IGBT 列为全控 I 象限器件；MOSFET 列为全控 I、IV 象限器件，注明“导通时为双向”。断态电流和通态电压降暂不考虑。
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.95,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[npn] (q) at (0.7,1.25) {};
+\coordinate (upper) at (q.C |- 0,2.5);
+\coordinate (lower) at (q.E |- 0,0);
+\draw (upper) -- (q.C);
+\draw (q.E) -- (lower);
+\draw (q.B) -- ++(-0.65,0) node[left] {$B$};
+\node[ocirc] at (upper) {};
+\node[ocirc] at (lower) {};
+\node[above] at (upper) {$1$};
+\node[below] at (lower) {$0$};
+\draw[-{Latex[length=1.7mm]}] ([xshift=-9pt]upper) -- ++(0,-0.65) node[midway,left] {$i$};
+\node[right=13pt] at (upper) {$+$};
+\node[right=13pt] at (lower) {$-$};
+\node at (2.0,1.25) {$v$};
+\end{circuitikz}
+}
+\caption{三极管：I 象限}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.95,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[nigbt] (q) at (0.7,1.25) {};
+\coordinate (upper) at (q.C |- 0,2.5);
+\coordinate (lower) at (q.E |- 0,0);
+\draw (upper) -- (q.C);
+\draw (q.E) -- (lower);
+\draw (q.G) -- ++(-0.65,0) node[left] {$G$};
+\node[ocirc] at (upper) {};
+\node[ocirc] at (lower) {};
+\node[above] at (upper) {$1$};
+\node[below] at (lower) {$0$};
+\draw[-{Latex[length=1.7mm]}] ([xshift=-9pt]upper) -- ++(0,-0.65) node[midway,left] {$i$};
+\node[right=13pt] at (upper) {$+$};
+\node[right=13pt] at (lower) {$-$};
+\node at (2.0,1.25) {$v$};
+\end{circuitikz}
+}
+\caption{IGBT：I 象限}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.95,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[nigfete] (q) at (0.7,1.25) {};
+\coordinate (upper) at (q.D |- 0,2.5);
+\coordinate (lower) at (q.S |- 0,0);
+\draw (upper) -- (q.D);
+\draw (q.S) -- (lower);
+\draw (q.G) -- ++(-0.65,0) node[left] {$G$};
+\node[ocirc] at (upper) {};
+\node[ocirc] at (lower) {};
+\node[above] at (upper) {$1$};
+\node[below] at (lower) {$0$};
+\draw[-{Latex[length=1.7mm]}] ([xshift=-9pt]upper) -- ++(0,-0.65) node[midway,left] {$i$};
+\node[right=13pt] at (upper) {$+$};
+\node[right=13pt] at (lower) {$-$};
+\node at (2.0,1.25) {$v$};
+\end{circuitikz}
+}
+\caption{MOSFET：I、IV 象限}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{三极管、IGBT 与 MOSFET 的参考端口方向}
+\label{pic0305}
+\end{figure}
+
+\reviewnote{MOSFET 的受控沟道可双向导电，但体二极管或其他反向导通路径可能使反向电流在栅极关断后仍继续流动。“导通时双向”不等于任意方向的电流都能由同一个器件独立切断。此处分类先按原稿保留，后续结合具体结构、体二极管及电压极性核对。}
+
+\subsubsection{带二极管的三极管组合}
+
+\paragraph{反并联二极管}
+
+带反并联二极管的三极管，原稿标为全控 I、IV 象限。
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.95,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[npn] (q) at (1.3,1.3) {};
+\draw (1.1,2.65) -| (q.C);
+\draw (q.E) |- (1.1,0);
+\draw (q.B) -- ++(-0.4,0);
+\node[right=5pt] at (q.center) {$Q$};
+\draw (1.1,2.65) -- (-0.4,2.65);
+\draw (-0.4,0) to[D-,l_=$D$] (-0.4,2.65);
+\draw (-0.4,0) -- (1.1,0);
+\draw (1.1,3.2) node[ocirc] {} -- (1.1,2.65);
+\draw (1.1,0) -- (1.1,-0.5) node[ocirc] {};
+\node[above] at (1.1,3.2) {$1$};
+\node[below] at (1.1,-0.5) {$0$};
+\draw[-{Latex[length=1.7mm]}] (0.65,3.1) -- (0.65,2.75) node[midway,left] {$i$};
+\node[right] at (2.45,2.65) {$+$};
+\node[right] at (2.45,0) {$-$};
+\path (2.45,2.65) -- node[right=5pt] {$v$} (2.45,0);
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{带反并联二极管的三极管组合}
+\label{pic0306}
+\end{figure}
+
+\reviewnote{反向电流若经反并联二极管流动，不能由三极管的控制端直接关断。因此“全控 I、IV 象限”应区分受控开关支路与不控二极管支路，不宜理解为两种电流方向都完全受控。原稿结论暂保留。}
+
+% 手稿 5：MsgID=6362353751456812155，文件修改时间 2026-10-07 17:26:12。
+\paragraph{串联二极管}
+
+带串联二极管的三极管，原稿标为全控 I、II 象限。
+
+\begin{figure}[H]
+\centering
+\begin{circuitikz}[scale=0.95,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[npn] (q) at (1.1,1.2) {};
+\draw (1.1,3.6) node[ocirc] {} to[D-,l=$D$] (1.1,2.25) -- (q.C);
+\draw (q.E) |- (1.1,0) node[ocirc] {};
+\draw (q.B) -- ++(-0.5,0);
+\node[right=5pt] at (q.center) {$Q$};
+\node[above] at (1.1,3.6) {$1$};
+\node[below] at (1.1,0) {$0$};
+\draw[-{Latex[length=1.7mm]}] (0.5,3.45) -- (0.5,2.85) node[midway,left] {$i$};
+\node[right] at (2.0,3.6) {$+$};
+\node[right] at (2.0,0) {$-$};
+\path (2.0,3.6) -- node[right=5pt] {$v$} (2.0,0);
+\end{circuitikz}
+\vspace{-0.15cm}
+\caption{带串联二极管的三极管组合}
+\label{pic0307}
+\end{figure}
+
+\subsubsection{四象限器件}
+
+原稿给出了三种四象限器件的组合结构。
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.79,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[npn,rotate=0] (q1) at (1.1,2.1) {};
+\node[npn,rotate=180] (q2) at (1.1,0.5) {};
+\draw (1.1,2.85) -| (q1.C);
+\draw (q2.C) |- (1.1,0);
+\draw[densely dashed,draw=reviewgray] (q1.E) |- (1.1,1.3);
+\draw[densely dashed,draw=reviewgray] (q2.E) |- (1.1,1.3);
+
+\node[circ] at (1.1,1.3) {};
+\draw (1.1,2.85) -- (-0.55,2.85);
+\draw[densely dashed,draw=reviewgray] (1.1,1.3) -- (-0.55,1.3);
+\draw[densely dashed,draw=reviewgray] (1.1,1.3) -- (2.6,1.3);
+\draw (1.1,0) -- (2.6,0);
+\draw (-0.55,1.3) to[D-,l_=$D_1$] (-0.55,2.85);
+\draw (2.6,1.3) to[D-,l=$D_2$] (2.6,0);
+
+\draw (q1.B) -- ++(-0.25,0);
+\draw (q2.B) -- ++(0.25,0);
+\node[right=4pt] at (q1.center) {$Q_1$};
+\node[left=4pt] at (q2.center) {$Q_2$};
+\draw (1.1,3.45) node[ocirc] {} -- (1.1,2.85);
+\draw (1.1,0) -- (1.1,-0.5) node[ocirc] {};
+\node[above] at (1.1,3.45) {$1$};
+\node[below] at (1.1,-0.5) {$0$};
+\draw[-{Latex[length=1.7mm]}] (0.65,3.35) -- (0.65,2.95) node[midway,left] {$i$};
+\node[right] at (2.9,2.85) {$+$};
+\node[right] at (2.9,0) {$-$};
+\node[right] at (2.9,1.3) {$v$};
+\end{circuitikz}
+}
+\caption{结构一：中间连接待核}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.79,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\node[npn,rotate=180] (q1) at (1.1,2.1) {};
+\node[npn,rotate=0] (q2) at (1.1,0.5) {};
+\draw (1.1,2.85) -| (q1.E);
+\draw (q2.E) |- (1.1,0);
+\draw[densely dashed,draw=reviewgray] (q1.C) |- (1.1,1.3);
+\draw[densely dashed,draw=reviewgray] (q2.C) |- (1.1,1.3);
+
+\node[circ] at (1.1,1.3) {};
+\draw (1.1,2.85) -- (-0.55,2.85);
+\draw[densely dashed,draw=reviewgray] (1.1,1.3) -- (-0.55,1.3);
+\draw[densely dashed,draw=reviewgray] (1.1,1.3) -- (2.6,1.3);
+\draw (1.1,0) -- (2.6,0);
+\draw (-0.55,2.85) to[D-,l=$D_1$] (-0.55,1.3);
+\draw (2.6,0) to[D-,l_=$D_2$] (2.6,1.3);
+
+\draw (q1.B) -- ++(0.25,0);
+\draw (q2.B) -- ++(-0.25,0);
+\node[right=4pt] at (q1.center) {$Q_1$};
+\node[left=4pt] at (q2.center) {$Q_2$};
+\draw (1.1,3.45) node[ocirc] {} -- (1.1,2.85);
+\draw (1.1,0) -- (1.1,-0.5) node[ocirc] {};
+\node[above] at (1.1,3.45) {$1$};
+\node[below] at (1.1,-0.5) {$0$};
+\draw[-{Latex[length=1.7mm]}] (0.65,3.35) -- (0.65,2.95) node[midway,left] {$i$};
+\node[right] at (2.9,2.85) {$+$};
+\node[right] at (2.9,0) {$-$};
+\node[right] at (2.9,1.3) {$v$};
+\end{circuitikz}
+}
+\caption{结构二：中间连接待核}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.31\textwidth}
+\centering
+\resizebox{0.97\linewidth}{!}{%
+\begin{circuitikz}[scale=0.8,transform shape,every node/.style={font=\small},line width=0.8pt]
+\ctikzset{bipoles/length=0.85cm,transistors/scale=1.15}
+\coordinate (top) at (0,2.7);
+\coordinate (right) at (1.65,1.3);
+\coordinate (bottom) at (0,-0.1);
+\coordinate (left) at (-1.65,1.3);
+\draw (top) to[D-] (right);
+\draw (bottom) to[D-] (right);
+\draw (left) to[D-] (top);
+\draw (left) to[D-] (bottom);
+\draw (right) to[nos,l=$S$] (left);
+\draw (top) -- (0,3.35) node[ocirc] {};
+\draw (bottom) -- (0,-0.6) node[ocirc] {};
+\node[above] at (0,3.35) {$1$};
+\node[below] at (0,-0.6) {$0$};
+\draw[-{Latex[length=1.7mm]}] (-0.4,3.25) -- (-0.4,2.85) node[midway,left] {$i$};
+\node[right] at (2.0,2.7) {$+$};
+\node[right] at (2.0,-0.1) {$-$};
+\node[right] at (2.0,1.3) {$v$};
+\end{circuitikz}
+}
+\caption{整流桥与受控开关}
+\end{subfigure}
+\vspace{-0.15cm}
+\caption{原稿中的四象限开关组合示意}
+\label{pic0308}
+\end{figure}
+
+\reviewnote{本小节标题后的括注仍不清晰。原稿前两幅组合的中间连线及器件朝向难以完全确认，图中暂按共发射极、共集电极形式作识别示意，灰色虚线表示待核连接；并未认定与原图完全一致。第三幅的二极管方向按整流桥功能整理，仍需对照原稿确认。还应分别核对两种极性下的导通路径、阻断路径以及控制端的参考点，不能把重绘等同于电路功能已校核。}
 
 \end{document}
