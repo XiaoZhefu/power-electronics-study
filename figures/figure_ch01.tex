@@ -1,5 +1,5 @@
 \DefineFigure{pic0101}{
-\begin{figure}[!htbp]
+  \begin{figure}[!htbp]
   \vspace{-0.1cm}
   \centering
   \begin{tikzpicture}[
@@ -35,7 +35,7 @@
 }
 
 \DefineFigure{pic0102}{
-\begin{figure}[!htbp]
+  \begin{figure}[!htbp]
   \vspace{-0.1cm}
   \centering
   \begin{circuitikz}[scale=1.0, transform shape, every node/.style={font=\small}, line width=0.8pt]
@@ -87,158 +87,133 @@
 }
 
 \DefineFigure{pic0103}{
-\begin{figure}[!htbp]
-  \centering
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{figure}[!htbp]
     \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{
-        bipoles/length=0.8cm,
-        transistors/scale=1.5,
-        tripoles/nigfete/base width=0.32,
-        tripoles/nigfete/gate width=0.40
-      }
-      \coordinate (gnd-a) at (0,0);
-      \node[
-        nigfete,
-        nogate,
-        rotate=90,
-        anchor=center
-      ] (q-a) at (1.55,2.0) {};
-      \draw (gnd-a)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-a] (0,2.0)
-      -- (q-a.D);
-      \node[left=1pt] at (0,1.35) {$+$};
-      \node[left=1pt] at (0,0.65) {$-$};
-      \draw (q-a.inner down |- q-a.nogate) -- ++(0,-0.22);
-      \node[above] at (q-a.center) {$Q$};
-      \draw (q-a.S) -- ++(0.35,0) coordinate (sw-a)
-      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-a] ++(2.2,0) coordinate (out-a)
-      -- ++(1.05,0) coordinate (load-a);
-      \node[below=4pt] at (ind-a.center)
-      {$+\;v_{\mathrm{L}}\;-$};
-      \draw (sw-a |- gnd-a) to[D-, l_=$D$] (sw-a);
-      \draw (out-a) to[C, l_=$C$] (out-a |- gnd-a);
-      \draw (load-a) to[european resistor, l_=$R$] (load-a |- gnd-a);
-      \draw (load-a |- gnd-a) -- (gnd-a);
-      \node[right] at (load-a) {$+$};
-      \node[right] at (load-a |- gnd-a) {$-$};
-      \path (load-a) -- node[right] {$v_{\mathrm{out}}$} (load-a |- gnd-a);
-    \end{circuitikz}
-    \caption{原电路}
-    \label{pic0103a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-b) at (0,0);
-      \coordinate (throw-one) at (1.45,2.0);
-      \coordinate (throw-two) at (1.83,1.25);
-      \coordinate (pole) at (2.2,2.0);
-      \draw (gnd-b)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-b] (0,2.0)
-      -- (throw-one);
-      \node[left=1pt] at (0,1.35) {$+$};
-      \node[left=1pt] at (0,0.65) {$-$};
-      \draw (throw-two) -- (throw-two |- gnd-b) -- (gnd-b);
-      \node[ocirc] at (throw-one) {};
-      \node[ocirc] at (throw-two) {};
-      \draw (pole) -- (1.58,1.58);
-      \node[above] at (throw-one) {$1$};
-      \node[left] at (throw-two) {$2$};
-      \draw (pole) -- ++(0.35,0)
-      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-b] ++(2.2,0) coordinate (out-b)
-      -- ++(1.05,0) coordinate (load-b);
-      \node[below=4pt] at (ind-b.center)
-      {$+\;v_{\mathrm{L}}\;-$};
-      \node[ocirc] at (pole) {};
-      \draw (out-b) to[C, l_=$C$] (out-b |- gnd-b);
-      \draw (load-b) to[european resistor, l_=$R$] (load-b |- gnd-b);
-      \draw (load-b |- gnd-b) -- (gnd-b);
-      \node[right] at (load-b) {$+$};
-      \node[right] at (load-b |- gnd-b) {$-$};
-      \path (load-b) -- node[right] {$v_{\mathrm{out}}$} (load-b |- gnd-b);
-    \end{circuitikz}
-    \caption{等效电路}
-    \label{pic0103b}
-  \end{subfigure}
-  \medskip
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-c) at (0,0);
-      \draw (gnd-c)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-c] (0,1.8)
-      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-c] (2.55,1.8) coordinate (out-c)
-      -- ++(1.05,0) coordinate (load-c);
-      \node[left=1pt] at (0,1.25) {$+$};
-      \node[left=1pt] at (0,0.55) {$-$};
-      \node[below=4pt] at (ind-c.center)
-      {$+\;v_{\mathrm{L}}\;-$};
-      \draw (out-c) to[C, l_=$C$] (out-c |- gnd-c);
-      \draw (load-c) to[european resistor, l_=$R$] (load-c |- gnd-c);
-      \draw (load-c |- gnd-c) -- (gnd-c);
-      \node[right] at (load-c) {$+$};
-      \node[right] at (load-c |- gnd-c) {$-$};
-      \path (load-c) -- node[right] {$v_{\mathrm{out}}$} (load-c |- gnd-c);
-    \end{circuitikz}
-    \caption{状态 1}
-    \label{pic0103c}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-d) at (0,0);
-      \draw (gnd-d)
-      -- (0,1.8)
-      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-d] (2.55,1.8) coordinate (out-d)
-      -- ++(1.05,0) coordinate (load-d);
-      \node[below=4pt] at (ind-d.center)
-      {$+\;v_{\mathrm{L}}\;-$};
-      \draw (out-d) to[C, l_=$C$] (out-d |- gnd-d);
-      \draw (load-d) to[european resistor, l_=$R$] (load-d |- gnd-d);
-      \draw (load-d |- gnd-d) -- (gnd-d);
-      \node[right] at (load-d) {$+$};
-      \node[right] at (load-d |- gnd-d) {$-$};
-      \path (load-d) -- node[right] {$v_{\mathrm{out}}$} (load-d |- gnd-d);
-    \end{circuitikz}
-    \caption{状态 2}
-    \label{pic0103d}
-  \end{subfigure}
-  \vspace{-0.5cm}
-  \caption{Buck 变换器及其开关状态等效电路}
-  \vspace{-0.5cm}
-  \label{pic0103}
-\end{figure}
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \ctikzset{
+          tripoles/nigfete/base width=0.32,
+          tripoles/nigfete/gate width=0.40
+        }
+        \coordinate (gnd-a) at (0,0);
+        \node[
+          nigfete,
+          nogate,
+          rotate=90,
+          anchor=center
+        ] (q-a) at (1.55,2.0) {};
+        \draw (gnd-a)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-a] (0,2.0)
+        -- (q-a.D);
+        \node[left=1pt] at (0,1.35) {$+$};
+        \node[left=1pt] at (0,0.65) {$-$};
+        \draw (q-a.inner down |- q-a.nogate) -- ++(0,-0.22);
+        \node[above] at (q-a.center) {$Q$};
+        \draw (q-a.S) -- ++(0.35,0) coordinate (sw-a)
+        to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-a] ++(2.2,0) coordinate (out-a)
+        -- ++(1.05,0) coordinate (load-a);
+        \node[below=4pt] at (ind-a.center)
+        {$+\;v_{\mathrm{L}}\;-$};
+        \draw (sw-a |- gnd-a) to[D-, l_=$D$] (sw-a);
+        \draw (out-a) to[C, l_=$C$] (out-a |- gnd-a);
+        \draw (load-a) to[european resistor, l_=$R$] (load-a |- gnd-a);
+        \draw (load-a |- gnd-a) -- (gnd-a);
+        \node[right] at (load-a) {$+$};
+        \node[right] at (load-a |- gnd-a) {$-$};
+        \path (load-a) -- node[right] {$v_{\mathrm{out}}$} (load-a |- gnd-a);
+      \end{notescircuit}
+      \caption{原电路}
+      \label{pic0103a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-b) at (0,0);
+        \coordinate (throw-one) at (1.45,2.0);
+        \coordinate (throw-two) at (1.83,1.25);
+        \coordinate (pole) at (2.2,2.0);
+        \draw (gnd-b)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-b] (0,2.0)
+        -- (throw-one);
+        \node[left=1pt] at (0,1.35) {$+$};
+        \node[left=1pt] at (0,0.65) {$-$};
+        \draw (throw-two) -- (throw-two |- gnd-b) -- (gnd-b);
+        \node[ocirc] at (throw-one) {};
+        \node[ocirc] at (throw-two) {};
+        \draw (pole) -- (1.58,1.58);
+        \node[above] at (throw-one) {$1$};
+        \node[left] at (throw-two) {$2$};
+        \draw (pole) -- ++(0.35,0)
+        to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-b] ++(2.2,0) coordinate (out-b)
+        -- ++(1.05,0) coordinate (load-b);
+        \node[below=4pt] at (ind-b.center)
+        {$+\;v_{\mathrm{L}}\;-$};
+        \node[ocirc] at (pole) {};
+        \draw (out-b) to[C, l_=$C$] (out-b |- gnd-b);
+        \draw (load-b) to[european resistor, l_=$R$] (load-b |- gnd-b);
+        \draw (load-b |- gnd-b) -- (gnd-b);
+        \node[right] at (load-b) {$+$};
+        \node[right] at (load-b |- gnd-b) {$-$};
+        \path (load-b) -- node[right] {$v_{\mathrm{out}}$} (load-b |- gnd-b);
+      \end{notescircuit}
+      \caption{等效电路}
+      \label{pic0103b}
+    \end{subfigure}
+    \medskip
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-c) at (0,0);
+        \draw (gnd-c)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-c] (0,1.8)
+        to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-c] (2.55,1.8) coordinate (out-c)
+        -- ++(1.05,0) coordinate (load-c);
+        \node[left=1pt] at (0,1.25) {$+$};
+        \node[left=1pt] at (0,0.55) {$-$};
+        \node[below=4pt] at (ind-c.center)
+        {$+\;v_{\mathrm{L}}\;-$};
+        \draw (out-c) to[C, l_=$C$] (out-c |- gnd-c);
+        \draw (load-c) to[european resistor, l_=$R$] (load-c |- gnd-c);
+        \draw (load-c |- gnd-c) -- (gnd-c);
+        \node[right] at (load-c) {$+$};
+        \node[right] at (load-c |- gnd-c) {$-$};
+        \path (load-c) -- node[right] {$v_{\mathrm{out}}$} (load-c |- gnd-c);
+      \end{notescircuit}
+      \caption{状态 1}
+      \label{pic0103c}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-d) at (0,0);
+        \draw (gnd-d)
+        -- (0,1.8)
+        to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-d] (2.55,1.8) coordinate (out-d)
+        -- ++(1.05,0) coordinate (load-d);
+        \node[below=4pt] at (ind-d.center)
+        {$+\;v_{\mathrm{L}}\;-$};
+        \draw (out-d) to[C, l_=$C$] (out-d |- gnd-d);
+        \draw (load-d) to[european resistor, l_=$R$] (load-d |- gnd-d);
+        \draw (load-d |- gnd-d) -- (gnd-d);
+        \node[right] at (load-d) {$+$};
+        \node[right] at (load-d |- gnd-d) {$-$};
+        \path (load-d) -- node[right] {$v_{\mathrm{out}}$} (load-d |- gnd-d);
+      \end{notescircuit}
+      \caption{状态 2}
+      \label{pic0103d}
+    \end{subfigure}
+    \vspace{-0.5cm}
+    \caption{Buck 变换器及其开关状态等效电路}
+    \vspace{-0.5cm}
+    \label{pic0103}
+  \end{figure}
 }
 
 \DefineFigure{pic0104}{
-\begin{figure}[!htbp]
+  \begin{figure}[!htbp]
   \centering
   \begin{tikzpicture}[
     axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
@@ -302,7 +277,7 @@
 }
 
 \DefineFigure{pic0105}{
-\begin{figure}[!htbp]
+  \begin{figure}[!htbp]
   \centering
   \begin{tikzpicture}[
     axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
@@ -362,7 +337,7 @@
 }
 
 \DefineFigure{pic0106}{
-\begin{figure}[!htbp]
+  \begin{figure}[!htbp]
   \vspace{-0.5cm}
   \centering
   \begin{tikzpicture}[
@@ -430,157 +405,132 @@
 }
 
 \DefineFigure{pic0107}{
-\begin{figure}[!htbp]
-  \vspace{-0.5cm}
-  \centering
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{figure}[!htbp]
+    \vspace{-0.5cm}
     \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{
-        bipoles/length=0.8cm,
-        transistors/scale=1.5,
-        tripoles/nigfete/base width=0.32,
-        tripoles/nigfete/gate width=0.40
-      }
-      \coordinate (gnd-ba) at (0,0);
-      \node[nigfete, nogate, anchor=center] (q-ba) at (2.25,0.95) {};
-      \draw (gnd-ba)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-ba] (0,2.0)
-      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-ba] (2.25,2.0) coordinate (sw-ba)
-      to[D-, l=$D$] (3.55,2.0) coordinate (out-ba)
-      -- ++(1.05,0) coordinate (load-ba);
-      \draw (sw-ba) -- (q-ba.D);
-      \draw (q-ba.S) -- (q-ba.S |- gnd-ba);
-      \draw (q-ba.inner down -| q-ba.nogate) -- ++(-0.22,0);
-      \node[left=11pt] at (q-ba.center) {$Q$};
-      \node[left=1pt] at (0,1.35) {$+$};
-      \node[left=1pt] at (0,0.65) {$-$};
-      \node[below=4pt] at (ind-ba.center)
-      {$+\;v_{\mathrm{L}}\;-$};
-      \draw (out-ba) to[C, l_=$C$] (out-ba |- gnd-ba);
-      \draw (load-ba) to[european resistor, l_=$R$] (load-ba |- gnd-ba);
-      \draw (load-ba |- gnd-ba) -- (gnd-ba);
-      \node[right] at (load-ba) {$+$};
-      \node[right] at (load-ba |- gnd-ba) {$-$};
-      \path (load-ba) -- node[right] {$v_{\mathrm{out}}$} (load-ba |- gnd-ba);
-    \end{circuitikz}
-    \caption{原电路}
-    \label{pic0107a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-bb) at (0,0);
-      \coordinate (pole-bb) at (2.15,2.0);
-      \coordinate (throw-one-bb) at (2.55,1.25);
-      \coordinate (throw-two-bb) at (2.90,2.0);
-      \draw (gnd-bb)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-bb] (0,2.0)
-      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bb] (pole-bb);
-      \node[ocirc] at (pole-bb) {};
-      \node[ocirc] at (throw-one-bb) {};
-      \node[ocirc] at (throw-two-bb) {};
-      \draw (pole-bb) -- (2.78,1.60);
-      \draw (throw-one-bb) -- (throw-one-bb |- gnd-bb) -- (gnd-bb);
-      \draw (throw-two-bb) -- ++(0.65,0) coordinate (out-bb)
-      -- ++(1.05,0) coordinate (load-bb);
-      \node[left] at (throw-one-bb) {$1$};
-      \node[above] at (throw-two-bb) {$2$};
-      \node[left=1pt] at (0,1.35) {$+$};
-      \node[left=1pt] at (0,0.65) {$-$};
-      \node[below=4pt] at (ind-bb.center)
-      {$+\;v_{\mathrm{L}}\;-$};
-      \draw (out-bb) to[C, l_=$C$] (out-bb |- gnd-bb);
-      \draw (load-bb) to[european resistor, l_=$R$] (load-bb |- gnd-bb);
-      \draw (load-bb |- gnd-bb) -- (gnd-bb);
-      \node[right] at (load-bb) {$+$};
-      \node[right] at (load-bb |- gnd-bb) {$-$};
-      \path (load-bb) -- node[right] {$v_{\mathrm{out}}$} (load-bb |- gnd-bb);
-    \end{circuitikz}
-    \caption{等效电路}
-    \label{pic0107b}
-  \end{subfigure}
-  \medskip
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-bc) at (0,0);
-      \draw (gnd-bc)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-bc] (0,1.8)
-      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bc] (2.20,1.8)
-      -- (2.20,0);
-      \draw (3.10,1.8) coordinate (out-bc)
-      -- ++(1.05,0) coordinate (load-bc);
-      \draw (out-bc) to[C, l_=$C$] (out-bc |- gnd-bc);
-      \draw (load-bc) to[european resistor, l_=$R$] (load-bc |- gnd-bc);
-      \draw (load-bc |- gnd-bc) -- (gnd-bc);
-      \node[left=1pt] at (0,1.25) {$+$};
-      \node[left=1pt] at (0,0.55) {$-$};
-      \node[below=4pt] at (ind-bc.center)
-      {$+\;v_{\mathrm{L}}\;-$};
-      \node[right] at (load-bc) {$+$};
-      \node[right] at (load-bc |- gnd-bc) {$-$};
-      \path (load-bc) -- node[right] {$v_{\mathrm{out}}$} (load-bc |- gnd-bc);
-    \end{circuitikz}
-    \caption{状态 1}
-    \label{pic0107c}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-bd) at (0,0);
-      \draw (gnd-bd)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-bd] (0,1.8)
-      to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bd] (2.55,1.8) coordinate (out-bd)
-      -- ++(1.05,0) coordinate (load-bd);
-      \draw (out-bd) to[C, l_=$C$] (out-bd |- gnd-bd);
-      \draw (load-bd) to[european resistor, l_=$R$] (load-bd |- gnd-bd);
-      \draw (load-bd |- gnd-bd) -- (gnd-bd);
-      \node[left=1pt] at (0,1.25) {$+$};
-      \node[left=1pt] at (0,0.55) {$-$};
-      \node[below=4pt] at (ind-bd.center)
-      {$+\;v_{\mathrm{L}}\;-$};
-      \node[right] at (load-bd) {$+$};
-      \node[right] at (load-bd |- gnd-bd) {$-$};
-      \path (load-bd) -- node[right] {$v_{\mathrm{out}}$} (load-bd |- gnd-bd);
-    \end{circuitikz}
-    \caption{状态 2}
-    \label{pic0107d}
-  \end{subfigure}
-  \vspace{-0.5cm}
-  \caption{Boost 变换器及其开关状态等效电路}
-  \vspace{-0.5cm}
-  \label{pic0107}
-\end{figure}
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \ctikzset{
+          tripoles/nigfete/base width=0.32,
+          tripoles/nigfete/gate width=0.40
+        }
+        \coordinate (gnd-ba) at (0,0);
+        \node[nigfete, nogate, anchor=center] (q-ba) at (2.25,0.95) {};
+        \draw (gnd-ba)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-ba] (0,2.0)
+        to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-ba] (2.25,2.0) coordinate (sw-ba)
+        to[D-, l=$D$] (3.55,2.0) coordinate (out-ba)
+        -- ++(1.05,0) coordinate (load-ba);
+        \draw (sw-ba) -- (q-ba.D);
+        \draw (q-ba.S) -- (q-ba.S |- gnd-ba);
+        \draw (q-ba.inner down -| q-ba.nogate) -- ++(-0.22,0);
+        \node[left=11pt] at (q-ba.center) {$Q$};
+        \node[left=1pt] at (0,1.35) {$+$};
+        \node[left=1pt] at (0,0.65) {$-$};
+        \node[below=4pt] at (ind-ba.center)
+        {$+\;v_{\mathrm{L}}\;-$};
+        \draw (out-ba) to[C, l_=$C$] (out-ba |- gnd-ba);
+        \draw (load-ba) to[european resistor, l_=$R$] (load-ba |- gnd-ba);
+        \draw (load-ba |- gnd-ba) -- (gnd-ba);
+        \node[right] at (load-ba) {$+$};
+        \node[right] at (load-ba |- gnd-ba) {$-$};
+        \path (load-ba) -- node[right] {$v_{\mathrm{out}}$} (load-ba |- gnd-ba);
+      \end{notescircuit}
+      \caption{原电路}
+      \label{pic0107a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-bb) at (0,0);
+        \coordinate (pole-bb) at (2.15,2.0);
+        \coordinate (throw-one-bb) at (2.55,1.25);
+        \coordinate (throw-two-bb) at (2.90,2.0);
+        \draw (gnd-bb)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-bb] (0,2.0)
+        to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bb] (pole-bb);
+        \node[ocirc] at (pole-bb) {};
+        \node[ocirc] at (throw-one-bb) {};
+        \node[ocirc] at (throw-two-bb) {};
+        \draw (pole-bb) -- (2.78,1.60);
+        \draw (throw-one-bb) -- (throw-one-bb |- gnd-bb) -- (gnd-bb);
+        \draw (throw-two-bb) -- ++(0.65,0) coordinate (out-bb)
+        -- ++(1.05,0) coordinate (load-bb);
+        \node[left] at (throw-one-bb) {$1$};
+        \node[above] at (throw-two-bb) {$2$};
+        \node[left=1pt] at (0,1.35) {$+$};
+        \node[left=1pt] at (0,0.65) {$-$};
+        \node[below=4pt] at (ind-bb.center)
+        {$+\;v_{\mathrm{L}}\;-$};
+        \draw (out-bb) to[C, l_=$C$] (out-bb |- gnd-bb);
+        \draw (load-bb) to[european resistor, l_=$R$] (load-bb |- gnd-bb);
+        \draw (load-bb |- gnd-bb) -- (gnd-bb);
+        \node[right] at (load-bb) {$+$};
+        \node[right] at (load-bb |- gnd-bb) {$-$};
+        \path (load-bb) -- node[right] {$v_{\mathrm{out}}$} (load-bb |- gnd-bb);
+      \end{notescircuit}
+      \caption{等效电路}
+      \label{pic0107b}
+    \end{subfigure}
+    \medskip
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-bc) at (0,0);
+        \draw (gnd-bc)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-bc] (0,1.8)
+        to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bc] (2.20,1.8)
+        -- (2.20,0);
+        \draw (3.10,1.8) coordinate (out-bc)
+        -- ++(1.05,0) coordinate (load-bc);
+        \draw (out-bc) to[C, l_=$C$] (out-bc |- gnd-bc);
+        \draw (load-bc) to[european resistor, l_=$R$] (load-bc |- gnd-bc);
+        \draw (load-bc |- gnd-bc) -- (gnd-bc);
+        \node[left=1pt] at (0,1.25) {$+$};
+        \node[left=1pt] at (0,0.55) {$-$};
+        \node[below=4pt] at (ind-bc.center)
+        {$+\;v_{\mathrm{L}}\;-$};
+        \node[right] at (load-bc) {$+$};
+        \node[right] at (load-bc |- gnd-bc) {$-$};
+        \path (load-bc) -- node[right] {$v_{\mathrm{out}}$} (load-bc |- gnd-bc);
+      \end{notescircuit}
+      \caption{状态 1}
+      \label{pic0107c}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-bd) at (0,0);
+        \draw (gnd-bd)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-bd] (0,1.8)
+        to[L, l=$L$, i>^=$i_{\mathrm{L}}$, name=ind-bd] (2.55,1.8) coordinate (out-bd)
+        -- ++(1.05,0) coordinate (load-bd);
+        \draw (out-bd) to[C, l_=$C$] (out-bd |- gnd-bd);
+        \draw (load-bd) to[european resistor, l_=$R$] (load-bd |- gnd-bd);
+        \draw (load-bd |- gnd-bd) -- (gnd-bd);
+        \node[left=1pt] at (0,1.25) {$+$};
+        \node[left=1pt] at (0,0.55) {$-$};
+        \node[below=4pt] at (ind-bd.center)
+        {$+\;v_{\mathrm{L}}\;-$};
+        \node[right] at (load-bd) {$+$};
+        \node[right] at (load-bd |- gnd-bd) {$-$};
+        \path (load-bd) -- node[right] {$v_{\mathrm{out}}$} (load-bd |- gnd-bd);
+      \end{notescircuit}
+      \caption{状态 2}
+      \label{pic0107d}
+    \end{subfigure}
+    \vspace{-0.5cm}
+    \caption{Boost 变换器及其开关状态等效电路}
+    \vspace{-0.5cm}
+    \label{pic0107}
+  \end{figure}
 }
 
 \DefineFigure{pic0108}{
-\begin{figure}[H]
+  \begin{figure}[H]
   \centering
   \begin{tikzpicture}[
     axis/.style={-{Latex[length=2.2mm]}, line width=0.6pt},
@@ -644,190 +594,165 @@
 }
 
 \DefineFigure{pic0109}{
-\begin{figure}[!htbp]
-  \centering
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{figure}[!htbp]
     \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{
-        bipoles/length=0.8cm,
-        transistors/scale=1.5,
-        tripoles/nigfete/base width=0.32,
-        tripoles/nigfete/gate width=0.40
-      }
-      \coordinate (gnd-ca) at (0,0);
-      \node[nigfete, nogate, anchor=center] (q-ca) at (2.05,0.95) {};
-      \draw (gnd-ca)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-ca] (0,2.0)
-      to[L, l=$L_1$, i>^=$i_1$, name=ind1-ca] (2.05,2.0) coordinate (sw-ca)
-      to[C, l=$C_1$, name=cap1-ca] (3.25,2.0) coordinate (diode-ca)
-      to[L, l=$L_2$, i>^=$i_2$, name=ind2-ca] (4.65,2.0) coordinate (out-ca)
-      -- ++(1.00,0) coordinate (load-ca);
-      \draw (sw-ca) -- (q-ca.D);
-      \draw (q-ca.S) -- (q-ca.S |- gnd-ca);
-      \draw (q-ca.inner down -| q-ca.nogate) -- ++(-0.22,0);
-      \node[left=11pt] at (q-ca.center) {$Q$};
-      \draw (diode-ca) to[D-, l_=$D$] (diode-ca |- gnd-ca);
-      \node[left=1pt] at (0,1.35) {$+$};
-      \node[left=1pt] at (0,0.65) {$-$};
-      \node[below=4pt] at (ind1-ca.center)
-      {$+\;v_{\mathrm{L}1}\;-$};
-      \node[below=4pt] at (cap1-ca.center)
-      {$+\;v_1\;-$};
-      \node[below=4pt] at (ind2-ca.center)
-      {$+\;v_{\mathrm{L}2}\;-$};
-      \draw (out-ca) to[C, l_=$C_2$] (out-ca |- gnd-ca);
-      \draw (load-ca) to[european resistor, l_=$R$] (load-ca |- gnd-ca);
-      \draw (load-ca |- gnd-ca) -- (gnd-ca);
-      \node[right] at (load-ca) {$+$};
-      \node[right] at (load-ca |- gnd-ca) {$-$};
-      \path (load-ca) -- node[right] {$v_2$} (load-ca |- gnd-ca);
-    \end{circuitikz}
-    \caption{原电路}
-    \label{pic0109a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-cb) at (0,0);
-      \coordinate (node-one-cb) at (1.45,2.0);
-      \coordinate (node-two-cb) at (3.05,2.0);
-      \coordinate (drop-one-cb) at (1.45,1.20);
-      \coordinate (drop-two-cb) at (3.05,1.20);
-      \coordinate (throw-one-cb) at (1.85,1.20);
-      \coordinate (throw-two-cb) at (2.65,1.20);
-      \coordinate (pole-cb) at (2.25,0.65);
-      \draw (gnd-cb)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-cb] (0,2.0)
-      to[L, l=$L_1$, i>^=$i_1$, name=ind1-cb] (node-one-cb)
-      to[C, l=$C_1$, name=cap1-cb] (node-two-cb)
-      to[L, l=$L_2$, i>^=$i_2$, name=ind2-cb] (4.65,2.0) coordinate (out-cb)
-      -- ++(1.00,0) coordinate (load-cb);
-      \draw (node-one-cb) -- (drop-one-cb) -- (throw-one-cb);
-      \draw (node-two-cb) -- (drop-two-cb) -- (throw-two-cb);
-      \node[ocirc] at (throw-one-cb) {};
-      \node[ocirc] at (throw-two-cb) {};
-      \node[ocirc] at (pole-cb) {};
-      \draw (pole-cb) -- (2.08,1.31);
-      \draw (pole-cb) -- (pole-cb |- gnd-cb);
-      \node[below=2pt] at (throw-one-cb) {$1$};
-      \node[below=2pt] at (throw-two-cb) {$2$};
-      \node[left=1pt] at (0,1.35) {$+$};
-      \node[left=1pt] at (0,0.65) {$-$};
-      \node[below=4pt] at (ind1-cb.center)
-      {$+\;v_{\mathrm{L}1}\;-$};
-      \node[below=4pt] at (cap1-cb.center)
-      {$+\;v_1\;-$};
-      \node[below=4pt] at (ind2-cb.center)
-      {$+\;v_{\mathrm{L}2}\;-$};
-      \draw (out-cb) to[C, l_=$C_2$] (out-cb |- gnd-cb);
-      \draw (load-cb) to[european resistor, l_=$R$] (load-cb |- gnd-cb);
-      \draw (load-cb |- gnd-cb) -- (gnd-cb);
-      \node[right] at (load-cb) {$+$};
-      \node[right] at (load-cb |- gnd-cb) {$-$};
-      \path (load-cb) -- node[right] {$v_2$} (load-cb |- gnd-cb);
-    \end{circuitikz}
-    \caption{等效电路}
-    \label{pic0109b}
-  \end{subfigure}
-  \medskip
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-cc) at (0,0);
-      \draw (gnd-cc)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-cc] (0,1.8)
-      to[L, l=$L_1$, i>^=$i_1$, name=ind1-cc] (1.75,1.8)
-      -- (1.75,0);
-      \draw (2.75,0)
-      to[C, name=cap1-cc] (2.75,1.8)
-      to[L, l=$L_2$, i>^=$i_2$, name=ind2-cc] (4.45,1.8) coordinate (out-cc)
-      -- ++(1.00,0) coordinate (load-cc);
-      \draw (out-cc) to[C, l_=$C_2$] (out-cc |- gnd-cc);
-      \draw (load-cc) to[european resistor, l_=$R$] (load-cc |- gnd-cc);
-      \draw (load-cc |- gnd-cc) -- (gnd-cc);
-      \node[left=1pt] at (0,1.25) {$+$};
-      \node[left=1pt] at (0,0.55) {$-$};
-      \node[below=4pt] at (ind1-cc.center)
-      {$+\;v_{\mathrm{L}1}\;-$};
-      \node[below=4pt] at (ind2-cc.center)
-      {$+\;v_{\mathrm{L}2}\;-$};
-      \node[right=3pt] at (2.75,0.90) {$C_1$};
-      \node[left=2pt] at (2.75,1.28) {$-$};
-      \node[left=2pt] at (2.75,0.52) {$+$};
-      \path (2.75,1.8) -- node[left=10pt] {$v_1$} (2.75,0);
-      \node[right] at (load-cc) {$+$};
-      \node[right] at (load-cc |- gnd-cc) {$-$};
-      \path (load-cc) -- node[right] {$v_2$} (load-cc |- gnd-cc);
-    \end{circuitikz}
-    \caption{状态 1}
-    \label{pic0109c}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \begin{circuitikz}[
-        scale=0.9,
-        transform shape,
-        every node/.style={font=\footnotesize},
-        line width=0.8pt
-      ]
-      \ctikzset{bipoles/length=0.8cm}
-      \coordinate (gnd-cd) at (0,0);
-      \draw (gnd-cd)
-      to[V, l_=$V_{\mathrm{in}}$, name=vin-cd] (0,1.8)
-      to[L, l=$L_1$, i>^=$i_1$, name=ind1-cd] (2.05,1.8)
-      to[C, name=cap1-cd] (2.05,0);
-      \draw (3.05,0) -- (3.05,1.8)
-      to[L, l=$L_2$, i>^=$i_2$, name=ind2-cd] (4.75,1.8) coordinate (out-cd)
-      -- ++(1.00,0) coordinate (load-cd);
-      \draw (out-cd) to[C, l_=$C_2$] (out-cd |- gnd-cd);
-      \draw (load-cd) to[european resistor, l_=$R$] (load-cd |- gnd-cd);
-      \draw (load-cd |- gnd-cd) -- (gnd-cd);
-      \node[left=1pt] at (0,1.25) {$+$};
-      \node[left=1pt] at (0,0.55) {$-$};
-      \node[below=4pt] at (ind1-cd.center)
-      {$+\;v_{\mathrm{L}1}\;-$};
-      \node[below=4pt] at (ind2-cd.center)
-      {$+\;v_{\mathrm{L}2}\;-$};
-      \node[left=3pt] at (2.05,0.90) {$C_1$};
-      \node[right=2pt] at (2.05,1.28) {$+$};
-      \node[right=2pt] at (2.05,0.52) {$-$};
-      \path (2.05,1.8) -- node[right=10pt] {$v_1$} (2.05,0);
-      \node[right] at (load-cd) {$+$};
-      \node[right] at (load-cd |- gnd-cd) {$-$};
-      \path (load-cd) -- node[right] {$v_2$} (load-cd |- gnd-cd);
-    \end{circuitikz}
-    \caption{状态 2}
-    \label{pic0109d}
-  \end{subfigure}
-  \vspace{-0.5cm}
-  \caption{\textup{\'{C}uk} 变换器及其开关状态等效电路}
-  \vspace{-0.5cm}
-  \label{pic0109}
-\end{figure}
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \ctikzset{
+          tripoles/nigfete/base width=0.32,
+          tripoles/nigfete/gate width=0.40
+        }
+        \coordinate (gnd-ca) at (0,0);
+        \node[nigfete, nogate, anchor=center] (q-ca) at (2.05,0.95) {};
+        \draw (gnd-ca)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-ca] (0,2.0)
+        to[L, l=$L_1$, i>^=$i_1$, name=ind1-ca] (2.05,2.0) coordinate (sw-ca)
+        to[C, l=$C_1$, name=cap1-ca] (3.25,2.0) coordinate (diode-ca)
+        to[L, l=$L_2$, i>^=$i_2$, name=ind2-ca] (4.65,2.0) coordinate (out-ca)
+        -- ++(1.00,0) coordinate (load-ca);
+        \draw (sw-ca) -- (q-ca.D);
+        \draw (q-ca.S) -- (q-ca.S |- gnd-ca);
+        \draw (q-ca.inner down -| q-ca.nogate) -- ++(-0.22,0);
+        \node[left=11pt] at (q-ca.center) {$Q$};
+        \draw (diode-ca) to[D-, l_=$D$] (diode-ca |- gnd-ca);
+        \node[left=1pt] at (0,1.35) {$+$};
+        \node[left=1pt] at (0,0.65) {$-$};
+        \node[below=4pt] at (ind1-ca.center)
+        {$+\;v_{\mathrm{L}1}\;-$};
+        \node[below=4pt] at (cap1-ca.center)
+        {$+\;v_1\;-$};
+        \node[below=4pt] at (ind2-ca.center)
+        {$+\;v_{\mathrm{L}2}\;-$};
+        \draw (out-ca) to[C, l_=$C_2$] (out-ca |- gnd-ca);
+        \draw (load-ca) to[european resistor, l_=$R$] (load-ca |- gnd-ca);
+        \draw (load-ca |- gnd-ca) -- (gnd-ca);
+        \node[right] at (load-ca) {$+$};
+        \node[right] at (load-ca |- gnd-ca) {$-$};
+        \path (load-ca) -- node[right] {$v_2$} (load-ca |- gnd-ca);
+      \end{notescircuit}
+      \caption{原电路}
+      \label{pic0109a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-cb) at (0,0);
+        \coordinate (node-one-cb) at (1.45,2.0);
+        \coordinate (node-two-cb) at (3.05,2.0);
+        \coordinate (drop-one-cb) at (1.45,1.20);
+        \coordinate (drop-two-cb) at (3.05,1.20);
+        \coordinate (throw-one-cb) at (1.85,1.20);
+        \coordinate (throw-two-cb) at (2.65,1.20);
+        \coordinate (pole-cb) at (2.25,0.65);
+        \draw (gnd-cb)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-cb] (0,2.0)
+        to[L, l=$L_1$, i>^=$i_1$, name=ind1-cb] (node-one-cb)
+        to[C, l=$C_1$, name=cap1-cb] (node-two-cb)
+        to[L, l=$L_2$, i>^=$i_2$, name=ind2-cb] (4.65,2.0) coordinate (out-cb)
+        -- ++(1.00,0) coordinate (load-cb);
+        \draw (node-one-cb) -- (drop-one-cb) -- (throw-one-cb);
+        \draw (node-two-cb) -- (drop-two-cb) -- (throw-two-cb);
+        \node[ocirc] at (throw-one-cb) {};
+        \node[ocirc] at (throw-two-cb) {};
+        \node[ocirc] at (pole-cb) {};
+        \draw (pole-cb) -- (2.08,1.31);
+        \draw (pole-cb) -- (pole-cb |- gnd-cb);
+        \node[below=2pt] at (throw-one-cb) {$1$};
+        \node[below=2pt] at (throw-two-cb) {$2$};
+        \node[left=1pt] at (0,1.35) {$+$};
+        \node[left=1pt] at (0,0.65) {$-$};
+        \node[below=4pt] at (ind1-cb.center)
+        {$+\;v_{\mathrm{L}1}\;-$};
+        \node[below=4pt] at (cap1-cb.center)
+        {$+\;v_1\;-$};
+        \node[below=4pt] at (ind2-cb.center)
+        {$+\;v_{\mathrm{L}2}\;-$};
+        \draw (out-cb) to[C, l_=$C_2$] (out-cb |- gnd-cb);
+        \draw (load-cb) to[european resistor, l_=$R$] (load-cb |- gnd-cb);
+        \draw (load-cb |- gnd-cb) -- (gnd-cb);
+        \node[right] at (load-cb) {$+$};
+        \node[right] at (load-cb |- gnd-cb) {$-$};
+        \path (load-cb) -- node[right] {$v_2$} (load-cb |- gnd-cb);
+      \end{notescircuit}
+      \caption{等效电路}
+      \label{pic0109b}
+    \end{subfigure}
+    \medskip
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-cc) at (0,0);
+        \draw (gnd-cc)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-cc] (0,1.8)
+        to[L, l=$L_1$, i>^=$i_1$, name=ind1-cc] (1.75,1.8)
+        -- (1.75,0);
+        \draw (2.75,0)
+        to[C, name=cap1-cc] (2.75,1.8)
+        to[L, l=$L_2$, i>^=$i_2$, name=ind2-cc] (4.45,1.8) coordinate (out-cc)
+        -- ++(1.00,0) coordinate (load-cc);
+        \draw (out-cc) to[C, l_=$C_2$] (out-cc |- gnd-cc);
+        \draw (load-cc) to[european resistor, l_=$R$] (load-cc |- gnd-cc);
+        \draw (load-cc |- gnd-cc) -- (gnd-cc);
+        \node[left=1pt] at (0,1.25) {$+$};
+        \node[left=1pt] at (0,0.55) {$-$};
+        \node[below=4pt] at (ind1-cc.center)
+        {$+\;v_{\mathrm{L}1}\;-$};
+        \node[below=4pt] at (ind2-cc.center)
+        {$+\;v_{\mathrm{L}2}\;-$};
+        \node[right=3pt] at (2.75,0.90) {$C_1$};
+        \node[left=2pt] at (2.75,1.28) {$-$};
+        \node[left=2pt] at (2.75,0.52) {$+$};
+        \path (2.75,1.8) -- node[left=10pt] {$v_1$} (2.75,0);
+        \node[right] at (load-cc) {$+$};
+        \node[right] at (load-cc |- gnd-cc) {$-$};
+        \path (load-cc) -- node[right] {$v_2$} (load-cc |- gnd-cc);
+      \end{notescircuit}
+      \caption{状态 1}
+      \label{pic0109c}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-cd) at (0,0);
+        \draw (gnd-cd)
+        to[V, l_=$V_{\mathrm{in}}$, name=vin-cd] (0,1.8)
+        to[L, l=$L_1$, i>^=$i_1$, name=ind1-cd] (2.05,1.8)
+        to[C, name=cap1-cd] (2.05,0);
+        \draw (3.05,0) -- (3.05,1.8)
+        to[L, l=$L_2$, i>^=$i_2$, name=ind2-cd] (4.75,1.8) coordinate (out-cd)
+        -- ++(1.00,0) coordinate (load-cd);
+        \draw (out-cd) to[C, l_=$C_2$] (out-cd |- gnd-cd);
+        \draw (load-cd) to[european resistor, l_=$R$] (load-cd |- gnd-cd);
+        \draw (load-cd |- gnd-cd) -- (gnd-cd);
+        \node[left=1pt] at (0,1.25) {$+$};
+        \node[left=1pt] at (0,0.55) {$-$};
+        \node[below=4pt] at (ind1-cd.center)
+        {$+\;v_{\mathrm{L}1}\;-$};
+        \node[below=4pt] at (ind2-cd.center)
+        {$+\;v_{\mathrm{L}2}\;-$};
+        \node[left=3pt] at (2.05,0.90) {$C_1$};
+        \node[right=2pt] at (2.05,1.28) {$+$};
+        \node[right=2pt] at (2.05,0.52) {$-$};
+        \path (2.05,1.8) -- node[right=10pt] {$v_1$} (2.05,0);
+        \node[right] at (load-cd) {$+$};
+        \node[right] at (load-cd |- gnd-cd) {$-$};
+        \path (load-cd) -- node[right] {$v_2$} (load-cd |- gnd-cd);
+      \end{notescircuit}
+      \caption{状态 2}
+      \label{pic0109d}
+    \end{subfigure}
+    \vspace{-0.5cm}
+    \caption{\textup{\'{C}uk} 变换器及其开关状态等效电路}
+    \vspace{-0.5cm}
+    \label{pic0109}
+  \end{figure}
 }
 
 \DefineFigure{pic0110}{
-\begin{figure}[H]
+  \begin{figure}[H]
   \centering
   \begin{tikzpicture}[
     yscale=0.92,
@@ -921,7 +846,7 @@
 }
 
 \DefineFigure{pic0111}{
-\begin{figure}[!htbp]
+  \begin{figure}[!htbp]
   \vspace{-0.5cm}
   \centering
   \begin{tikzpicture}[
