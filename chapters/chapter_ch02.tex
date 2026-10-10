@@ -1,0 +1,169 @@
+\chapter{稳态等效模型}
+
+前文主要通过分开关状态列方程，求解变换器的稳态量。加入器件损耗等因素后，直接求解会更加繁琐。因此，本章建立稳态等效电路模型，以便分析变换器的输入输出关系、变换比及效率。
+
+\section{理想稳态模型}
+
+在理想器件、周期稳态和小纹波近似的前提下，输入功率与输出功率相等：
+
+\vspace{-0.7cm}
+\InsertEquation{equ0201}
+\vspace{-0.7cm}
+
+\noindent{}定义直流电压变换比为 $M(D)$，结合功率平衡可得
+
+\vspace{-0.8cm}
+\InsertEquation{equ0202}
+\vspace{-1cm}
+
+\subsection{受控源模型}
+
+将端口关系分别用受控源表示，可得图 \ref{pic0201} 所示的等效电路。
+
+\InsertFigure{pic0201}
+
+\subsection{直流“变压器”模型}
+
+上述端口关系也可以用变比为 $1:M(D)$ 的理想直流“变压器”模型表示，$D$ 为控制输入。
+
+图 \ref{pic0202} 中，原边源电压记作 $V_{\mathrm{in}}$，原边等效内阻为 $R_1$，副边负载为 $R$。此处 $V_{\mathrm{in}}$ 表示电源电压，理想直流“变压器”的原边端口电压为 $V_{\mathrm{in}}-I_{\mathrm{in}}R_1$。将原边折算到副边后，电压按变比缩放，电阻按变比的平方缩放：
+\InsertEquation{equ0204}
+
+\InsertFigure{pic0202}
+
+\section{向前一步：含电感铜损的直流稳态分析}
+
+\exampletitle[exa0201]{含电感铜损的 Boost 变换器稳态分析}
+
+以下以 Boost 电路为例，在电感模型中加入等效串联电阻 $R_{\mathrm{L}}$，尝试验证前文方法的可拓展性。仍取 CCM、周期稳态和小纹波近似，开关、二极管和电容均按理想器件处理。
+
+\examplesubheading{等效电路}
+
+\InsertFigure{pic0203}
+
+共有 2 个状态与 2 个储能元器件，因此共 4 条方程。
+
+\examplesubheading{状态方程}
+\examplesubheading{小纹波近似}
+
+接状态 1 时，
+\InsertEquation{equ0205}
+
+\examplesubheading{变换比与平均状态量}
+
+由伏秒平衡，并与下述电荷平衡关系联立，
+\InsertEquation{equ0207}
+
+当 $R_{\mathrm{L}}=0$ 时，以上结果退化为前章的理想 Boost 关系；对于给定的 $D$ 和负载 $R$，电感铜损使变换比降低。
+
+\examplesubheading{电感电流与电容电压纹波}
+
+\InsertFigure{pic0204}
+
+状态 1 的斜率：
+\InsertEquation{equ0213}
+
+由电感得电流纹波：
+\InsertEquation{equ0215}
+
+\examplesubheading{建立等效电路模型}
+
+沿用小纹波近似建立直流稳态等效模型，电感伏秒平衡可以写成输入侧等效回路的 KVL 方程，电容电荷平衡关系可以写成输出侧等效回路的 KCL 方程：
+\InsertEquation{equ0219}
+
+在该直流模型中，Boost 的输入平均电流为 $I_{\mathrm{in}}=I_{\mathrm{L}}$，输出平均电流为 $I_{\mathrm{out}}=D'I_{\mathrm{L}}$；变压器原、副边的比例为 $D':1$。
+
+\InsertFigure{pic0205}
+
+将原边折算到副边后，等效电压源为 $V_{\mathrm{in}}/D'$，串联电阻为 $R_{\mathrm{L}}/(D')^2$，故
+\InsertEquation{equ0220}
+
+\InsertFigure{pic0206}
+
+两种模型本质上都是利用平衡方程直接得到稳态等效模型，且都可以单独用于求解。前者便于按 KVL、KCL 列方程，后者便于进行阻抗折算；两者联用只是为了便于理解，不会增加独立方程。
+
+这两种模型只描述周期平均的直流稳态量，不包含纹波信息；纹波须按照瞬时状态方程另行计算。
+
+\section{输入端口模型：补充理想稳态模型}
+
+仅由电感伏秒平衡和电容电荷平衡列出的方程，有时只能确定受控源模型一侧的平均量，还需根据原开关电路的输入电流波形补充输入平均电流关系。
+
+\exampletitle[exa0202]{含电感铜损的 Buck 变换器稳态分析}
+
+\InsertFigure{pic0207}
+
+\InsertFigure{pic0208}
+
+仍取 CCM、周期稳态和小纹波近似，且 $V_{\mathrm{C}}=V_{\mathrm{out}}$。计及电感铜损后，省略类似推导过程，有
+\InsertEquation{equ0221}
+
+对于给定的 $D$、$V_{\mathrm{in}}$、$R$ 和 $R_{\mathrm{L}}$，上述两式可直接解得
+\InsertEquation{equ0222}
+
+若要建立完整的输入、输出端口模型，并计算输入功率和效率，还需对左侧受控源回路进行分析，小纹波近似条件下直接可得：
+\InsertEquation{equ0224}
+
+将与前文公式合并即可构成图 \ref{pic0208} 所示的两种完整稳态模型。
+
+\newpage{}
+
+\section{更进一步：计及半导体通态损耗的稳态建模}
+
+前文讨论了电感铜损，此处继续研究半导体器件的通态损耗；当然，这些损耗为何产生，请见下一章。
+
+\exampletitle[exa0203]{含电感铜损及半导体通态损耗的 Boost 变换器稳态分析}
+
+以下以 Boost 电路为例，在电感铜损的基础上，进一步计及 MOSFET 和二极管的通态损耗，尝试验证前文两种模型的可拓展性。此处省略状态方程分析，也不做纹波分析，仍取 CCM、周期稳态和小纹波近似，电容按理想器件处理。
+
+\examplesubheading{等效电路}
+
+MOSFET 的通态损耗用导通电阻 $R_{\mathrm{on}}$ 建模；二极管的通态损耗用电阻 $R_{\mathrm{D}}$ 和固定压降 $V_{\mathrm{D}}$ 建模；$R_{\mathrm{L}}$ 仍为电感的等效串联电阻，各参数如图 \ref{pic0209} 所示。
+
+\InsertFigure{pic0209}
+\vspace{-0.4cm}
+\InsertFigure{pic0210}
+
+\examplesubheading{建立等效电路模型}
+
+为简化后续表达，记平均等效串联电阻为
+\InsertEquation{equ0225}
+其中 $R_{\mathrm{L}}$ 在整个周期内起作用，$R_{\mathrm{on}}$ 与 $R_{\mathrm{D}}$ 分别按导通时间占比 $D$、$D'$ 加权；直接按照原始器件分别列方程，求出的解中也会有这一部分的等效电阻组合。
+
+在周期稳态和小纹波近似下，电感伏秒平衡关系可以写成输入侧等效回路的 KVL 方程，电容电荷平衡关系可以写成输出侧等效回路的 KCL 方程：
+\InsertEquation{equ0226}
+
+\InsertFigure{pic0211}
+
+将原边折算到副边后，等效电压源为 $V_{\mathrm{in}}/D'-V_{\mathrm{D}}$，串联电阻为 $R_{\Sigma}/(D')^2$，故
+\InsertEquation{equ0227}
+
+\InsertFigure{pic0212}
+
+\examplesubheading{效率与高效率条件}
+
+在该直流平均模型中，
+\InsertEquation{equ0228}
+
+第一个因子对应二极管固定压降的影响；第二个因子中，$(D')^2R$ 是折算至原边的负载电阻，$R_{\Sigma}$ 是原边的总等效串联电阻。
+
+由式 \eqref{equ0231} 可见，要使效率接近 1，应满足
+\InsertEquation{equ0232}
+
+\examplesubheading{模型准确性}
+
+电阻损耗取决于电流的均方根值（RMS，即有效值）。周期稳态下，电流有效值定义为
+\InsertEquation{equ0233}
+
+其中，$i(t)$ 表示流过待考察电阻的瞬时电流，$T_{\mathrm{s}}$ 为开关周期，$I_{\mathrm{rms}}$ 为该电流在一个完整开关周期内的有效值。
+
+在平均电流相同的条件下，纹波会增大电流有效值，使电阻损耗增加。上述模型采用小纹波近似，忽略了电感电流纹波对电阻损耗的额外贡献。因此，电感电流纹波相对于平均值越大，损耗和效率的估算通常越不准确。
+
+由于附加参数的引入，电路分析变得更加复杂，但方程的结构基本不变，可以借助计算机求解。因此，建立较准确模型的关键一步应当是研究器件，并掌握主要损耗的机理与模型。下一章就重点关注器件本身的特性，并从器件中提取出电路模型。
+
+\clearpage
+
+\section{本章符号汇总}
+
+本节汇总本章主要符号。大写表示直流分量或平均值，小写表示瞬时量，$x$ 和 $y$ 表示任意字符串。未列举的符号不是主要符号。
+
+\InsertTable{tab0201}

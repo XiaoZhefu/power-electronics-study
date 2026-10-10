@@ -1,0 +1,260 @@
+\DefineEquation{equ0201}{
+\begin{equation}
+  P_{\mathrm{in}}=P_{\mathrm{out}}
+  \quad\Rightarrow\quad
+  V_{\mathrm{in}}I_{\mathrm{in}}=V_{\mathrm{out}}I_{\mathrm{out}}.
+  \label{equ0201}
+\end{equation}
+}
+
+\DefineEquation{equ0202}{
+\begin{align}
+  V_{\mathrm{out}} & =M(D)V_{\mathrm{in}},
+  \label{equ0202}                           \\
+  I_{\mathrm{in}}  & =M(D)I_{\mathrm{out}}.
+  \label{equ0203}
+\end{align}
+}
+
+\DefineEquation{equ0204}{
+\begin{equation}
+  V_{\mathrm{out}}
+  =M(D)V_{\mathrm{in}}\frac{R}{R+M^2(D)R_1}.
+  \label{equ0204}
+\end{equation}
+}
+
+\DefineEquation{equ0205}{
+\begin{align}
+   & \left\{
+  \begin{aligned}
+    v_{\mathrm{L}}(t) & =V_{\mathrm{in}}-i_{\mathrm{L}}(t)R_{\mathrm{L}}
+    \approx V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}},                \\
+    i_{\mathrm{C}}(t) & =-\frac{v_{\mathrm{out}}(t)}{R}
+    \approx-\frac{V_{\mathrm{out}}}{R}.
+  \end{aligned}
+  \right.
+  \label{equ0205} \\
+  \intertext{\qquad{}接状态 2 时，}
+   & \left\{
+  \begin{aligned}
+    v_{\mathrm{L}}(t) & =V_{\mathrm{in}}-i_{\mathrm{L}}(t)R_{\mathrm{L}}-v_{\mathrm{out}}(t)
+    \approx V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-V_{\mathrm{out}},                   \\
+    i_{\mathrm{C}}(t) & =i_{\mathrm{L}}(t)-\frac{v_{\mathrm{out}}(t)}{R}
+    \approx I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}.
+  \end{aligned}
+  \right.
+  \label{equ0206}
+\end{align}
+}
+
+\DefineEquation{equ0207}{
+\begin{alignat}{2}
+  \phantom{\Rightarrow}
+   & \;                                                        & \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t
+   & \approx D(V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}})
+  +D'(V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-V_{\mathrm{out}})=0,
+  \label{equ0207}                                                                                                                              \\
+  \Rightarrow
+   & \;                                                        & V_{\mathrm{out}}
+   & \approx\frac{D'R}{R(D')^2+R_{\mathrm{L}}}V_{\mathrm{in}},
+  \label{equ0208}                                                                                                                              \\
+  \Rightarrow
+   & \;                                                        & M(D)
+   & =\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}
+  \approx\frac{1}{D'\left(1+\dfrac{R_{\mathrm{L}}}{R(D')^2}\right)}.
+  \label{equ0209}                                                                                                                              \\
+  \intertext{\qquad{}由电荷平衡，}
+  \phantom{\Rightarrow}
+   & \;                                                        & \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{C}}(t)\,\mathrm{d}t
+   & \approx-D\frac{V_{\mathrm{out}}}{R}
+  +D'\left(I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}\right)=0,
+  \label{equ0210}                                                                                                                              \\
+  \Rightarrow
+   & \;                                                        & V_{\mathrm{out}}
+   & \approx RD'I_{\mathrm{L}},
+  \label{equ0211}                                                                                                                              \\
+  \Rightarrow
+   & \;                                                        & I_{\mathrm{L}}
+   & \approx\frac{V_{\mathrm{out}}}{RD'}
+  \approx\frac{V_{\mathrm{in}}}{R(D')^2+R_{\mathrm{L}}}.
+  \label{equ0212}
+\end{alignat}
+}
+
+\DefineEquation{equ0213}{
+\begin{align}
+   & \left\{
+  \begin{aligned}
+    \frac{\mathrm{d}i_{\mathrm{L}}(t)}{\mathrm{d}t}
+     & \approx\frac{V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}}{L}, \\
+    \frac{\mathrm{d}v_{\mathrm{C}}(t)}{\mathrm{d}t}
+     & \approx-\frac{V_{\mathrm{out}}}{RC}.
+  \end{aligned}
+  \right.
+  \label{equ0213} \\
+  \intertext{\qquad{}状态 2 的斜率：}
+   & \left\{
+  \begin{aligned}
+    \frac{\mathrm{d}i_{\mathrm{L}}(t)}{\mathrm{d}t}
+     & \approx\frac{V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-V_{\mathrm{out}}}{L}, \\
+    \frac{\mathrm{d}v_{\mathrm{C}}(t)}{\mathrm{d}t}
+     & \approx\frac{I_{\mathrm{L}}}{C}-\frac{V_{\mathrm{out}}}{RC}.
+  \end{aligned}
+  \right.
+  \label{equ0214}
+\end{align}
+}
+
+\DefineEquation{equ0215}{
+\begin{alignat}{2}
+  \phantom{\Rightarrow}
+   & \;                                                                                                          & \Delta i_{\mathrm{L,pp}}
+   & \approx\left.\frac{\mathrm{d}i_{\mathrm{L}}(t)}{\mathrm{d}t}\right|_{0\le t<DT_{\mathrm{s}}}DT_{\mathrm{s}}
+  \approx\frac{V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}}{L}DT_{\mathrm{s}},
+  \label{equ0215}                                                                                                                            \\
+  \Rightarrow
+   & \;                                                                                                          & \Delta i_{\mathrm{L,pk}}
+   & \approx\frac{V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}}{2L}DT_{\mathrm{s}},
+  \label{equ0216}                                                                                                                            \\
+  \intertext{\qquad{}由电容得电压纹波：}
+  \phantom{\Rightarrow}
+   & \;                                                                                                          & -\Delta v_{\mathrm{C,pp}}
+   & \approx\left.\frac{\mathrm{d}v_{\mathrm{C}}(t)}{\mathrm{d}t}\right|_{0\le t<DT_{\mathrm{s}}}DT_{\mathrm{s}}
+  \approx-\frac{V_{\mathrm{out}}}{RC}DT_{\mathrm{s}},
+  \label{equ0217}                                                                                                                            \\
+  \Rightarrow
+   & \;                                                                                                          & \Delta v_{\mathrm{C,pk}}
+   & \approx\frac{V_{\mathrm{out}}}{2RC}DT_{\mathrm{s}}.
+  \label{equ0218}
+\end{alignat}
+}
+
+\DefineEquation{equ0219}{
+\begin{equation}
+  \left\{
+  \begin{aligned}
+     & V_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-D'V_{\mathrm{out}}=0, \\
+     & D'I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}=0.
+  \end{aligned}
+  \right.
+  \label{equ0219}
+\end{equation}
+}
+
+\DefineEquation{equ0220}{
+\begin{equation}
+  V_{\mathrm{out}}
+  =\frac{V_{\mathrm{in}}}{D'}\frac{R}{R+\dfrac{R_{\mathrm{L}}}{(D')^2}}
+  =\frac{1}{D'\left(1+\dfrac{R_{\mathrm{L}}}{R(D')^2}\right)}V_{\mathrm{in}}.
+  \label{equ0220}
+\end{equation}
+}
+
+\DefineEquation{equ0221}{
+\begin{equation}
+  \left\{
+  \begin{aligned}
+    \langle v_{\mathrm{L}}\rangle & =DV_{\mathrm{in}}-I_{\mathrm{L}}R_{\mathrm{L}}-V_{\mathrm{C}}=0, \\
+    \langle i_{\mathrm{C}}\rangle & =I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}=0.
+  \end{aligned}
+  \right.
+  \label{equ0221}
+\end{equation}
+}
+
+\DefineEquation{equ0222}{
+\begin{alignat}{2}
+  \cdots\Rightarrow
+   & \;                                                           & V_{\mathrm{out}}
+   & \approx\frac{D}{1+\dfrac{R_{\mathrm{L}}}{R}}V_{\mathrm{in}},
+  \label{equ0222}                                                                    \\
+  \cdots\Rightarrow
+   & \;                                                           & I_{\mathrm{L}}
+   & \approx\frac{D}{R+R_{\mathrm{L}}}V_{\mathrm{in}}.
+  \label{equ0223}
+\end{alignat}
+}
+
+\DefineEquation{equ0224}{
+\begin{equation}
+  I_{\mathrm{in}}
+  =\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{in}}(t)\,\mathrm{d}t
+  \approx DI_{\mathrm{L}}.
+  \label{equ0224}
+\end{equation}
+}
+
+\DefineEquation{equ0225}{
+\begin{equation}
+  R_{\Sigma}=R_{\mathrm{L}}+DR_{\mathrm{on}}+D'R_{\mathrm{D}}.
+  \label{equ0225}
+\end{equation}
+}
+
+\DefineEquation{equ0226}{
+\begin{equation}
+  \left\{
+  \begin{aligned}
+     & V_{\mathrm{in}}-I_{\mathrm{L}}R_{\Sigma}
+    -D'V_{\mathrm{D}}-D'V_{\mathrm{out}}=0,           \\
+     & D'I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}=0.
+  \end{aligned}
+  \right.
+  \label{equ0226}
+\end{equation}
+}
+
+\DefineEquation{equ0227}{
+\begin{equation}
+  V_{\mathrm{out}}
+  \approx\frac{V_{\mathrm{in}}-D'V_{\mathrm{D}}}{D'}
+  \frac{R}{R+\dfrac{R_{\Sigma}}{(D')^2}}
+  =\frac{1-\dfrac{D'V_{\mathrm{D}}}{V_{\mathrm{in}}}}
+  {D'\left(1+\dfrac{R_{\Sigma}}{R(D')^2}\right)}V_{\mathrm{in}}.
+  \label{equ0227}
+\end{equation}
+}
+
+\DefineEquation{equ0228}{
+\begin{alignat}{2}
+  \phantom{\Rightarrow}
+   & \;                                                             & P_{\mathrm{in}}
+   & =V_{\mathrm{in}}I_{\mathrm{in}}=V_{\mathrm{in}}I_{\mathrm{L}},
+  \label{equ0228}                                                                      \\
+  \phantom{\Rightarrow}
+   & \;                                                             & P_{\mathrm{out}}
+   & =V_{\mathrm{out}}I_{\mathrm{out}}
+  \approx V_{\mathrm{out}}D'I_{\mathrm{L}}.
+  \label{equ0229}                                                                      \\
+  \intertext{\qquad{}因此}
+  \phantom{\Rightarrow}
+   & \;                                                             & \eta
+   & =\frac{P_{\mathrm{out}}}{P_{\mathrm{in}}}
+  \approx D'\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}},
+  \label{equ0230}                                                                      \\
+  \Rightarrow
+   & \;                                                             & \eta
+   & \approx\frac{1-\dfrac{D'V_{\mathrm{D}}}{V_{\mathrm{in}}}}
+  {1+\dfrac{R_{\Sigma}}{R(D')^2}}=\frac{V_{\mathrm{in}}-D'V_{\mathrm{D}}}{V_{\mathrm{in}}}
+  \frac{(D')^2R}{(D')^2R+R_{\Sigma}}.
+  \label{equ0231}
+\end{alignat}
+}
+
+\DefineEquation{equ0232}{
+\begin{equation}
+  \frac{V_{\mathrm{in}}}{D'}\gg V_{\mathrm{D}},
+  \qquad
+  (D')^2R\gg R_{\Sigma}.
+  \label{equ0232}
+\end{equation}
+}
+
+\DefineEquation{equ0233}{
+\begin{equation}
+  I_{\mathrm{rms}}
+  =\sqrt{\frac{1}{T_{\mathrm{s}}}\int_{0}^{T_{\mathrm{s}}}i^2(t)\,\mathrm{d}t}.
+  \label{equ0233}
+\end{equation}
+}

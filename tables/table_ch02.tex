@@ -1,0 +1,58 @@
+\DefineTable{tab0201}{
+\begingroup
+\small
+\addtolength{\abovecaptionskip}{-0.2cm}
+\setlength{\tabcolsep}{3pt}
+\setlength{\dashlinedash}{1.5pt}
+\setlength{\dashlinegap}{1.5pt}
+\renewcommand{\arraystretch}{1.10}
+% 使用 hline 让竖虚线计入横线厚度，避免分区边界累积错位。
+\edef\symboltablearrayrulewidth{\the\arrayrulewidth}
+\newcommand{\symboltablerule}[1]{%
+  \noalign{\global\arrayrulewidth=#1\relax}%
+  \hline
+  \noalign{\global\arrayrulewidth=\symboltablearrayrulewidth\relax}%
+}
+\begin{longtable}{
+  >{\centering\arraybackslash}p{0.160\textwidth}
+  >{\centering\arraybackslash}p{0.300\textwidth}:
+  >{\centering\arraybackslash}p{0.160\textwidth}
+  >{\centering\arraybackslash}p{0.300\textwidth}}
+  \caption{第二章符号汇总}\label{tab0201}                                                                                                                                                                                  \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{时间}}                                                                                                                                                                \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $T_{\mathrm{s}}$                                   & 开关周期                                               & $D$                                                & 占空比                                                \\
+  $D'$                                               & 互补占空比                                              &                                                    &                                                    \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电压}}                                                                                                                                                                \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $V_x$                                              & 直流分量或平均值                                           & $v_x(t)$                                           & 瞬时量                                                \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电流}}                                                                                                                                                                \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $I_x$                                              & 直流分量或平均值                                           & $i_x(t)$                                           & 瞬时量                                                \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{功率与效率}}                                                                                                                                                             \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $P_x$                                              & 平均功率                                               & $\eta$                                             & 变换器效率                                              \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{标记}}                                                                                                                                                                \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $x_{\mathrm{in}}$                                  & 输入                                                 & $x_{\mathrm{out}}$                                 & 输出                                                 \\
+  $x_{\mathrm{L}}$                                   & 电感                                                 & $x_{\mathrm{C}}$                                   & 电容                                                 \\
+  $x_{\mathrm{D}}$                                   & 二极管                                                & $x_{\mathrm{on}}$                                  & MOSFET 导通                                          \\
+  $x_{\mathrm{s}}$                                   & 开关                                                 & $x_{\Sigma}$                                       & 按占空比加权的总等效量                                        \\
+  $x_{1},\;x_{2},\;\cdots$                           & 量、元器件或时刻的序号                                        & $x'_y(t)$                                          & 对时间的变化率                                            \\
+  $\langle x_y\rangle$                               & 单周期内均值                                             & $x_{y,\mathrm{rms}}$                               & 有效值                                                \\
+  $\Delta x_{y,\mathrm{pp}}$                         & 峰峰值                                                & $\Delta x_{y,\mathrm{pk}}$                         & 单边幅值                                               \\
+  \symboltablerule{\heavyrulewidth}
+\end{longtable}
+
+\endgroup
+}
