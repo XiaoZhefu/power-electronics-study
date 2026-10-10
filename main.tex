@@ -339,7 +339,7 @@
 
 \section{理想稳态模型}
 
-理想稳态及小纹波前提下，输入功率与输出功率相等：
+在理想器件、周期稳态和小纹波近似的前提下，输入功率与输出功率相等：
 
 \vspace{-0.7cm}
 \begin{equation}
@@ -350,7 +350,7 @@
 \end{equation}
 \vspace{-0.7cm}
 
-\noindent{}使用直流电压变比 $M(D)$ 表示，则其中满足
+\noindent{}定义直流电压变换比为 $M(D)$，结合功率平衡可得
 
 \vspace{-0.8cm}
 \begin{align}
@@ -363,7 +363,7 @@
 
 \subsection{受控源模型}
 
-如图，根据纯粹的电流、电压关系，使用受控电流源、受控电压源来表示原电路，可得如下等效电路：
+将端口关系分别用受控源表示，可得图 \ref{pic0201} 所示的等效电路。
 
 \begin{figure}[H]
   \vspace{-0.3cm}
@@ -393,9 +393,9 @@
 
 \subsection{直流“变压器”模型}
 
-上述端口关系也可以用变比为 $1:M(D)$ 、其他均为理想参数的直流“变压器”表示，$D$ 为控制输入。
+上述端口关系也可以用变比为 $1:M(D)$ 的理想直流“变压器”模型表示，$D$ 为控制输入。
 
-若原边源电压记作 $V_{\mathrm{in}}$，原边等效内阻为 $R_1$，副边负载为 $R$，将原边折算到副边后，电压按变比缩放，电阻按变比的平方缩放：
+图 \ref{pic0202} 中，原边源电压记作 $V_{\mathrm{in}}$，原边等效内阻为 $R_1$，副边负载为 $R$。此处 $V_{\mathrm{in}}$ 表示电源电压，理想直流“变压器”的原边端口电压为 $V_{\mathrm{in}}-I_{\mathrm{in}}R_1$。将原边折算到副边后，电压按变比缩放，电阻按变比的平方缩放：
 \begin{equation}
   V_{\mathrm{out}}
   =M(D)V_{\mathrm{in}}\frac{R}{R+M^2(D)R_1}.
@@ -773,7 +773,7 @@
 
 \examplesubheading{建立等效电路模型}
 
-回到前文所述模型，仅考虑直流稳态时，电感伏秒平衡关系可以写成输入侧等效回路的 KVL 方程，电容电荷平衡关系可以写成输出侧等效回路的 KCL 方程：
+沿用小纹波近似建立直流稳态等效模型，电感伏秒平衡可以写成输入侧等效回路的 KVL 方程，电容电荷平衡关系可以写成输出侧等效回路的 KCL 方程：
 \begin{equation}
   \left\{
   \begin{aligned}
@@ -869,13 +869,13 @@
   \label{pic0206}
 \end{figure}
 
-两种模型本质上都是利用平衡方程直接得到稳态等效模型，且两种模型都可以单独使用，只是此处为了方便理解，就都使用了。
+两种模型本质上都是利用平衡方程直接得到稳态等效模型，且都可以单独用于求解。前者便于按 KVL、KCL 列方程，后者便于进行阻抗折算；两者联用只是为了便于理解，不会增加独立方程。
 
-需要注意的是，这两种模型属于纯直流稳态模型，虽然求解较快，但不描述纹波；纹波须按前述例题的瞬时状态方程另行计算。
+这两种模型只描述周期平均的直流稳态量，不包含纹波信息；纹波须按照瞬时状态方程另行计算。
 
-\section{输入端口模型：对理想稳态模型的补充}
+\section{输入端口模型：补充理想稳态模型}
 
-有时，前述两种模型得出的方程都是针对受控源模型下电路的同一侧回路的，因此要对另一侧的回路单独进行分析，作为对前述等效电路的补充。
+仅由电感伏秒平衡和电容电荷平衡列出的方程，有时只能确定受控源模型一侧的平均量，还需根据原开关电路的输入电流波形补充输入平均电流关系。
 
 \exampletitle[exa0202]{含电感铜损的 Buck 变换器稳态分析}
 
@@ -1007,7 +1007,7 @@
   \end{subfigure}
   \vspace{-0.5cm}
   \caption{含电感铜损的 Buck 变换器及其开关状态等效电路}
-  \vspace{-0.5cm}
+  \vspace{-0.7cm}
   \label{pic0207}
 \end{figure}
 
@@ -1064,10 +1064,11 @@
   \end{subfigure}
   \vspace{-0.15cm}
   \caption{含电感铜损的 Buck 变换器直流稳态等效模型}
+  \vspace{-0.4cm}
   \label{pic0208}
 \end{figure}
 
-以 Buck 电路为例，其中依旧有 $V_{\mathrm{C}}=V_{\mathrm{out}}$。计及电感铜损后，省略类似推导过程，有
+仍取 CCM、周期稳态和小纹波近似，且 $V_{\mathrm{C}}=V_{\mathrm{out}}$。计及电感铜损后，省略类似推导过程，有
 \begin{equation}
   \left\{
   \begin{aligned}
@@ -1098,9 +1099,13 @@
   \label{equ0224}
 \end{equation}
 
+将与前文公式合并即可构成图 \ref{pic0208} 所示的两种完整稳态模型。
+
+\newpage{}
+
 \section{更进一步：计及半导体通态损耗的稳态建模}
 
-前文我们探讨了电感等无源器件的损耗，此处我们继续针对有源器件的损耗进行研究；当然，为什么有源器件会有这些损耗，请见下一章。
+前文讨论了电感铜损，此处继续研究半导体器件的通态损耗；当然，这些损耗为何产生，请见下一章。
 
 \exampletitle[exa0203]{含电感铜损及半导体通态损耗的 Boost 变换器稳态分析}
 
@@ -1108,7 +1113,7 @@
 
 \examplesubheading{等效电路}
 
-MOSFET 的通态损耗用 $R_{\mathrm{on}}$ 表示；二极管的通态损耗用电阻 $R_{\mathrm{D}}$ 和压降 $V_{\mathrm{D}}$ 表示；$R_{\mathrm{L}}$ 仍表示电感铜损，各参数如图 \ref{pic0209} 所示。
+MOSFET 的通态损耗用导通电阻 $R_{\mathrm{on}}$ 建模；二极管的通态损耗用电阻 $R_{\mathrm{D}}$ 和固定压降 $V_{\mathrm{D}}$ 建模；$R_{\mathrm{L}}$ 仍为电感的等效串联电阻，各参数如图 \ref{pic0209} 所示。
 
 \begin{figure}[H]
   \centering
@@ -1135,7 +1140,7 @@ MOSFET 的通态损耗用 $R_{\mathrm{on}}$ 表示；二极管的通态损耗用
     \node at (8.05,1.35) {$v_{\mathrm{out}}$};
   \end{notescircuit}
   \vspace{-0.15cm}
-  \caption{Boost 电路的电感与半导体导通损耗参数}
+  \caption{Boost 电路的电感与半导体通态损耗参数}
   \label{pic0209}
 \end{figure}
 \vspace{-0.4cm}
@@ -1289,7 +1294,7 @@ MOSFET 的通态损耗用 $R_{\mathrm{on}}$ 表示；二极管的通态损耗用
     \label{pic0210d}
   \end{subfigure}
   \vspace{-0.5cm}
-  \caption{含电感铜损及半导体导通损耗的 Boost 变换器及其开关状态等效电路}
+  \caption{含电感铜损及半导体通态损耗的 Boost 变换器及其开关状态等效电路}
   \vspace{-0.2cm}
   \label{pic0210}
 \end{figure}
@@ -1301,8 +1306,9 @@ MOSFET 的通态损耗用 $R_{\mathrm{on}}$ 表示；二极管的通态损耗用
   R_{\Sigma}=R_{\mathrm{L}}+DR_{\mathrm{on}}+D'R_{\mathrm{D}}.
   \label{equ0225}
 \end{equation}
+其中 $R_{\mathrm{L}}$ 在整个周期内起作用，$R_{\mathrm{on}}$ 与 $R_{\mathrm{D}}$ 分别按导通时间占比 $D$、$D'$ 加权；直接按照原始器件分别列方程，求出的解中也会有这一部分的等效电阻组合。
 
-仅考虑直流稳态时，电感伏秒平衡关系可以写成输入侧等效回路的 KVL 方程，电容电荷平衡关系可以写成输出侧等效回路的 KCL 方程：
+在周期稳态和小纹波近似下，电感伏秒平衡关系可以写成输入侧等效回路的 KVL 方程，电容电荷平衡关系可以写成输出侧等效回路的 KCL 方程：
 \begin{equation}
   \left\{
   \begin{aligned}
@@ -1434,13 +1440,13 @@ MOSFET 的通态损耗用 $R_{\mathrm{on}}$ 表示；二极管的通态损耗用
    & \;                                                             & \eta
    & \approx\frac{1-\dfrac{D'V_{\mathrm{D}}}{V_{\mathrm{in}}}}
   {1+\dfrac{R_{\Sigma}}{R(D')^2}}=\frac{V_{\mathrm{in}}-D'V_{\mathrm{D}}}{V_{\mathrm{in}}}
-  \frac{(D')^2R}{(D')^2R+R_{\Sigma}}..
+  \frac{(D')^2R}{(D')^2R+R_{\Sigma}}.
   \label{equ0231}
 \end{alignat}
 
 第一个因子对应二极管固定压降的影响；第二个因子中，$(D')^2R$ 是折算至原边的负载电阻，$R_{\Sigma}$ 是原边的总等效串联电阻。
 
-效率较高时，应满足
+由式 \eqref{equ0231} 可见，要使效率接近 1，应满足
 \begin{equation}
   \frac{V_{\mathrm{in}}}{D'}\gg V_{\mathrm{D}},
   \qquad
@@ -1450,30 +1456,81 @@ MOSFET 的通态损耗用 $R_{\mathrm{on}}$ 表示；二极管的通态损耗用
 
 \examplesubheading{模型准确性}
 
-用均方根值（RMS），或称有效值估算电阻的功率损耗，对比纯直流与含纹波两种情况的影响。其中，
+电阻损耗取决于电流的均方根值（RMS，即有效值）。周期稳态下，电流有效值定义为
 \begin{equation}
   I_{\mathrm{rms}}
-  =\sqrt{\frac{1}{T}\int_{t_0}^{t_0+T}i^2(t)\,\mathrm{d}t}.
+  =\sqrt{\frac{1}{T_{\mathrm{s}}}\int_{0}^{T_{\mathrm{s}}}i^2(t)\,\mathrm{d}t}.
   \label{equ0233}
 \end{equation}
 
-电阻损耗应按
-\begin{equation}
-  P_R=RI_{\mathrm{rms}}^2
-  =R\left(I_{\mathrm{avg}}^2+I_{\mathrm{ripple,rms}}^2\right)
-  \label{equ0234}
-\end{equation}
-计算，其中 $I_{\mathrm{ripple,rms}}$ 为相对于平均值的电流纹波有效值。
+其中，$i(t)$ 表示流过待考察电阻的瞬时电流，$T_{\mathrm{s}}$ 为开关周期，$I_{\mathrm{rms}}$ 为该电流在一个完整开关周期内的有效值。
 
-小纹波近似下，电感铜损约为 $I_{\mathrm{L}}^2R_{\mathrm{L}}$，MOSFET 通态电阻损耗约为 $DI_{\mathrm{L}}^2R_{\mathrm{on}}$，二极管通态电阻损耗约为 $D'I_{\mathrm{L}}^2R_{\mathrm{D}}$，固定压降损耗约为 $D'V_{\mathrm{D}}I_{\mathrm{L}}$。因此，总损耗可写为
-\begin{equation}
-  P_{\mathrm{loss}}\approx I_{\mathrm{L}}^2R_{\Sigma}
-  +D'V_{\mathrm{D}}I_{\mathrm{L}}.
-  \label{equ0235}
-\end{equation}
-当电感电流纹波较大时，上述平均模型会遗漏纹波对有效值的贡献，损耗估算的准确性下降；同时上述模型尚未计入器件开通、关断过程中的开关损耗；进入 DCM 后需增加电感电流保持为零的第三个工作状态，并重新建立状态方程。
+在平均电流相同的条件下，纹波会增大电流有效值，使电阻损耗增加。上述模型采用小纹波近似，忽略了电感电流纹波对电阻损耗的额外贡献。因此，电感电流纹波相对于平均值越大，损耗和效率的估算通常越不准确。
 
-由于附加参数的引入，电路分析变得更加复杂，但方程的结构基本不变，结果可以依靠计算机进行求解，因此实际上建立较准确模型的关键一步应当是研究器件并掌握器件的每种主要损耗。下一章就重点关注器件本身的特性，并从器件中提取出电路模型。
+由于附加参数的引入，电路分析变得更加复杂，但方程的结构基本不变，可以借助计算机求解。因此，建立较准确模型的关键一步应当是研究器件，并掌握主要损耗的机理与模型。下一章就重点关注器件本身的特性，并从器件中提取出电路模型。
+
+\clearpage
+
+\section{本章符号汇总}
+
+本节汇总本章主要符号。大写表示直流分量或平均值，小写表示瞬时量，$x$ 和 $y$ 表示任意字符串。未列举的符号不是主要符号。
+
+\begingroup
+\small
+\addtolength{\abovecaptionskip}{-0.2cm}
+\setlength{\tabcolsep}{3pt}
+\setlength{\dashlinedash}{1.5pt}
+\setlength{\dashlinegap}{1.5pt}
+\renewcommand{\arraystretch}{1.10}
+% 使用 hline 让竖虚线计入横线厚度，避免分区边界累积错位。
+\edef\symboltablearrayrulewidth{\the\arrayrulewidth}
+\newcommand{\symboltablerule}[1]{%
+  \noalign{\global\arrayrulewidth=#1\relax}%
+  \hline
+  \noalign{\global\arrayrulewidth=\symboltablearrayrulewidth\relax}%
+}
+\begin{longtable}{
+  >{\centering\arraybackslash}p{0.160\textwidth}
+  >{\centering\arraybackslash}p{0.300\textwidth}:
+  >{\centering\arraybackslash}p{0.160\textwidth}
+  >{\centering\arraybackslash}p{0.300\textwidth}}
+  \caption{第二章符号汇总}\label{tab0201}                                                                                                                                                                                  \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{时间}}                                                                                                                                                                \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $T_{\mathrm{s}}$                                   & 开关周期                                               & $D$                                                & 占空比                                                \\
+  $D'$                                               & 互补占空比                                              &                                                    &                                                    \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电压}}                                                                                                                                                                \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $V_x$                                              & 直流分量或平均值                                           & $v_x(t)$                                           & 瞬时量                                                \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电流}}                                                                                                                                                                \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $I_x$                                              & 直流分量或平均值                                           & $i_x(t)$                                           & 瞬时量                                                \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{功率与效率}}                                                                                                                                                             \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $P_x$                                              & 平均功率                                               & $\eta$                                             & 变换器效率                                              \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{标记}}                                                                                                                                                                \\
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\
+  \symboltablerule{\lightrulewidth}
+  $x_{\mathrm{in}}$                                  & 输入                                                 & $x_{\mathrm{out}}$                                 & 输出                                                 \\
+  $x_{\mathrm{L}}$                                   & 电感                                                 & $x_{\mathrm{C}}$                                   & 电容                                                 \\
+  $x_{\mathrm{D}}$                                   & 二极管                                                & $x_{\mathrm{on}}$                                  & MOSFET 导通                                          \\
+  $x_{\mathrm{s}}$                                   & 开关                                                 & $x_{\Sigma}$                                       & 按占空比加权的总等效量                                        \\
+  $x_{1},\;x_{2},\;\cdots$                           & 量、元器件或时刻的序号                                        & $x'_y(t)$                                          & 对时间的变化率                                            \\
+  $\langle x_y\rangle$                               & 单周期内均值                                             & $x_{y,\mathrm{rms}}$                               & 有效值                                                \\
+  $\Delta x_{y,\mathrm{pp}}$                         & 峰峰值                                                & $\Delta x_{y,\mathrm{pk}}$                         & 单边幅值                                               \\
+  \symboltablerule{\heavyrulewidth}
+\end{longtable}
+
+\endgroup
 
 \chapter{电力电子器件}
 
