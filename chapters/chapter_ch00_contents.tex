@@ -1,0 +1,38 @@
+\clearpage
+\pagenumbering{Roman}
+\renewcommand{\contentsname}{目\qquad{}录}
+\begingroup
+\makeatletter
+\let\notescontentschapter\l@chapter
+\renewcommand*{\l@chapter}[2]{%
+  \begingroup
+  \heiti\zihao{-3}%
+  \notescontentschapter{#1}{#2}%
+  \endgroup
+}
+\renewcommand*{\l@section}[2]{%
+  \ifnum\c@tocdepth>\z@
+    \begingroup
+      \zihao{4}\bfseries
+      \vskip\z@\@plus.2\p@
+      \leftskip1.5em\relax
+      \rightskip\@tocrmarg
+      \parfillskip-\rightskip
+      \parindent1.5em\relax
+      \@afterindenttrue
+      \interlinepenalty\@M
+      \leavevmode
+      \@tempdima2.3em\relax
+      \advance\leftskip\@tempdima
+      \null\nobreak\hskip-\leftskip
+      {#1}\nobreak\hfill
+      \nobreak\hb@xt@\@pnumwidth{\hfil#2\kern-\p@\kern\p@}%
+      \par
+    \endgroup
+  \fi
+}
+\makeatother
+\tableofcontents
+\clearpage
+\endgroup
+\pagenumbering{arabic}
