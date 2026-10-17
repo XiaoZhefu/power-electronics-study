@@ -1,3 +1,14 @@
+% chktex-file 1
+% chktex-file 2
+% chktex-file 3
+% chktex-file 8
+% chktex-file 11
+% chktex-file 12
+% chktex-file 24
+% chktex-file 26
+% chktex-file 36
+% chktex-file 44
+
 \DefineFigure{pic0201}{
 \begin{figure}[H]
   \vspace{-0.3cm}
@@ -589,6 +600,8 @@
   \centering
   \begin{subfigure}[t]{0.48\textwidth}
     \centering
+    % 仅忽略本子图已知的不足 2 pt 的行盒超宽。
+    \hfuzz=2pt\relax
     \begin{notescircuit}[scale=0.9]
       \ctikzset{
         tripoles/nigfete/base width=0.32,
@@ -626,6 +639,7 @@
   \hfill
   \begin{subfigure}[t]{0.48\textwidth}
     \centering
+    \hfuzz=2pt\relax
     \begin{notescircuit}[scale=0.9]
       \coordinate (gnd-boost-loss-switch) at (0,0);
       \coordinate (pole-boost-loss-switch) at (2.94,2.0);

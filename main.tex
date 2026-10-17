@@ -1,6 +1,15 @@
 % !TeX program = xelatex
 % !TeX encoding = UTF-8
-% 在 out 目录中运行：xelatex -interaction=nonstopmode -halt-on-error ../main.tex
+% chktex-file 1
+% chktex-file 2
+% chktex-file 3
+% chktex-file 8
+% chktex-file 11
+% chktex-file 12
+% chktex-file 24
+% chktex-file 26
+% chktex-file 36
+% chktex-file 44
 
 \PassOptionsToPackage{no-math}{fontspec}
 \documentclass[
@@ -143,23 +152,6 @@
   \end{circuitikz}
   \endgroup
 }
-\newenvironment{notesplot}[1][]{%
-  \begingroup
-  \notescircuitfont
-  \begin{tikzpicture}[
-    every node/.append style={font=\notescircuitfont},
-    font=\notescircuitfont,
-    axis/.style={-{Latex[length=1.7mm]},line width=0.6pt},
-    guide/.style={densely dashed,line width=0.4pt},
-    waveform/.style={line width=0.9pt},
-    measure/.style={{Latex[length=1.4mm]}-{Latex[length=1.4mm]},line width=0.5pt},
-    transform shape=false,
-    #1
-  ]
-}{%
-  \end{tikzpicture}
-  \endgroup
-}
 \newcommand{\reviewnote}[1]{%
   \par\smallskip
   {\color{reviewgray}\small\noindent【校核建议：#1】\par}
@@ -187,6 +179,23 @@
       ] (circlednumber) {#1};%
     }%
   }%
+}
+\newenvironment{notesplot}[1][]{%
+  \begingroup
+  \notescircuitfont
+  \begin{tikzpicture}[
+    every node/.append style={font=\notescircuitfont},
+    font=\notescircuitfont,
+    axis/.style={-{Latex[length=1.7mm]},line width=0.6pt},
+    guide/.style={densely dashed,line width=0.4pt},
+    waveform/.style={line width=0.9pt},
+    measure/.style={{Latex[length=1.4mm]}-{Latex[length=1.4mm]},line width=0.5pt},
+    transform shape=false,
+    #1
+  ]
+}{%
+  \end{tikzpicture}
+  \endgroup
 }
 \renewcommand{\thechapter}{\arabic{chapter}}
 \renewcommand{\theequation}{\arabic{chapter}-\arabic{equation}}
@@ -260,6 +269,9 @@
   },
 }
 
+\ExplSyntaxOn
+\msg_redirect_name:nnn { xeCJK } { CJKfamily-redef } { none }
+\ExplSyntaxOff
 \IfFontExistsTF{SimHei}{
   \setCJKfamilyfont{zhhei}[AutoFakeBold=2]{SimHei}
   \setCJKsansfont[AutoFakeBold=2]{SimHei}
@@ -268,12 +280,14 @@
   \setCJKfamilyfont{zhsong}[AutoFakeBold=2]{SimSun}
   \setCJKmainfont[AutoFakeBold=2]{SimSun}
 }{}
+\ExplSyntaxOn
+\msg_redirect_name:nnn { xeCJK } { CJKfamily-redef } { warning }
+\ExplSyntaxOff
 \IfFontExistsTF{Times New Roman}{
   \setmainfont{Times New Roman}
 }{
   \setmainfont{TeX Gyre Termes}
 }{}
-
 \ExplSyntaxOn
 \prop_new:N \g_notes_block_owner_prop
 \prop_new:N \g_notes_block_declared_prop
@@ -292,7 +306,6 @@
     {#1/\tl_use:N \l_tmpa_tl} {true}
   \tl_new:c {g_notes_block_#1_\tl_use:N \l_tmpa_tl _tl}
 }
-
 \NewDocumentCommand{\DefineContentBlock}{m m +m}{
   \prop_if_in:NnTF \g_notes_block_declared_prop {#1/#2} {
     \prop_if_in:NnTF \g_notes_block_defined_prop {#1/#2}
@@ -303,7 +316,6 @@
       }
   }{\PackageError{notes}{Undeclared~#1~block:~#2}{Declare~the~first~label~of~the~block~in~the~header.}}
 }
-
 \cs_new_protected:Npn \notes_insert_block:nn #1#2 {
   \prop_if_in:NnTF \g_notes_block_defined_prop {#1/#2} {
     \prop_if_in:NnTF \g_notes_block_used_prop {#1/#2}
@@ -314,13 +326,11 @@
       }
   }{\PackageError{notes}{Undefined~#1~block:~#2}{Check~the~corresponding~source~definition.}}
 }
-
 \NewDocumentCommand{\InsertContentBlock}{m m}{
   \prop_get:NnNTF \g_notes_block_owner_prop {#1/#2} \l_tmpa_tl
     {\exp_args:NnV \notes_insert_block:nn {#1} \l_tmpa_tl}
     {\PackageError{notes}{Unknown~#1~label:~#2}{Check~the~corresponding~header.}}
 }
-
 \cs_new_protected:Npn \notes_check_definitions: {
   \prop_map_inline:Nn \g_notes_block_declared_prop {
     \prop_if_in:NnF \g_notes_block_defined_prop {##1}
@@ -355,124 +365,152 @@
 
 \chapter{电力电子器件}
 
+前两章中，我们分别探讨了在理想开关与有一定损耗参数的开关控制之下，电路的计算方法，但是此类“开关”是一个抽象的模型，并不是电路中的实际元件。
+
+曾经，小电压或小电流控制的电动开关常以机械继电器的形态出现，但在对开关频率要求较高时，其在高压下易拉弧并造成损耗，不利于快速控制，寿命也受限。因此不太可能依靠机械开关完成所讨论电路的快速通断。
+
+在半导体工业的蓬勃发展之下，半导体器件的性能不断增强，在高频开关条件下几乎完全能够代替机械元件，因此电力电子行业中主要通过半导体器件充当开关。当然，半导体器件也具有各种特性，有的会带来损耗，故本章专门针对半导体器件的相关特性进行分析。
+
 \section{从“开关”模型到具体器件}
 
-现实中不太可能依靠机械开关完成所讨论电路的快速通断。机械开关在高压下易拉弧，造成损耗，且不利于快速控制，寿命也受限，因此应用半导体器件进行替代。
-
-\reviewnote{“不太可能用机械开关”应限定在这里讨论的高频、快速控制场景。机械开关仍可用于接触器、断路器等场合，不宜将这句话理解为所有电力电路都不能使用机械开关。}
-
 以 Buck 为例，可以把一个单刀双掷（SPDT）开关分解为一对互斥的单刀单掷（SPST）开关 $A$、$B$。
+\vspace{-0.3cm}
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[b]{0.31\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.98]
-      \draw (0,2.4) node[ocirc] {} -- (1.0,2.4) node[ocirc] {};
-      \draw (0,0) -- (1.0,0) -- (1.0,1.1) node[ocirc] {};
-      \draw (2.0,2.4) node[ocirc] {} -- (3.0,2.4) node[ocirc] {};
-      \draw (2.0,2.4) -- (1.22,1.35);
-      \node[above] at (1.0,2.4) {$1$};
-      \node[left] at (1.0,1.1) {$2$};
+    \begin{notescircuit}[scale=0.92]
+      \coordinate (throw-one-spdt) at (1.0,2.4);
+      \coordinate (throw-two-spdt) at (1.38,1.65);
+      \coordinate (pole-spdt) at (1.75,2.4);
+      \draw (0,2.4) node[ocirc] {} -- (throw-one-spdt);
+      \draw (0,0) node[ocirc] {} -- (3.0,0) node[ocirc] {};
+      \draw (throw-two-spdt |- 0,0) -- (throw-two-spdt);
+      \draw (pole-spdt) -- (3.0,2.4) node[ocirc] {};
+      \draw (pole-spdt) -- (1.13,1.98);
+      \node[ocirc] at (throw-one-spdt) {};
+      \node[ocirc] at (throw-two-spdt) {};
+      \node[ocirc] at (pole-spdt) {};
+      \node[above] at (throw-one-spdt) {$1$};
+      \node[left] at (throw-two-spdt) {$2$};
       \node[left] at (0,2.4) {$V_{\mathrm{in}}$};
     \end{notescircuit}
-    \caption{SPDT 模型}
+    \caption{SPDT}
     \label{pic0301a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \end{subfigure}%
+  \hfill%
+  \begin{subfigure}[b]{0.31\textwidth}
     \centering
     \begin{notescircuit}[scale=0.92]
-      \draw (0,2.4) node[ocirc] {} to[nos,l=$A$] (2.2,2.4) -- (3.0,2.4) node[ocirc] {};
-      \draw (2.2,2.4) to[nos,l_=$B$] (2.2,0) -- (0,0);
+      \draw (0,2.4) node[ocirc] {} to[nos,l=$A$,name=spst-a] (2.2,2.4) -- (3.0,2.4) node[ocirc] {};
+      \draw (2.2,2.4) to[nos,l_=$B$,name=spst-b] (2.2,0);
+      \draw (0,0) node[ocirc] {} -- (3.0,0) node[ocirc] {};
+      \node[ocirc] at (spst-a.left) {};
+      \node[ocirc] at (spst-a.right) {};
+      \node[ocirc] at (spst-b.left) {};
+      \node[ocirc] at (spst-b.right) {};
       \draw[-{Latex[length=1.5mm]}] (0.2,2.92) -- (1.1,2.92) node[midway,above] {$i_A$};
       \draw[-{Latex[length=1.5mm]}] (1.55,0.3) -- (1.55,1.0) node[midway,left] {$i_B$};
-      \node at (0.2,1.98) {$+$};
-      \node at (2.0,1.98) {$-$};
+      \node at (0.65,1.98) {$+$};
+      \node at (1.55,1.98) {$-$};
       \node at (1.1,1.98) {$v_A$};
-      \node[right] at (2.2,1.95) {$-$};
-      \node[right] at (2.2,0.25) {$+$};
+      \node[right] at (2.2,1.60) {$-$};
+      \node[right] at (2.2,0.80) {$+$};
       \node[right] at (2.2,1.2) {$v_B$};
     \end{notescircuit}
-    \caption{两个互斥 SPST}
+    \caption{互斥 SPST}
     \label{pic0301b}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \end{subfigure}%
+  \hfill%
+  \begin{subfigure}[b]{0.31\textwidth}
     \centering
     \begin{notescircuit}[scale=0.92]
-      \node[nigfete,nogate,rotate=90] (q) at (1.2,2.4) {};
+      \ctikzset{
+        tripoles/nigfete/base width=0.32,
+        tripoles/nigfete/gate width=0.40
+      }
+      \coordinate (gnd-buck-local) at (0,0);
+      \node[nigfete, nogate, rotate=90, anchor=center] (q) at (1.55,2.4) {};
       \draw (0,2.4) node[ocirc] {} -- (q.D);
-      \draw (q.S) -- (2.5,2.4) -- (3.2,2.4) node[ocirc] {};
-      \draw (q.nogate) -- ++(0,-0.25);
-      \draw (2.5,0) to[D-,l_=$D$] (2.5,2.4);
-      \draw (0,0) -- (2.5,0);
-      \node[above=5pt] at (q.center) {$Q$};
+      \draw (q.S) -- ++(0.35,0) coordinate (sw-buck-local)
+      -- (3.2,2.4) node[ocirc] {};
+      \draw (q.inner down |- q.nogate) -- ++(0,-0.22);
+      \draw (sw-buck-local |- gnd-buck-local) to[D-,l_=$D$] (sw-buck-local);
+      \draw (gnd-buck-local) node[ocirc] {} -- (3.2,0) node[ocirc] {};
+      \node[above] at (q.center) {$Q$};
     \end{notescircuit}
-    \caption{半导体实现}
+    \caption{半导体}
     \label{pic0301c}
-  \end{subfigure}
+  \end{subfigure}\par
   \vspace{-0.15cm}
-  \caption{Buck 等效开关的分解与器件替代}
+  \caption{Buck 电路等效开关分解与器件替代}
   \label{pic0301}
+  \vspace{-0.3cm}
 \end{figure}
 
 $A$、$B$ 除了互斥，还应满足各自的通态电流和断态电压要求：$A$ 导通时承载 $i_A(t)$，截止时承受 $v_A(t)$；$B$ 导通时承载 $i_B(t)$，截止时承受 $v_B(t)$。
 
 那么，用哪些器件最适合呢？
 
-\subsection{器件类型}
-
-原稿列举了晶闸管、三极管、IGBT、MOSFET 和二极管，并在 MOSFET 旁注明“传统硅、GaN、SiC”。
-
 \begin{figure}[H]
   \centering
-  \begin{notescircuit}[scale=0.88]
-    \draw (0,1.4) to[thyristor] (0,-0.5);
-    \node[npn] (bjt) at (2.8,0.5) {};
-    \draw (bjt.C) -- ++(0,0.4);
-    \draw (bjt.E) -- ++(0,-0.4);
-    \draw (bjt.B) -- ++(-0.3,0);
-    \node[nigbt] (igbt) at (5.6,0.5) {};
-    \draw (igbt.C) -- ++(0,0.4);
-    \draw (igbt.E) -- ++(0,-0.4);
-    \draw (igbt.G) -- ++(-0.3,0);
-    \node[nigfete] (mos) at (8.4,0.5) {};
-    \draw (mos.D) -- ++(0,0.4);
-    \draw (mos.S) -- ++(0,-0.4);
-    \draw (mos.G) -- ++(-0.3,0);
-    \draw (11.2,1.4) to[D-] (11.2,-0.5);
-    \node at (0,-1.15) {晶闸管};
-    \node at (2.8,-1.15) {三极管};
-    \node at (5.6,-1.15) {IGBT};
-    \node at (8.4,-1.15) {MOSFET};
-    \node at (11.2,-1.15) {二极管};
-    \node[align=center] at (8.4,-1.9) {Si、GaN、SiC\\（原稿注记，待核）};
-  \end{notescircuit}
+  \begin{circuitikz}[scale=1.0, transform shape, every node/.style={font=\small}, line width=0.8pt]
+    \ctikzset{
+      bipoles/length=0.85cm,
+      transistors/scale=1.5,
+      tripoles/npn/base width=0.42,
+      tripoles/npn/width=0.48,
+      tripoles/nigbt/base width=0.32,
+      tripoles/nigbt/gate width=0.40,
+      tripoles/nigfete/base width=0.32,
+      tripoles/nigfete/gate width=0.40
+    }
+    \begin{scope}[scale around={1.15:(0.7,-0.2)}]
+      \draw (0,-0.2) to[stroke thyristor] (1.4,-0.2);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(3.7,-0.2)}]
+      \node[npn, nobase, rotate=90, anchor=C] (bjt) at (3.0,-0.2) {};
+      \draw (bjt.nobase) -- ++(0,-0.22);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(6.7,-0.2)}]
+      \ctikzset{tripoles/nigbt/outer base height=0}
+      \node[nigbt, nogate, rotate=90, anchor=C] (igbt) at (6.0,-0.2) {};
+      \coordinate (igbt-gate-left) at
+      ($(igbt.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(igbt.inner up |- igbt.nogate)$);
+      \coordinate (igbt-gate-right) at
+      ($(igbt.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(igbt.inner down |- igbt.nogate)$);
+      \draw[line cap=butt,line join=miter]
+      (igbt-gate-left) -- (igbt-gate-right) -- ++(0,-0.22);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(10.45,-0.2)}]
+      \node[nigfete, nogate, rotate=90, anchor=D] (mos) at (9.75,-0.2) {};
+      \draw (mos.inner down |- mos.nogate) -- ++(0,-0.22);
+    \end{scope}
+    \begin{scope}[scale around={1.15:(13.5,-0.2)}]
+      \draw (12.8,-0.2) to[D-] (14.2,-0.2);
+    \end{scope}
+    \node[anchor=north,align=center] at (0.7,-1.35) {SCR\\晶闸管};
+    \node[anchor=north,align=center] at (3.7,-1.35) {BJT\\三极管};
+    \node[anchor=north,align=center] at (6.7,-1.35)
+    {IGBT\\绝缘栅\\双极型晶体管};
+    \node[anchor=north,align=center] at (10.45,-1.35)
+    {MOSFET\\金属氧化物半导体\\场效应晶体管};
+    \node[anchor=north,align=center] at (13.5,-1.35) {Diode\\二极管};
+  \end{circuitikz}
   \vspace{-0.15cm}
-  \caption{原稿列举的功率半导体器件符号}
+  \caption{功率半导体器件符号}
   \label{pic0302}
 \end{figure}
 
-\reviewnote{GaN 功率器件常采用 HEMT 结构，不能把全部 GaN 器件直接归为 MOSFET；GaN HEMT 的反向导通机理也与硅、SiC MOSFET 的体二极管不同。原稿材料注记先保留，后续建议分开整理器件结构与材料分类，参见\href{https://www.infineon.com/product-information/gan-hemt-structure-architecture-physics-operation}{Infineon 器件说明}。}
+其中，部分器件会自带反并联体二极管，或者外加反并联二极管，有时会和这些二极管一同绘制； SiC 、 GaN 器件大部分也使用类似 MOS 管的画法。
 
-\subsection{通态电流、断态电压与象限}
+\subsection{器件的象限划分}
 
-暂不考虑损耗，只考虑器件功能，即其允许的电压、电流方向，以及通断是否可控。原稿用通态、断态的“容量”分别衡量器件。
-
-\begin{samepage}
-  象限图的横轴为断态电压，纵轴为通态电流。按图示参考方向，各象限的符号组合为
-  \begin{equation}
-    \begin{aligned}
-      \mathrm{I}:   & \quad v>0,\quad i>0, \\
-      \mathrm{II}:  & \quad v<0,\quad i>0, \\
-      \mathrm{III}: & \quad v<0,\quad i<0, \\
-      \mathrm{IV}:  & \quad v>0,\quad i<0.
-    \end{aligned}
-  \end{equation}
-\end{samepage}
+暂不考虑损耗，只考虑器件功能，即其允许的断态截止电压、通态通过电流方向，以及通断是否可控。
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
   \begin{notescircuit}[scale=0.95]
     \draw[-{Latex[length=2.0mm]},line width=0.6pt] (-3.2,0) -- (3.35,0) node[right] {断态电压 $v$};
@@ -482,306 +520,343 @@ $A$、$B$ 除了互斥，还应满足各自的通态电流和断态电压要求�
     \node[align=center] at (-1.8,1.2) {II\\$v<0,\ i>0$};
     \node[align=center] at (-1.8,-1.2) {III\\$v<0,\ i<0$};
     \node[align=center] at (1.8,-1.2) {IV\\$v>0,\ i<0$};
-    \draw (5.6,1.45) node[ocirc] {} to[nos] (5.6,-1.0) node[ocirc] {};
-    \node[above] at (5.6,1.45) {$1$};
-    \node[below] at (5.6,-1.0) {$0$};
-    \draw[-{Latex[length=1.7mm]}] (5.2,1.3) -- (5.2,0.7) node[midway,left] {$i$};
-    \node[right] at (6.0,1.1) {$+$};
-    \node[right] at (6.0,-0.7) {$-$};
-    \node[right] at (6.0,0.2) {$v$};
+    \begin{scope}[xshift=7.6cm]
+      \draw (0,1.45) node[ocirc] {} to[nos,name=spst-quadrant] (0,-1.0) node[ocirc] {};
+      \node[ocirc] at (spst-quadrant.left) {};
+      \node[ocirc] at (spst-quadrant.right) {};
+      \node[above] at (0,1.45) {$1$};
+      \node[below] at (0,-1.0) {$0$};
+      \draw[-{Latex[length=1.5mm]}] (-0.55,1.3) -- (-0.55,0.6) node[midway,left] {$i$};
+      \node[right] at (0.2,0.625) {$+$};
+      \node[right] at (0.2,0.225) {$v$};
+      \node[right] at (0.2,-0.175) {$-$};
+    \end{scope}
   \end{notescircuit}
   \vspace{-0.15cm}
   \caption{开关通态电流与断态电压的方向能力象限}
+  \vspace{-0.4cm}
   \label{pic0303}
 \end{figure}
 
-原稿给出的分类为：
-\begin{itemize}
-  \item I：单象限器件；
-  \item I、II：电压双向；
-  \item I、IV：电流双向；
-  \item I、II、III、IV：四象限器件。
-\end{itemize}
-象限定义具有相对性，应以下文给出的参考方向为准。
+按照通态电流、断态电压划分象限，器件可分为单象限器件、电压双向器件、电流双向器件、四象限器件；象限定义具有相对性，笔记中以上图给出的参考方向为准。
 
-\reviewnote{这里考察的是通态电流与断态电压的方向能力，二者对应不同状态，不能把象限图当作器件在同一时刻的静态伏安特性曲线。“单象限”也不限于第 I 象限，原稿的 I 应理解为示例；器件符号和参考极性明确后还需统一核对。}
-
-\subsection{控制能力}
+\subsection{器件的控制能力}
 
 按控制能力，分为全控、不控、半控。
 
-\reviewnote{建议后续补充判据：不控器件的通断由外部电路条件决定；半控器件通常只能控制开通；全控器件可控制开通和关断。普通晶闸管与可关断晶闸管应分别讨论，不宜仅凭“晶闸管”这一总称判断控制类型。}
+不控器件的通断由外部电路条件决定；半控器件通常只能控制开通，而关断需由外部电路条件决定；全控器件可控制开通和关断。
 
 \subsection{器件及其组合}
 
 \subsubsection{二极管}
 
-二极管为不控器件。按原稿的端口参考方向，属于 II 象限：正向导通，反向阻断。
+二极管为正向导通，反向阻断的不控型器件。由于通态电流与上文参考方向相同，而断态（截止）电压方向相反，故属于 II 象限器件。
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
   \begin{notescircuit}[scale=0.96]
     \draw (0,0) node[ocirc] {} to[D-] (3.6,0) node[ocirc] {};
-    \node[left] at (0,0) {$1$};
-    \node[right] at (3.6,0) {$0$};
-    \draw[-{Latex[length=1.7mm]}] (1.0,0.65) -- (2.3,0.65) node[midway,above] {$i$};
-    \node at (0.4,-0.65) {$+$};
-    \node at (3.2,-0.65) {$-$};
-    \node at (1.8,-0.65) {$v$};
+    \node[left=2pt] at (0,0) {$1$};
+    \node[right=2pt] at (3.6,0) {$0$};
+    \draw[-{Latex[length=1.5mm]}] (1.15,0.52) -- (2.45,0.52) node[midway,above] {$i$};
+    \node[anchor=base] at (1.15,-0.48) {$+$};
+    \node[anchor=base] at (1.8,-0.48) {$v$};
+    \node[anchor=base] at (2.45,-0.48) {$-$};
   \end{notescircuit}
   \vspace{-0.15cm}
   \caption{二极管的端口参考方向}
+  \vspace{-0.4cm}
   \label{pic0304}
 \end{figure}
 
 \subsubsection{三极管、IGBT 与 MOSFET}
 
-原稿将三极管、IGBT 列为全控 I 象限器件；MOSFET 列为全控 I、IV 象限器件，注明“导通时为双向”。断态电流和通态电压降暂不考虑。
+三极管、IGBT 为全控 I 象限器件。MOSFET 可阻断单一极性的电压，导通时沟道可双向通流，正向导通电流可受控关断；但由于体二极管（未画出）的存在，沟道关断后其仍能承受反向电流，按上述参考方向归为全控 I、IV 象限器件。
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{skip=2pt}
+  \begin{subfigure}[b]{0.31\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.95]
-      \node[npn] (q) at (0.7,1.25) {};
-      \coordinate (upper) at (q.C |- 0,2.5);
-      \coordinate (lower) at (q.E |- 0,0);
-      \draw (upper) -- (q.C);
-      \draw (q.E) -- (lower);
-      \draw (q.B) -- ++(-0.65,0) node[left] {$B$};
-      \node[ocirc] at (upper) {};
-      \node[ocirc] at (lower) {};
-      \node[above] at (upper) {$1$};
-      \node[below] at (lower) {$0$};
-      \draw[-{Latex[length=1.7mm]}] ([xshift=-9pt]upper) -- ++(0,-0.65) node[midway,left] {$i$};
-      \node[right=13pt] at (upper) {$+$};
-      \node[right=13pt] at (lower) {$-$};
-      \node at (2.0,1.25) {$v$};
-    \end{notescircuit}
+    \begin{notescircuit}[scale=0.96]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        tripoles/npn/base width=0.42,
+        tripoles/npn/width=0.48
+      }
+      \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+        \node[npn,nobase,rotate=90,anchor=C] (q) at (1.1,0) {};
+        \draw (q.nobase) -- ++(0,-0.22) coordinate (base);
+      \end{scope}
+      \draw (0,0) node[ocirc] {} -- (q.C);
+      \draw (q.E) -- (3.6,0) node[ocirc] {};
+      \node[right=2pt] at (base) {$B$};
+      \node[left=2pt] at (0,0) {$1$};
+      \node[right=2pt] at (3.6,0) {$0$};
+      \draw[-{Latex[length=1.5mm]}] (1.15,0.32) -- (2.45,0.32) node[midway,above] {$i$};
+      \node[anchor=base] at (1.15,-1.0) {$+$};
+      \node[anchor=base] at (1.8,-1.0) {$v$};
+      \node[anchor=base] at (2.45,-1.0) {$-$};
+    \end{notescircuit}\par
     \caption{三极管：I 象限}
     \label{pic0305a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \end{subfigure}\hfill%
+  \begin{subfigure}[b]{0.31\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.95]
-      \node[nigbt] (q) at (0.7,1.25) {};
-      \coordinate (upper) at (q.C |- 0,2.5);
-      \coordinate (lower) at (q.E |- 0,0);
-      \draw (upper) -- (q.C);
-      \draw (q.E) -- (lower);
-      \draw (q.G) -- ++(-0.65,0) node[left] {$G$};
-      \node[ocirc] at (upper) {};
-      \node[ocirc] at (lower) {};
-      \node[above] at (upper) {$1$};
-      \node[below] at (lower) {$0$};
-      \draw[-{Latex[length=1.7mm]}] ([xshift=-9pt]upper) -- ++(0,-0.65) node[midway,left] {$i$};
-      \node[right=13pt] at (upper) {$+$};
-      \node[right=13pt] at (lower) {$-$};
-      \node at (2.0,1.25) {$v$};
-    \end{notescircuit}
+    \begin{notescircuit}[scale=0.96]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        tripoles/nigbt/base width=0.32,
+        tripoles/nigbt/gate width=0.40,
+        tripoles/nigbt/outer base height=0
+      }
+      \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+        \node[nigbt,nogate,rotate=90,anchor=C] (q) at (1.1,0) {};
+        \coordinate (gate-left) at
+        ($(q.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(q.inner up |- q.nogate)$);
+        \coordinate (gate-right) at
+        ($(q.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(q.inner down |- q.nogate)$);
+        \draw[line cap=butt,line join=miter]
+        (gate-left) -- (gate-right) -- ++(0,-0.22) coordinate (gate);
+      \end{scope}
+      \draw (0,0) node[ocirc] {} -- (q.C);
+      \draw (q.E) -- (3.6,0) node[ocirc] {};
+      \node[right=2pt] at (gate) {$G$};
+      \node[left=2pt] at (0,0) {$1$};
+      \node[right=2pt] at (3.6,0) {$0$};
+      \draw[-{Latex[length=1.5mm]}] (1.15,0.32) -- (2.45,0.32) node[midway,above] {$i$};
+      \node[anchor=base] at (1.15,-1.0) {$+$};
+      \node[anchor=base] at (1.8,-1.0) {$v$};
+      \node[anchor=base] at (2.45,-1.0) {$-$};
+    \end{notescircuit}\par
     \caption{IGBT：I 象限}
     \label{pic0305b}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \end{subfigure}\hfill%
+  \begin{subfigure}[b]{0.31\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.95]
-      \node[nigfete] (q) at (0.7,1.25) {};
-      \coordinate (upper) at (q.D |- 0,2.5);
-      \coordinate (lower) at (q.S |- 0,0);
-      \draw (upper) -- (q.D);
-      \draw (q.S) -- (lower);
-      \draw (q.G) -- ++(-0.65,0) node[left] {$G$};
-      \node[ocirc] at (upper) {};
-      \node[ocirc] at (lower) {};
-      \node[above] at (upper) {$1$};
-      \node[below] at (lower) {$0$};
-      \draw[-{Latex[length=1.7mm]}] ([xshift=-9pt]upper) -- ++(0,-0.65) node[midway,left] {$i$};
-      \node[right=13pt] at (upper) {$+$};
-      \node[right=13pt] at (lower) {$-$};
-      \node at (2.0,1.25) {$v$};
-    \end{notescircuit}
+    \begin{notescircuit}[scale=0.96]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        tripoles/nigfete/base width=0.32,
+        tripoles/nigfete/gate width=0.40
+      }
+      \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+        \node[nigfete,nogate,rotate=90,anchor=D] (q) at (1.1,0) {};
+        \draw (q.inner down |- q.nogate) -- ++(0,-0.22) coordinate (gate);
+      \end{scope}
+      \draw (0,0) node[ocirc] {} -- (q.D);
+      \draw (q.S) -- (3.6,0) node[ocirc] {};
+      \node[right=2pt] at (gate) {$G$};
+      \node[left=2pt] at (0,0) {$1$};
+      \node[right=2pt] at (3.6,0) {$0$};
+      \draw[-{Latex[length=1.5mm]}] (1.15,0.32) -- (2.45,0.32) node[midway,above] {$i$};
+      \node[anchor=base] at (1.15,-1.0) {$+$};
+      \node[anchor=base] at (1.8,-1.0) {$v$};
+      \node[anchor=base] at (2.45,-1.0) {$-$};
+    \end{notescircuit}\par
     \caption{MOSFET：I、IV 象限}
     \label{pic0305c}
-  \end{subfigure}
+  \end{subfigure}\par
   \vspace{-0.15cm}
   \caption{三极管、IGBT 与 MOSFET 的参考端口方向}
   \label{pic0305}
+  \vspace{-0.3cm}
 \end{figure}
 
-\reviewnote{MOSFET 的受控沟道可双向导电，但体二极管或其他反向导通路径可能使反向电流在栅极关断后仍继续流动。“导通时双向”不等于任意方向的电流都能由同一个器件独立切断。此处分类先按原稿保留，后续结合具体结构、体二极管及电压极性核对。}
+\subsubsection{二极管、三极管组合}
 
-\subsubsection{带二极管的三极管组合}
-
-\paragraph{反并联二极管}
-
-带反并联二极管的三极管，原稿标为全控 I、IV 象限。
+带反并联二极管的三极管如图 \ref{pic0306a} 所示，为 I、IV 象限；反向电流若经反并联二极管流动，不能由三极管的控制端直接关断。带串联二极管的三极管如图 \ref{pic0306b} 所示，为 I、II 象限。
 
 \begin{figure}[H]
-  \centering
-  \begin{notescircuit}[scale=0.95]
-    \node[npn] (q) at (1.3,1.3) {};
-    \draw (1.1,2.65) -| (q.C);
-    \draw (q.E) |- (1.1,0);
-    \draw (q.B) -- ++(-0.4,0);
-    \node[right=5pt] at (q.center) {$Q$};
-    \draw (1.1,2.65) -- (-0.4,2.65);
-    \draw (-0.4,0) to[D-,l_=$D$] (-0.4,2.65);
-    \draw (-0.4,0) -- (1.1,0);
-    \draw (1.1,3.2) node[ocirc] {} -- (1.1,2.65);
-    \draw (1.1,0) -- (1.1,-0.5) node[ocirc] {};
-    \node[above] at (1.1,3.2) {$1$};
-    \node[below] at (1.1,-0.5) {$0$};
-    \draw[-{Latex[length=1.7mm]}] (0.65,3.1) -- (0.65,2.75) node[midway,left] {$i$};
-    \node[right] at (2.45,2.65) {$+$};
-    \node[right] at (2.45,0) {$-$};
-    \path (2.45,2.65) -- node[right=5pt] {$v$} (2.45,0);
-  \end{notescircuit}
   \vspace{-0.15cm}
-  \caption{带反并联二极管的三极管组合}
+  \centering
+  \captionsetup[subfigure]{skip=2pt}
+  \begin{subfigure}[b]{0.47\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.96]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        tripoles/npn/base width=0.42,
+        tripoles/npn/width=0.48
+      }
+      \begin{scope}[scale around={1.15:(2.5,0)},transform shape]
+        \node[npn,nobase,rotate=90,anchor=C] (q) at (1.8,0) {};
+        \draw (q.nobase) -- ++(0,-0.22) coordinate (base);
+      \end{scope}
+      \draw (0,0) node[ocirc] {} -- (q.C);
+      \draw (q.E) -- (5.0,0) node[ocirc] {};
+      \draw (3.8,0) -- (3.8,0.9) to[D-,l_=$D$] (1.2,0.9) -- (1.2,0);
+      \node[circ] at (1.2,0) {};
+      \node[circ] at (3.8,0) {};
+      \node[above=2pt] at ($(q.C)!0.5!(q.E)$) {$Q$};
+      \node[right=2pt] at (base) {$B$};
+      \node[left=2pt] at (0,0) {$1$};
+      \node[right=2pt] at (5.0,0) {$0$};
+      \draw[-{Latex[length=1.5mm]}] (0.1,0.32) -- (1.0,0.32) node[midway,above] {$i$};
+      \node[anchor=base] at (1.85,-0.9) {$+$};
+      \node[anchor=base] at (2.5,-0.9) {$v$};
+      \node[anchor=base] at (3.15,-0.9) {$-$};
+    \end{notescircuit}\par
+    \caption{反并联二极管：I、IV 象限}
+    \label{pic0306a}
+  \end{subfigure}\hfill%
+  \begin{subfigure}[b]{0.47\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.96]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        tripoles/npn/base width=0.42,
+        tripoles/npn/width=0.48
+      }
+      \begin{scope}[scale around={1.15:(3.5,0)},transform shape]
+        \node[npn,nobase,rotate=90,anchor=C] (q) at (2.8,0) {};
+        \draw (q.nobase) -- ++(0,-0.22) coordinate (base);
+      \end{scope}
+      \draw (0,0) node[ocirc] {} -- (0.9,0) to[D-,l=$D$] (2.3,0) -- (q.C);
+      \draw (q.E) -- (5.0,0) node[ocirc] {};
+      \node[above=2pt] at ($(q.C)!0.5!(q.E)$) {$Q$};
+      \node[right=2pt] at (base) {$B$};
+      \node[left=2pt] at (0,0) {$1$};
+      \node[right=2pt] at (5.0,0) {$0$};
+      \draw[-{Latex[length=1.5mm]}] (0.1,0.32) -- (1.0,0.32) node[midway,above] {$i$};
+      \node[anchor=base] at (1.85,-0.9) {$+$};
+      \node[anchor=base] at (2.5,-0.9) {$v$};
+      \node[anchor=base] at (3.15,-0.9) {$-$};
+    \end{notescircuit}\par
+    \caption{串联二极管：I、II 象限}
+    \label{pic0306b}
+  \end{subfigure}\par
+  \vspace{-0.15cm}
+  \caption{二极管与三极管的组合}
   \label{pic0306}
-\end{figure}
-
-\reviewnote{反向电流若经反并联二极管流动，不能由三极管的控制端直接关断。因此“全控 I、IV 象限”应区分受控开关支路与不控二极管支路，不宜理解为两种电流方向都完全受控。原稿结论暂保留。}
-
-\paragraph{串联二极管}
-
-带串联二极管的三极管，原稿标为全控 I、II 象限。
-
-\begin{figure}[H]
-  \centering
-  \begin{notescircuit}[scale=0.95]
-    \node[npn] (q) at (1.1,1.2) {};
-    \draw (1.1,3.6) node[ocirc] {} to[D-,l=$D$] (1.1,2.25) -- (q.C);
-    \draw (q.E) |- (1.1,0) node[ocirc] {};
-    \draw (q.B) -- ++(-0.5,0);
-    \node[right=5pt] at (q.center) {$Q$};
-    \node[above] at (1.1,3.6) {$1$};
-    \node[below] at (1.1,0) {$0$};
-    \draw[-{Latex[length=1.7mm]}] (0.5,3.45) -- (0.5,2.85) node[midway,left] {$i$};
-    \node[right] at (2.0,3.6) {$+$};
-    \node[right] at (2.0,0) {$-$};
-    \path (2.0,3.6) -- node[right=5pt] {$v$} (2.0,0);
-  \end{notescircuit}
-  \vspace{-0.15cm}
-  \caption{带串联二极管的三极管组合}
-  \label{pic0307}
+  \vspace{-0.3cm}
 \end{figure}
 
 \subsubsection{四象限器件}
 
-原稿给出了三种四象限器件的组合结构。
+四象限开关兼具双向通流和双向阻断能力，图 \ref{pic0307} 给出了三种实现方式。
 
 \begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.31\textwidth}
-    \centering
-    \begin{notescircuit}[scale=0.79,yscale=1.2]
-      \node[npn,rotate=0] (q1) at (1.1,2.15) {};
-      \node[npn,rotate=180] (q2) at (1.1,0.7) {};
-      \draw (1.1,2.85) -| (q1.C);
-      \draw (q2.C) |- (1.1,0);
-      \draw[densely dashed,draw=reviewgray] (q1.E) |- (1.1,1.425);
-      \draw[densely dashed,draw=reviewgray] (q2.E) |- (1.1,1.425);
-
-      \node[circ] at (1.1,1.425) {};
-      \draw (1.1,2.85) -- (-0.55,2.85);
-      \draw[densely dashed,draw=reviewgray] (1.1,1.425) -- (-0.55,1.425);
-      \draw[densely dashed,draw=reviewgray] (1.1,1.425) -- (2.6,1.425);
-      \draw (1.1,0) -- (2.6,0);
-      \draw (-0.55,1.425) to[D-,l_=$D_1$] (-0.55,2.85);
-      \draw (2.6,1.425) to[D-,l=$D_2$] (2.6,0);
-
-      \draw (q1.B) -- ++(-0.25,0);
-      \draw (q2.B) -- ++(0.25,0);
-      \node[right=4pt] at (q1.center) {$Q_1$};
-      \node[left=4pt] at (q2.center) {$Q_2$};
-      \draw (1.1,3.45) node[ocirc] {} -- (1.1,2.85);
-      \draw (1.1,0) -- (1.1,-0.5) node[ocirc] {};
-      \node[above] at (1.1,3.45) {$1$};
-      \node[below] at (1.1,-0.5) {$0$};
-      \draw[-{Latex[length=1.7mm]}] (0.65,3.35) -- (0.65,2.95) node[midway,left] {$i$};
-      \node[right] at (2.9,2.85) {$+$};
-      \node[right] at (2.9,0) {$-$};
-      \node[right] at (2.9,1.425) {$v$};
-    \end{notescircuit}
-    \caption{结构一：中间连接待核}
-    \label{pic0308a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
-    \centering
-    \begin{notescircuit}[scale=0.79,yscale=1.2]
-      \node[npn,rotate=180] (q1) at (1.1,2.15) {};
-      \node[npn,rotate=0] (q2) at (1.1,0.7) {};
-      \draw (1.1,2.85) -| (q1.E);
-      \draw (q2.E) |- (1.1,0);
-      \draw[densely dashed,draw=reviewgray] (q1.C) |- (1.1,1.425);
-      \draw[densely dashed,draw=reviewgray] (q2.C) |- (1.1,1.425);
-
-      \node[circ] at (1.1,1.425) {};
-      \draw (1.1,2.85) -- (-0.55,2.85);
-      \draw[densely dashed,draw=reviewgray] (1.1,1.425) -- (-0.55,1.425);
-      \draw[densely dashed,draw=reviewgray] (1.1,1.425) -- (2.6,1.425);
-      \draw (1.1,0) -- (2.6,0);
-      \draw (-0.55,2.85) to[D-,l=$D_1$] (-0.55,1.425);
-      \draw (2.6,0) to[D-,l_=$D_2$] (2.6,1.425);
-
-      \draw (q1.B) -- ++(0.25,0);
-      \draw (q2.B) -- ++(-0.25,0);
-      \node[right=4pt] at (q1.center) {$Q_1$};
-      \node[left=4pt] at (q2.center) {$Q_2$};
-      \draw (1.1,3.45) node[ocirc] {} -- (1.1,2.85);
-      \draw (1.1,0) -- (1.1,-0.5) node[ocirc] {};
-      \node[above] at (1.1,3.45) {$1$};
-      \node[below] at (1.1,-0.5) {$0$};
-      \draw[-{Latex[length=1.7mm]}] (0.65,3.35) -- (0.65,2.95) node[midway,left] {$i$};
-      \node[right] at (2.9,2.85) {$+$};
-      \node[right] at (2.9,0) {$-$};
-      \node[right] at (2.9,1.425) {$v$};
-    \end{notescircuit}
-    \caption{结构二：中间连接待核}
-    \label{pic0308b}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
-    \centering
-    \begin{notescircuit}[scale=0.8]
-      \coordinate (top) at (0,2.7);
-      \coordinate (right) at (1.65,1.3);
-      \coordinate (bottom) at (0,-0.1);
-      \coordinate (left) at (-1.65,1.3);
-      \draw (top) to[D-] (right);
-      \draw (bottom) to[D-] (right);
-      \draw (left) to[D-] (top);
-      \draw (left) to[D-] (bottom);
-      \draw (right) to[nos,l=$S$] (left);
-      \draw (top) -- (0,3.35) node[ocirc] {};
-      \draw (bottom) -- (0,-0.6) node[ocirc] {};
-      \node[above] at (0,3.35) {$1$};
-      \node[below] at (0,-0.6) {$0$};
-      \draw[-{Latex[length=1.7mm]}] (-0.4,3.25) -- (-0.4,2.85) node[midway,left] {$i$};
-      \node[right] at (2.0,2.7) {$+$};
-      \node[right] at (2.0,-0.1) {$-$};
-      \node[right] at (2.0,1.3) {$v$};
-    \end{notescircuit}
-    \caption{整流桥与受控开关}
-    \label{pic0308c}
-  \end{subfigure}
   \vspace{-0.15cm}
-  \caption{原稿中的四象限开关组合示意}
-  \label{pic0308}
+  \centering
+  \captionsetup[subfigure]{skip=2pt}
+  \begin{subfigure}[b]{0.31\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.84]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        tripoles/npn/base width=0.42,
+        tripoles/npn/width=0.48
+      }
+      \coordinate (top) at (0,3.4);
+      \coordinate (bottom) at (0,0);
+      \node[npn,nobase,anchor=C,scale=1.15,transform shape] (q1) at (-0.85,1.7) {};
+      \node[npn,nobase,rotate=180,anchor=E,scale=1.15,transform shape] (q2) at (0.85,3.2) {};
+      \draw (top) -| (-0.85,3.4) to[D-,l_=$D_1$] (q1.C);
+      \draw (q1.E) |- (bottom);
+      \draw (top) -| (q2.E);
+      \draw (bottom) -- (0.85,0) to[D-,l_=$D_2$] (q2.C);
+      \draw (q1.nobase) -- ++(-0.22,0);
+      \draw (q2.nobase) -- ++(0.22,0);
+      \node[right=3pt] at (q1.C |- q1.nobase) {$Q_1$};
+      \node[left=3pt] at (q2.C |- q2.nobase) {$Q_2$};
+      \draw (top) node[circ] {} -- (0,4.35) node[ocirc] {} node[above] {$1$};
+      \draw (bottom) node[circ] {} -- (0,-0.45) node[ocirc] {} node[below] {$0$};
+      \draw[-{Latex[length=1.5mm]}] (-0.42,4.2) -- (-0.42,3.55) node[midway,left] {$i$};
+      \node[right] at (1.85,3.15) {$+$};
+      \node[right] at (1.85,1.7) {$v$};
+      \node[right] at (1.85,0.25) {$-$};
+    \end{notescircuit}\par
+    \caption{串联支路反并联}
+    \label{pic0307a}
+  \end{subfigure}\hfill%
+  \begin{subfigure}[b]{0.31\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.84]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        tripoles/npn/base width=0.42,
+        tripoles/npn/width=0.48
+      }
+      \coordinate (top) at (0,3.4);
+      \coordinate (bottom) at (0,0);
+      \coordinate (middle) at (-0.85,1.7);
+      \node[npn,nobase,xscale=-1,anchor=E,scale=1.15,transform shape] (q1) at (0.65,1.7) {};
+      \node[npn,nobase,rotate=180,anchor=E,scale=1.15,transform shape] (q2) at (0.65,1.7) {};
+      \draw (top) -| (q1.C);
+      \draw (q2.C) |- (bottom);
+      \draw (top) -- (-0.85,3.4);
+      \draw (bottom) -- (-0.85,0);
+      \draw (middle) to[D-,l=$D_1$] (-0.85,3.4);
+      \draw (middle) to[D-,l_=$D_2$] (-0.85,0);
+      \draw (middle) node[circ] {} -- (q1.E) node[circ] {};
+      \draw (q1.nobase) -- ++(0.22,0);
+      \draw (q2.nobase) -- ++(0.22,0);
+      \node[left=3pt] at (q1.C |- q1.nobase) {$Q_1$};
+      \node[left=3pt] at (q2.C |- q2.nobase) {$Q_2$};
+      \draw (top) node[circ] {} -- (0,4.35) node[ocirc] {} node[above] {$1$};
+      \draw (bottom) node[circ] {} -- (0,-0.45) node[ocirc] {} node[below] {$0$};
+      \draw[-{Latex[length=1.5mm]}] (-0.42,4.2) -- (-0.42,3.55) node[midway,left] {$i$};
+      \node[right] at (1.85,3.15) {$+$};
+      \node[right] at (1.85,1.7) {$v$};
+      \node[right] at (1.85,0.25) {$-$};
+    \end{notescircuit}\par
+    \caption{共射组合}
+    \label{pic0307b}
+  \end{subfigure}\hfill%
+  \begin{subfigure}[b]{0.31\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.84]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        tripoles/npn/base width=0.42,
+        tripoles/npn/width=0.48
+      }
+      \coordinate (top) at (0,3.4);
+      \coordinate (right) at (1.7,1.7);
+      \coordinate (bottom) at (0,0);
+      \coordinate (left) at (-1.7,1.7);
+      \ctikzset{label/align=straight}
+      \draw (top) to[D-,l_=$D_1$] (left);
+      \draw (bottom) to[D-,l=$D_4$] (left);
+      \draw (right) to[D-,l_=$D_2$] (top);
+      \draw (right) to[D-,l=$D_3$] (bottom);
+      \node[npn,nobase,rotate=90,anchor=C,scale=1.15,transform shape] (q) at (-0.75,1.7) {};
+      \draw (left) node[circ] {} -- (q.C);
+      \draw (q.E) -- (right) node[circ] {};
+      \draw (q.nobase) -- ++(0,-0.22);
+      \node[above=2pt] at ($(q.C)!0.5!(q.E)$) {$Q$};
+      \draw (top) node[circ] {} -- (0,4.35) node[ocirc] {} node[above] {$1$};
+      \draw (bottom) node[circ] {} -- (0,-0.45) node[ocirc] {} node[below] {$0$};
+      \draw[-{Latex[length=1.5mm]}] (-0.42,4.2) -- (-0.42,3.55) node[midway,left] {$i$};
+      \node[right] at (2.0,3.15) {$+$};
+      \node[right] at (2.0,1.7) {$v$};
+      \node[right] at (2.0,0.25) {$-$};
+    \end{notescircuit}\par
+    \caption{二极管全桥与三极管}
+    \label{pic0307c}
+  \end{subfigure}\par
+  \vspace{-0.15cm}
+  \caption{四象限开关的组合结构}
+  \label{pic0307}
+  \vspace{-0.3cm}
 \end{figure}
 
-\reviewnote{本小节标题后的括注仍不清晰。原稿前两幅组合的中间连线及器件朝向难以完全确认，图中暂按共发射极、共集电极形式作识别示意，灰色虚线表示待核连接；并未认定与原图完全一致。第三幅的二极管方向按整流桥功能整理，仍需对照原稿确认。还应分别核对两种极性下的导通路径、阻断路径以及控制端的参考点，不能把重绘等同于电路功能已校核。}
+图 \ref{pic0307a} 将两条由二极管与三极管串联的支路反并联，分别通过控制对应的三极管实现通断。两只三极管均关断时，组合可阻断两种极性的端口电压。
 
-% ---------- 照片 1：二极管（开头的器件组合已见前节） ----------
+图 \ref{pic0307b} 将两只三极管共发射极连接，并分别配置反并联二极管。其正、反向电流分别由两只三极管控制，两只三极管均关断时，同样可实现双向阻断。
+
+图 \ref{pic0307c} 利用二极管全桥，使外部电流无论沿哪个方向流动，通过三极管的电流方向均保持不变。只需控制一只三极管，即可控制两个方向的电流或阻断两个方向的电压。
+
+\newpage{}
+
 \section{二极管}
 
 \subsection{静态特性与种类}
 
-本节暂不展开 P 型、N 型半导体及 PN 结的微观原理，先从端口特性理解二极管。以阳极到阴极为电流正方向，以阳极相对阴极的电压为正电压，二极管的静态伏安特性如图 \ref{pic0309a} 所示：正向偏置时导通，反向偏置时阻断；反向电压超过击穿电压后进入击穿区。
+本节暂不展开 P 型、N 型半导体及 PN 结的微观原理，先从端口特性理解二极管。以阳极到阴极为电流正方向，以阳极相对阴极的电压为正电压，二极管的静态伏安特性如图 \ref{pic0308a} 所示：正向偏置时导通，反向偏置时阻断；反向电压超过击穿电压后进入击穿区。
 
 \begin{figure}[H]
   \centering
@@ -804,7 +879,7 @@ $A$、$B$ 除了互斥，还应满足各自的通态电流和断态电压要求�
       \node[align=center] at (1.05,2.35) {正向导通};
     \end{notesplot}\par
     \caption{静态伏安特性}
-    \label{pic0309a}
+    \label{pic0308a}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.48\textwidth}
@@ -820,10 +895,10 @@ $A$、$B$ 除了互斥，还应满足各自的通态电流和断态电压要求�
       \node at (1.8,0.1) {肖特基二极管};
     \end{notescircuit}\par
     \caption{两类二极管的符号}
-    \label{pic0309b}
+    \label{pic0308b}
   \end{subfigure}
   \caption{二极管的静态特性与种类}
-  \label{pic0309}
+  \label{pic0308}
 \end{figure}
 
 原稿将 PN 结二极管归为双极型、少子器件，注明适用于较高电压和较大功率；将肖特基二极管归为单极型、多子器件，注明适用于较低电压。
@@ -850,7 +925,7 @@ $A$、$B$ 除了互斥，还应满足各自的通态电流和断态电压要求�
     \node[reviewgray,align=center] at (4.8,-1.4) {原稿电流曲线未清晰画出，待核};
   \end{notescircuit}
   \caption{二极管开通响应}
-  \label{pic0310}
+  \label{pic0309}
 \end{figure}
 
 \begin{figure}[H]
@@ -902,12 +977,12 @@ $A$、$B$ 除了互斥，还应满足各自的通态电流和断态电压要求�
     \node at (7.6,-2.85) {关断损耗};
   \end{notesplot}
   \caption{二极管开通与反向恢复波形}
-  \label{pic0311}
+  \label{pic0310}
 \end{figure}
 
 PN 结二极管开通时，端口电压可能先出现过冲，再降至稳定的正向压降。关断时，电流先从正向电流降至零，再出现短暂的反向电流，随后恢复反向阻断能力。
 
-\reviewnote{图 \ref{pic0310} 为原手绘的概略示意，图 \ref{pic0311} 按补充图片重绘；1～6 为开通、通态及反向恢复过程的区间编号。图中标出了电导调制、少子电荷移除、结电容充电和反向恢复电荷；反向阻断电压按阳极到阴极的参考方向标为 $-V_{\mathrm{R}}$。图 \ref{pic0310} 中无法辨认的电流曲线仍待核。}
+\reviewnote{图 \ref{pic0309} 为原手绘的概略示意，图 \ref{pic0310} 按补充图片重绘；1～6 为开通、通态及反向恢复过程的区间编号。图中标出了电导调制、少子电荷移除、结电容充电和反向恢复电荷；反向阻断电压按阳极到阴极的参考方向标为 $-V_{\mathrm{R}}$。图 \ref{pic0309} 中无法辨认的电流曲线仍待核。}
 
 \subsection{主要参数}
 
@@ -942,7 +1017,7 @@ PN 结二极管开通时，端口电压可能先出现过冲，再降至稳定�
       \node at (3.35,3.35) {$-$};
     \end{notescircuit}\par
     \caption{MOSFET 与体二极管}
-    \label{pic0312a}
+    \label{pic0311a}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.54\textwidth}
@@ -968,10 +1043,10 @@ PN 结二极管开通时，端口电压可能先出现过冲，再降至稳定�
       node[midway,above] {$Q_{\mathrm{g}}$};
     \end{notescircuit}\par
     \caption{寄生参数模型}
-    \label{pic0312b}
+    \label{pic0311b}
   \end{subfigure}
   \caption{MOSFET 的端口方向与寄生参数}
-  \label{pic0312}
+  \label{pic0311}
 \end{figure}
 
 \reviewnote{MOSFET 标题旁被框起及划去的旁注不清晰，未作为正式结论。原稿关于体二极管的第一句已划去，后面的意思可辨认为“关断时允许电流通过，起保护作用，但反向电流无法阻断”。这里按端口方向整理；“起保护作用”并非所有工况下都成立，不能据此忽略体二极管的电流、恢复和损耗限制。}
@@ -1013,10 +1088,10 @@ PN 结二极管开通时，端口电压可能先出现过冲，再降至稳定�
     \node at (6.8,-0.6) {关断};
   \end{notesplot}
   \caption{MOSFET 输出特性与开关工作区域}
-  \label{pic0313}
+  \label{pic0312}
 \end{figure}
 
-\reviewnote{图 \ref{pic0313} 按补充图片重绘，横、纵轴分别为漏源电压和漏极电流，曲线族对应不同栅源电压；图中给出三极管区与饱和区的分界关系。该图是定性工作区域示意，不表示安全工作区或器件实测数据。}
+\reviewnote{图 \ref{pic0312} 按补充图片重绘，横、纵轴分别为漏源电压和漏极电流，曲线族对应不同栅源电压；图中给出三极管区与饱和区的分界关系。该图是定性工作区域示意，不表示安全工作区或器件实测数据。}
 
 MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同时非零，形成开关损耗；稳定通态仍有通态电阻损耗。
 
@@ -1048,10 +1123,10 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
     \node[below] at (7.65,-0.2) {关断损耗};
   \end{notesplot}
   \caption{MOSFET 电压、电流波形与损耗示意}
-  \label{pic0314}
+  \label{pic0313}
 \end{figure}
 
-\reviewnote{图 \ref{pic0314} 上半部分给出电压、电流波形，下半部分示意通态损耗与开关损耗；电压、电流使用各自的纵坐标比例，不能直接比较曲线高度。}
+\reviewnote{图 \ref{pic0313} 上半部分给出电压、电流波形，下半部分示意通态损耗与开关损耗；电压、电流使用各自的纵坐标比例，不能直接比较曲线高度。}
 
 原稿将平均损耗分为通态、开关和驱动三部分：
 \begin{equation}
@@ -1081,7 +1156,7 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
 
 应用方面，原稿提到用 MOSFET 代替二极管，以及器件的串联、并联。
 
-图 \ref{pic0315} 给出了半桥驱动示意：逻辑信号经过死区生成、高侧电平移位及栅极驱动后，分别控制上下两个 MOSFET；高侧驱动采用自举供电。
+图 \ref{pic0314} 给出了半桥驱动示意：逻辑信号经过死区生成、高侧电平移位及栅极驱动后，分别控制上下两个 MOSFET；高侧驱动采用自举供电。
 
 \begin{figure}[H]
   \centering
@@ -1154,10 +1229,10 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
     \node[below] at (10.5,4.3) {开关节点电压};
   \end{notescircuit}
   \caption{半桥电路、死区控制与自举驱动}
-  \label{pic0315}
+  \label{pic0314}
 \end{figure}
 
-\reviewnote{新补充的图 \ref{pic0315} 明确给出了死区生成、电平移位、自举电容及上下管驱动；原手写应用条目末尾的括注仍无法可靠辨认。课件的半桥驱动图不等于串并联器件的均压、均流设计，后者仍需另行讨论。}
+\reviewnote{新补充的图 \ref{pic0314} 明确给出了死区生成、电平移位、自举电容及上下管驱动；原手写应用条目末尾的括注仍无法可靠辨认。课件的半桥驱动图不等于串并联器件的均压、均流设计，后者仍需另行讨论。}
 
 % ---------- 照片 4：Buck 的开关损耗示例 ----------
 \exampletitle[exa0301]{计及开关过渡与二极管反向恢复的 Buck 变换器}
@@ -1203,7 +1278,7 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
     \node at (9.85,0) {$-$};
   \end{notescircuit}
   \caption{用于反向恢复损耗分析的 Buck 电路}
-  \label{pic0316}
+  \label{pic0315}
 \end{figure}
 
 图中 $v_{\mathrm{d}}(t)$ 表示开关节点相对输入负端的电压，正端在上；$i_{\mathrm{D}}(t)$ 的正方向向上，与前节二极管的阳极到阴极方向一致。这里的 $v_{\mathrm{d}}$ 是节点电压，不能直接当作前节按阳极到阴极定义的二极管端口电压。
@@ -1260,10 +1335,10 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
     \node[below] at (9.2,-0.45) {$T_{\mathrm{s}}$};
   \end{notesplot}
   \caption{Buck 电路的主要波形与反向恢复电荷}
-  \label{pic0317}
+  \label{pic0316}
 \end{figure}
 
-\reviewnote{图 \ref{pic0317} 按补充图片重绘，开关电流、电压及恢复电荷统一记为 $i_{\mathrm{Q}}$、$v_{\mathrm{Q}}$ 和 $Q_{\mathrm{rr}}$。$t_{\mathrm{r}}$ 为二极管反向恢复时间；恢复期间开关电流包含负载电流和附加恢复电流。图中以恢复结束后的电压跳变为有效周期起点，控制信号提前 $t_{\mathrm{r}}$ 开通。}
+\reviewnote{图 \ref{pic0316} 按补充图片重绘，开关电流、电压及恢复电荷统一记为 $i_{\mathrm{Q}}$、$v_{\mathrm{Q}}$ 和 $Q_{\mathrm{rr}}$。$t_{\mathrm{r}}$ 为二极管反向恢复时间；恢复期间开关电流包含负载电流和附加恢复电流。图中以恢复结束后的电压跳变为有效周期起点，控制信号提前 $t_{\mathrm{r}}$ 开通。}
 
 \examplesubheading{平均电流与平衡关系}
 
@@ -1309,7 +1384,7 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
 
 \examplesubheading{等效模型与效率}
 
-输入端新增的两项平均电流，可以分别用反向恢复电流源和过渡损耗电流源表示，如图 \ref{pic0318} 所示。
+输入端新增的两项平均电流，可以分别用反向恢复电流源和过渡损耗电流源表示，如图 \ref{pic0317} 所示。
 
 \begin{figure}[H]
   \centering
@@ -1339,7 +1414,7 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
       \node at (13.75,0) {$-$};
     \end{notescircuit}\par
     \caption{端口平均模型}
-    \label{pic0318a}
+    \label{pic0317a}
   \end{subfigure}
   \par\medskip
   \begin{subfigure}[t]{0.98\textwidth}
@@ -1365,10 +1440,10 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
       \node[right] at (11.35,0) {$-$};
     \end{notescircuit}\par
     \caption{直流变压器模型}
-    \label{pic0318b}
+    \label{pic0317b}
   \end{subfigure}
   \caption{Buck 反向恢复损耗的平均等效模型}
-  \label{pic0318}
+  \label{pic0317}
 \end{figure}
 
 由此可得
@@ -1411,10 +1486,10 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
     .. controls (4.3,2.65) and (5.7,2.75) .. (7.0,2.78);
   \end{notescircuit}
   \caption{效率随占空比变化的趋势}
-  \label{pic0319}
+  \label{pic0318}
 \end{figure}
 
-\reviewnote{式 \eqref{equ0315} 原稿末项的分母有涂改，这里由前面的输入、输出功率关系整理为 $DV_{\mathrm{out}}$，再用模型关系 $V_{\mathrm{out}}=DV_{\mathrm{in}}$ 换成 $D^2V_{\mathrm{in}}$；这一步属于代数校核，不是逐字照录。$Q_{\mathrm{rr}}$ 实际随电流、温度和换流条件变化，图 \ref{pic0319} 仅反映把参数固定时的模型趋势；接近 $D=0$ 时还需核对 CCM 条件。该模型把损耗表现为输入附加电流，不能据此断言实际 Buck 的变换比不受开关过程影响。}
+\reviewnote{式 \eqref{equ0315} 原稿末项的分母有涂改，这里由前面的输入、输出功率关系整理为 $DV_{\mathrm{out}}$，再用模型关系 $V_{\mathrm{out}}=DV_{\mathrm{in}}$ 换成 $D^2V_{\mathrm{in}}$；这一步属于代数校核，不是逐字照录。$Q_{\mathrm{rr}}$ 实际随电流、温度和换流条件变化，图 \ref{pic0318} 仅反映把参数固定时的模型趋势；接近 $D=0$ 时还需核对 CCM 条件。该模型把损耗表现为输入附加电流，不能据此断言实际 Buck 的变换比不受开关过程影响。}
 
 % ---------- 照片 2：BJT、IGBT、SCR、宽禁带器件及应用 ----------
 \section{BJT 与 IGBT}
@@ -1435,7 +1510,7 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
       \node[right=5pt] at (q.center) {$Q$};
     \end{notescircuit}\par
     \caption{NPN 型 BJT}
-    \label{pic0320a}
+    \label{pic0319a}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.60\textwidth}
@@ -1455,15 +1530,15 @@ MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同�
       \node[left=4pt] at (q2.center) {$Q_2$};
     \end{notescircuit}\par
     \caption{达林顿复合结构}
-    \label{pic0320b}
+    \label{pic0319b}
   \end{subfigure}
   \caption{BJT 符号与达林顿复合结构}
-  \label{pic0320}
+  \label{pic0319}
 \end{figure}
 
-\reviewnote{图 \ref{pic0320b} 主连接按达林顿结构识别：两个集电极相连，$Q_1$ 的发射极接 $Q_2$ 的基极。原稿附加二极管的连接点及支路用途没有文字说明，暂用灰色虚线表示待核部分。“BJT 在功率电路中用得少”是原稿的比较性旁注，应限定所讨论的应用，不能理解为 BJT 不用于功率电路。}
+\reviewnote{图 \ref{pic0319b} 主连接按达林顿结构识别：两个集电极相连，$Q_1$ 的发射极接 $Q_2$ 的基极。原稿附加二极管的连接点及支路用途没有文字说明，暂用灰色虚线表示待核部分。“BJT 在功率电路中用得少”是原稿的比较性旁注，应限定所讨论的应用，不能理解为 BJT 不用于功率电路。}
 
-BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出了基极电压、电流与集电极电压、电流的对应关系。
+BJT 的驱动电路及开通、关断波形见图 \ref{pic0320}，图中给出了基极电压、电流与集电极电压、电流的对应关系。
 
 \begin{figure}[H]
   \centering
@@ -1489,7 +1564,7 @@ BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出�
       \node at (3.7,0.65) {$-$};
     \end{notescircuit}\par
     \caption{驱动电路}
-    \label{pic0321a}
+    \label{pic0320a}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.61\textwidth}
@@ -1538,10 +1613,10 @@ BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出�
       \node at (6.15,-1.3) {关断损耗};
     \end{notesplot}\par
     \caption{开关过程波形}
-    \label{pic0321b}
+    \label{pic0320b}
   \end{subfigure}
   \caption{BJT 驱动电路与开关过程波形}
-  \label{pic0321}
+  \label{pic0320}
 \end{figure}
 
 原稿随后给出 IGBT 符号及一个由 MOSFET 与 BJT 组成的简化等效模型，表示其兼有绝缘栅输入与双极型导电特性。
@@ -1558,7 +1633,7 @@ BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出�
       \node[right=5pt] at (q.center) {$Q$};
     \end{notescircuit}\par
     \caption{IGBT 符号}
-    \label{pic0322a}
+    \label{pic0321a}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.60\textwidth}
@@ -1579,15 +1654,15 @@ BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出�
       \node[circ] at (qb.C |- 0,0.3) {};
     \end{notescircuit}\par
     \caption{简化等效结构}
-    \label{pic0322b}
+    \label{pic0321b}
   \end{subfigure}
   \caption{IGBT 符号与简化等效结构}
-  \label{pic0322}
+  \label{pic0321}
 \end{figure}
 
-\reviewnote{图 \ref{pic0322b} 按补充图片重绘为 MOSFET 与 PNP 管的简化等效结构，$i_1$、$i_2$ 为两条导电支路的电流。该图不包含全部寄生器件及内部电阻，不能当作完整内部模型；器件结构可继续对照\href{https://toshiba.semicon-storage.com/us/semiconductor/knowledge/faq/mosfet_igbt/igbt-001.html.html}{东芝的 IGBT 说明}。}
+\reviewnote{图 \ref{pic0321b} 按补充图片重绘为 MOSFET 与 PNP 管的简化等效结构，$i_1$、$i_2$ 为两条导电支路的电流。该图不包含全部寄生器件及内部电阻，不能当作完整内部模型；器件结构可继续对照\href{https://toshiba.semicon-storage.com/us/semiconductor/knowledge/faq/mosfet_igbt/igbt-001.html.html}{东芝的 IGBT 说明}。}
 
-图 \ref{pic0323} 给出 IGBT 关断时的电流拖尾、续流二极管响应及瞬时功率波形，图中 $W_{\mathrm{off}}$ 为关断过程的功率积分面积。
+图 \ref{pic0322} 给出 IGBT 关断时的电流拖尾、续流二极管响应及瞬时功率波形，图中 $W_{\mathrm{off}}$ 为关断过程的功率积分面积。
 
 \begin{figure}[H]
   \centering
@@ -1633,7 +1708,7 @@ BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出�
       }
   \end{notesplot}
   \caption{IGBT 关断拖尾、二极管响应与关断损耗}
-  \label{pic0323}
+  \label{pic0322}
 \end{figure}
 
 \subsection{主要参数}
@@ -1657,7 +1732,7 @@ BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出�
       \node[left] at (scr.G) {$G$};
     \end{notescircuit}\par
     \caption{SCR 符号}
-    \label{pic0324a}
+    \label{pic0323a}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.60\textwidth}
@@ -1675,15 +1750,15 @@ BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出�
       \node[right=5pt] at (qn.center) {NPN};
     \end{notescircuit}\par
     \caption{双晶体管等效结构}
-    \label{pic0324b}
+    \label{pic0323b}
   \end{subfigure}
   \caption{晶闸管符号与双晶体管模型}
-  \label{pic0324}
+  \label{pic0323}
 \end{figure}
 
 \reviewnote{原稿写“关断要等功率电路停下”，这只是口语化描述。普通 SCR 关断需要阳极电流降到维持电流以下，并满足恢复阻断能力所需的时间和电路条件；不要求整个功率电路停止运行。可对照\href{https://www.st.com/resource/en/application_note/cd00003853-thyristors-and-triacs-holding-current--an-important-parameter-stmicroelectronics.pdf}{ST 关于维持电流的说明}。这里讨论普通 SCR，不包括 GTO 等可关断晶闸管。}
 
-图 \ref{pic0325} 给出 SCR 的静态伏安特性，包括反向阻断、反向击穿、正向阻断与正向导通区域，并标示门极电流增大时曲线的变化方向。
+图 \ref{pic0324} 给出 SCR 的静态伏安特性，包括反向阻断、反向击穿、正向阻断与正向导通区域，并标示门极电流增大时曲线的变化方向。
 
 \begin{figure}[H]
   \centering
@@ -1706,7 +1781,7 @@ BJT 的驱动电路及开通、关断波形见图 \ref{pic0321}，图中给出�
     \node[above] at (6.8,0.23) {$i_{\mathrm{G}}=0$};
   \end{notesplot}
   \caption{SCR 静态伏安特性与门极电流的影响}
-  \label{pic0325}
+  \label{pic0324}
 \end{figure}
 
 \section{宽禁带器件}
