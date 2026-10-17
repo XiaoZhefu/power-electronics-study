@@ -107,13 +107,13 @@
       -- (0.57,2.0)
       to[L, l=$L$, name=ind-rl-a] (1.68,2.0) coordinate (ind-end-rl-a)
       to[european resistor, l=$R_{\mathrm{L}}$] (2.98,2.0) coordinate (sw-rl-a)
-      to[D-, l=$D$] (4.28,2.0) coordinate (out-rl-a)
+      to[D-, l=$\mathrm{D}$] (4.28,2.0) coordinate (out-rl-a)
       -- ++(1.05,0) coordinate (load-rl-a);
       \draw[-{Latex[length=1.5mm]}] (0.12,2.0) -- (0.52,2.0) node[midway,above] {$i_{\mathrm{L}}$};
       \draw (sw-rl-a) -- (q-rl-a.D);
       \draw (q-rl-a.S) -- (q-rl-a.S |- gnd-rl-a);
       \draw (q-rl-a.inner down -| q-rl-a.nogate) -- ++(-0.22,0);
-      \node[left=11pt] at (q-rl-a.center) {$Q$};
+      \node[left=11pt] at (q-rl-a.center) {$\mathrm{Q}$};
       \node[left=1pt] at (0,1.35) {$+$};
       \node[left=1pt] at (0,0.65) {$-$};
       \node[below=4pt] at (ind-rl-a.center)
@@ -387,7 +387,7 @@
       to[V, l_=$V_{\mathrm{in}}$, name=vin-buck-rl-a] (0,2.0)
       -- (q-buck-rl-a.D);
       \draw (q-buck-rl-a.inner down |- q-buck-rl-a.nogate) -- ++(0,-0.22);
-      \node[above] at (q-buck-rl-a.center) {$Q$};
+      \node[above] at (q-buck-rl-a.center) {$\mathrm{Q}$};
       \draw (q-buck-rl-a.S) -- ++(0.35,0) coordinate (sw-buck-rl-a)
       -- ++(0.56,0)
       to[L, l=$L$, name=ind-buck-rl-a] ++(1.08,0)
@@ -395,7 +395,7 @@
       -- ++(1.05,0) coordinate (load-buck-rl-a);
       \draw[-{Latex[length=1.5mm]}] ($(sw-buck-rl-a)+(0.12,0)$) -- ($(sw-buck-rl-a)+(0.52,0)$)
       node[midway,above] {$i_{\mathrm{L}}$};
-      \draw (sw-buck-rl-a |- gnd-buck-rl-a) to[D-, l_=$D$] (sw-buck-rl-a);
+      \draw (sw-buck-rl-a |- gnd-buck-rl-a) to[D-, l_=$\mathrm{D}$] (sw-buck-rl-a);
       \node[left=1pt] at (0,1.35) {$+$};
       \node[left=1pt] at (0,0.65) {$-$};
       \node[below=4pt] at (ind-buck-rl-a.center)
@@ -573,12 +573,12 @@
     }
     \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.7)
     to[L,l=$L$,i>^=$i_{\mathrm{L}}$] (3.3,2.7)
-    to[D-,l=$D$,name=diode] (6.0,2.7) -- (7.5,2.7);
+    to[D-,l=$\mathrm{D}$,name=diode] (6.0,2.7) -- (7.5,2.7);
     \node[nigfete, nogate, anchor=center] (q) at (3.3,1.25) {};
     \draw (3.3,2.7) -- (q.D);
     \draw (q.S) -- (q.S |- 0,0);
     \draw (q.inner down -| q.nogate) -- ++(-0.22,0);
-    \node[left=11pt] at (q.center) {$Q$};
+    \node[left=11pt] at (q.center) {$\mathrm{Q}$};
     \node[right=2pt] at (q.center) {$R_{\mathrm{on}}$};
     \node[below=5pt] at (diode.center) {$R_{\mathrm{D}},\ V_{\mathrm{D}}$};
     \node[below=5pt] at (1.65,2.7) {$R_{\mathrm{L}}$};
@@ -612,13 +612,13 @@
       \draw (gnd-boost-loss-original)
       to[V, l_=$V_{\mathrm{in}}$, name=vin-boost-loss-original] (0,2.0)
       to[L, l=$L$, name=ind-boost-loss-original] (2.94,2.0) coordinate (sw-boost-loss-original)
-      to[D-, l=$D$, name=diode-boost-loss-original] (4.84,2.0) coordinate (out-boost-loss-original)
+      to[D-, l=$\mathrm{D}$, name=diode-boost-loss-original] (4.84,2.0) coordinate (out-boost-loss-original)
       -- ++(1.05,0) coordinate (load-boost-loss-original);
       \draw[-{Latex[length=1.5mm]}] (0.12,2.0) -- (0.52,2.0) node[midway,above] {$i_{\mathrm{L}}$};
       \draw (sw-boost-loss-original) -- (q-boost-loss-original.D);
       \draw (q-boost-loss-original.S) -- (q-boost-loss-original.S |- gnd-boost-loss-original);
       \draw (q-boost-loss-original.inner down -| q-boost-loss-original.nogate) -- ++(-0.22,0);
-      \node[left=11pt] at (q-boost-loss-original.center) {$Q$};
+      \node[left=11pt] at (q-boost-loss-original.center) {$\mathrm{Q}$};
       \node[right=2pt] at (q-boost-loss-original.center) {$R_{\mathrm{on}}$};
       \node[below=5pt] at (diode-boost-loss-original.center) {$R_{\mathrm{D}},\ V_{\mathrm{D}}$};
       \node[left=1pt] at (0,1.35) {$+$};
