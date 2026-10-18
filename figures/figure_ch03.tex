@@ -1,0 +1,1566 @@
+% chktex-file 1
+% chktex-file 2
+% chktex-file 3
+% chktex-file 8
+% chktex-file 11
+% chktex-file 12
+% chktex-file 24
+% chktex-file 26
+% chktex-file 36
+% chktex-file 44
+
+\DefineFigure{pic0301}{
+  \begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.92]
+        \coordinate (throw-one-spdt) at (1.0,2.4);
+        \coordinate (throw-two-spdt) at (1.38,1.65);
+        \coordinate (pole-spdt) at (1.75,2.4);
+        \draw (0,2.4) node[ocirc] {} -- (throw-one-spdt);
+        \draw (0,0) node[ocirc] {} -- (3.0,0) node[ocirc] {};
+        \draw (throw-two-spdt |- 0,0) -- (throw-two-spdt);
+        \draw (pole-spdt) -- (3.0,2.4) node[ocirc] {};
+        \draw (pole-spdt) -- (1.13,1.98);
+        \node[ocirc] at (throw-one-spdt) {};
+        \node[ocirc] at (throw-two-spdt) {};
+        \node[ocirc] at (pole-spdt) {};
+        \node[above] at (throw-one-spdt) {$1$};
+        \node[left] at (throw-two-spdt) {$2$};
+        \node[left] at (0,2.4) {$V_{\mathrm{in}}$};
+      \end{notescircuit}
+      \caption{SPDT}
+      \label{pic0301a}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.92]
+        \draw (0,2.4) node[ocirc] {} to[nos,l=$\mathrm{A}$,name=spst-a] (2.2,2.4) -- (3.0,2.4) node[ocirc] {};
+        \draw (2.2,2.4) to[nos,l_=$\mathrm{B}$,name=spst-b] (2.2,0);
+        \draw (0,0) node[ocirc] {} -- (3.0,0) node[ocirc] {};
+        \node[ocirc] at (spst-a.left) {};
+        \node[ocirc] at (spst-a.right) {};
+        \node[ocirc] at (spst-b.left) {};
+        \node[ocirc] at (spst-b.right) {};
+        \draw[-{Latex[length=1.5mm]}] (0.2,2.92) -- (1.1,2.92) node[midway,above] {$i_{\mathrm{A}}$};
+        \draw[-{Latex[length=1.5mm]}] (1.55,0.3) -- (1.55,1.0) node[midway,left] {$i_{\mathrm{B}}$};
+        \node at (0.65,1.98) {$+$};
+        \node at (1.55,1.98) {$-$};
+        \node at (1.1,1.98) {$v_{\mathrm{A}}$};
+        \node[right] at (2.2,1.60) {$-$};
+        \node[right] at (2.2,0.80) {$+$};
+        \node[right] at (2.2,1.2) {$v_{\mathrm{B}}$};
+      \end{notescircuit}
+      \caption{互斥 SPST}
+      \label{pic0301b}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.92]
+        \ctikzset{
+          tripoles/nigfete/base width=0.32,
+          tripoles/nigfete/gate width=0.40
+        }
+        \coordinate (gnd-buck-local) at (0,0);
+        \node[nigfete, nogate, rotate=90, anchor=center] (q) at (1.55,2.4) {};
+        \draw (0,2.4) node[ocirc] {} -- (q.D);
+        \draw (q.S) -- ++(0.35,0) coordinate (sw-buck-local)
+        -- (3.2,2.4) node[ocirc] {};
+        \draw (q.inner down |- q.nogate) -- ++(0,-0.22);
+        \draw (sw-buck-local |- gnd-buck-local) to[D-,l_=$\mathrm{D}$] (sw-buck-local);
+        \draw (gnd-buck-local) node[ocirc] {} -- (3.2,0) node[ocirc] {};
+        \node[above] at (q.center) {$\mathrm{Q}$};
+      \end{notescircuit}
+      \caption{半导体}
+      \label{pic0301c}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{Buck 电路等效开关分解与器件替代}
+    \label{pic0301}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0302}{
+  \begin{figure}[H]
+    \centering
+    \begin{circuitikz}[scale=1.0, transform shape, every node/.style={font=\small}, line width=0.8pt]
+      \ctikzset{
+        bipoles/length=0.85cm,
+        transistors/scale=1.5,
+        tripoles/npn/base width=0.42,
+        tripoles/npn/width=0.48,
+        tripoles/nigbt/base width=0.32,
+        tripoles/nigbt/gate width=0.40,
+        tripoles/nigfete/base width=0.32,
+        tripoles/nigfete/gate width=0.40
+      }
+      \begin{scope}[scale around={1.15:(0.7,-0.2)}]
+        \draw (0,-0.2) to[stroke thyristor] (1.4,-0.2);
+      \end{scope}
+      \begin{scope}[scale around={1.15:(3.7,-0.2)}]
+        \node[npn, nobase, rotate=90, anchor=C] (bjt) at (3.0,-0.2) {};
+        \draw (bjt.nobase) -- ++(0,-0.22);
+      \end{scope}
+      \begin{scope}[scale around={1.15:(6.7,-0.2)}]
+        \ctikzset{tripoles/nigbt/outer base height=0}
+        \node[nigbt, nogate, rotate=90, anchor=C] (igbt) at (6.0,-0.2) {};
+        \coordinate (igbt-gate-left) at
+        ($(igbt.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(igbt.inner up |- igbt.nogate)$);
+        \coordinate (igbt-gate-right) at
+        ($(igbt.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(igbt.inner down |- igbt.nogate)$);
+        \draw[line cap=butt,line join=miter]
+        (igbt-gate-left) -- (igbt-gate-right) -- ++(0,-0.22);
+      \end{scope}
+      \begin{scope}[scale around={1.15:(10.45,-0.2)}]
+        \node[nigfete, nogate, rotate=90, anchor=D] (mos) at (9.75,-0.2) {};
+        \draw (mos.inner down |- mos.nogate) -- ++(0,-0.22);
+      \end{scope}
+      \begin{scope}[scale around={1.15:(13.5,-0.2)}]
+        \draw (12.8,-0.2) to[D-] (14.2,-0.2);
+      \end{scope}
+      \node[anchor=north,align=center] at (0.7,-1.35) {SCR\\晶闸管};
+      \node[anchor=north,align=center] at (3.7,-1.35) {BJT\\三极管};
+      \node[anchor=north,align=center] at (6.7,-1.35)
+      {IGBT\\绝缘栅\\双极型晶体管};
+      \node[anchor=north,align=center] at (10.45,-1.35)
+      {MOSFET\\金属氧化物半导体\\场效应晶体管};
+      \node[anchor=north,align=center] at (13.5,-1.35) {Diode\\二极管};
+    \end{circuitikz}
+    \vspace{-0.15cm}
+    \caption{功率半导体器件符号}
+    \label{pic0302}
+  \end{figure}
+}
+
+\DefineFigure{pic0303}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \begin{notescircuit}[scale=0.95]
+      \draw[-{Latex[length=2.0mm]},line width=0.6pt] (-3.2,0) -- (3.35,0) node[right] {断态电压 $v$};
+      \draw[-{Latex[length=2.0mm]},line width=0.6pt] (0,-2.1) -- (0,2.45) node[above] {通态电流 $i$};
+      \node[below left] at (0,0) {$0$};
+      \node[align=center] at (1.8,1.2) {I\\$v>0,\ i>0$};
+      \node[align=center] at (-1.8,1.2) {II\\$v<0,\ i>0$};
+      \node[align=center] at (-1.8,-1.2) {III\\$v<0,\ i<0$};
+      \node[align=center] at (1.8,-1.2) {IV\\$v>0,\ i<0$};
+      \begin{scope}[xshift=7.6cm]
+        \draw (0,1.45) node[ocirc] {} to[nos,name=spst-quadrant] (0,-1.0) node[ocirc] {};
+        \node[ocirc] at (spst-quadrant.left) {};
+        \node[ocirc] at (spst-quadrant.right) {};
+        \node[above] at (0,1.45) {$1$};
+        \node[below] at (0,-1.0) {$0$};
+        \draw[-{Latex[length=1.5mm]}] (-0.55,1.3) -- (-0.55,0.6) node[midway,left] {$i$};
+        \node[right] at (0.2,0.625) {$+$};
+        \node[right] at (0.2,0.225) {$v$};
+        \node[right] at (0.2,-0.175) {$-$};
+      \end{scope}
+    \end{notescircuit}
+    \vspace{-0.15cm}
+    \caption{开关通态电流与断态电压的方向能力象限}
+    \vspace{-0.4cm}
+    \label{pic0303}
+  \end{figure}
+}
+
+\DefineFigure{pic0304}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \begin{notescircuit}[scale=0.96]
+      \draw (0,0) node[ocirc] {} to[D-] (3.6,0) node[ocirc] {};
+      \node[left=2pt] at (0,0) {$1$};
+      \node[right=2pt] at (3.6,0) {$0$};
+      \draw[-{Latex[length=1.5mm]}] (1.15,0.52) -- (2.45,0.52) node[midway,above] {$i$};
+      \node[anchor=base] at (1.15,-0.48) {$+$};
+      \node[anchor=base] at (1.8,-0.48) {$v$};
+      \node[anchor=base] at (2.45,-0.48) {$-$};
+    \end{notescircuit}
+    \vspace{-0.15cm}
+    \caption{二极管的端口参考方向}
+    \vspace{-0.4cm}
+    \label{pic0304}
+  \end{figure}
+}
+
+\DefineFigure{pic0305}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{
+          bipoles/length=0.85cm,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48
+        }
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \node[npn,nobase,rotate=90,anchor=C] (q) at (1.1,0) {};
+          \draw (q.nobase) -- ++(0,-0.22) coordinate (base);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (q.C);
+        \draw (q.E) -- (3.6,0) node[ocirc] {};
+        \node[right=2pt] at (base) {$\mathrm{B}$};
+        \node[left=2pt] at (0,0) {$1$};
+        \node[right=2pt] at (3.6,0) {$0$};
+        \draw[-{Latex[length=1.5mm]}] (1.15,0.32) -- (2.45,0.32) node[midway,above] {$i$};
+        \node[anchor=base] at (1.15,-1.0) {$+$};
+        \node[anchor=base] at (1.8,-1.0) {$v$};
+        \node[anchor=base] at (2.45,-1.0) {$-$};
+      \end{notescircuit}\par
+      \caption{三极管：I 象限}
+      \label{pic0305a}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{
+          bipoles/length=0.85cm,
+          tripoles/nigbt/base width=0.32,
+          tripoles/nigbt/gate width=0.40,
+          tripoles/nigbt/outer base height=0
+        }
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \node[nigbt,nogate,rotate=90,anchor=C] (q) at (1.1,0) {};
+          \coordinate (gate-left) at
+          ($(q.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(q.inner up |- q.nogate)$);
+          \coordinate (gate-right) at
+          ($(q.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(q.inner down |- q.nogate)$);
+          \draw[line cap=butt,line join=miter]
+          (gate-left) -- (gate-right) -- ++(0,-0.22) coordinate (gate);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (q.C);
+        \draw (q.E) -- (3.6,0) node[ocirc] {};
+        \node[right=2pt] at (gate) {$\mathrm{G}$};
+        \node[left=2pt] at (0,0) {$1$};
+        \node[right=2pt] at (3.6,0) {$0$};
+        \draw[-{Latex[length=1.5mm]}] (1.15,0.32) -- (2.45,0.32) node[midway,above] {$i$};
+        \node[anchor=base] at (1.15,-1.0) {$+$};
+        \node[anchor=base] at (1.8,-1.0) {$v$};
+        \node[anchor=base] at (2.45,-1.0) {$-$};
+      \end{notescircuit}\par
+      \caption{IGBT：I 象限}
+      \label{pic0305b}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{
+          bipoles/length=0.85cm,
+          tripoles/nigfete/base width=0.32,
+          tripoles/nigfete/gate width=0.40
+        }
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \node[nigfete,nogate,rotate=90,anchor=D] (q) at (1.1,0) {};
+          \draw (q.inner down |- q.nogate) -- ++(0,-0.22) coordinate (gate);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (q.D);
+        \draw (q.S) -- (3.6,0) node[ocirc] {};
+        \node[right=2pt] at (gate) {$\mathrm{G}$};
+        \node[left=2pt] at (0,0) {$1$};
+        \node[right=2pt] at (3.6,0) {$0$};
+        \draw[-{Latex[length=1.5mm]}] (1.15,0.32) -- (2.45,0.32) node[midway,above] {$i$};
+        \node[anchor=base] at (1.15,-1.0) {$+$};
+        \node[anchor=base] at (1.8,-1.0) {$v$};
+        \node[anchor=base] at (2.45,-1.0) {$-$};
+      \end{notescircuit}\par
+      \caption{MOSFET：I、IV 象限}
+      \label{pic0305c}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{三极管、IGBT 与 MOSFET 的参考端口方向}
+    \label{pic0305}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0306}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.47\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{
+          bipoles/length=0.85cm,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48
+        }
+        \begin{scope}[scale around={1.15:(2.5,0)},transform shape]
+          \node[npn,nobase,rotate=90,anchor=C] (q) at (1.8,0) {};
+          \draw (q.nobase) -- ++(0,-0.22) coordinate (base);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (q.C);
+        \draw (q.E) -- (5.0,0) node[ocirc] {};
+        \draw (3.8,0) -- (3.8,0.9) to[D-,l_=$\mathrm{D}$] (1.2,0.9) -- (1.2,0);
+        \node[circ] at (1.2,0) {};
+        \node[circ] at (3.8,0) {};
+        \node[above=2pt] at ($(q.C)!0.5!(q.E)$) {$\mathrm{Q}$};
+        \node[right=2pt] at (base) {$\mathrm{B}$};
+        \node[left=2pt] at (0,0) {$1$};
+        \node[right=2pt] at (5.0,0) {$0$};
+        \draw[-{Latex[length=1.5mm]}] (0.1,0.32) -- (1.0,0.32) node[midway,above] {$i$};
+        \node[anchor=base] at (1.85,-0.9) {$+$};
+        \node[anchor=base] at (2.5,-0.9) {$v$};
+        \node[anchor=base] at (3.15,-0.9) {$-$};
+      \end{notescircuit}\par
+      \caption{反并联二极管：I、IV 象限}
+      \label{pic0306a}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[b]{0.47\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{
+          bipoles/length=0.85cm,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48
+        }
+        \begin{scope}[scale around={1.15:(3.5,0)},transform shape]
+          \node[npn,nobase,rotate=90,anchor=C] (q) at (2.8,0) {};
+          \draw (q.nobase) -- ++(0,-0.22) coordinate (base);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (0.9,0) to[D-,l=$\mathrm{D}$] (2.3,0) -- (q.C);
+        \draw (q.E) -- (5.0,0) node[ocirc] {};
+        \node[above=2pt] at ($(q.C)!0.5!(q.E)$) {$\mathrm{Q}$};
+        \node[right=2pt] at (base) {$\mathrm{B}$};
+        \node[left=2pt] at (0,0) {$1$};
+        \node[right=2pt] at (5.0,0) {$0$};
+        \draw[-{Latex[length=1.5mm]}] (0.1,0.32) -- (1.0,0.32) node[midway,above] {$i$};
+        \node[anchor=base] at (1.85,-0.9) {$+$};
+        \node[anchor=base] at (2.5,-0.9) {$v$};
+        \node[anchor=base] at (3.15,-0.9) {$-$};
+      \end{notescircuit}\par
+      \caption{串联二极管：I、II 象限}
+      \label{pic0306b}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{二极管与三极管的组合}
+    \label{pic0306}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0307}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.84]
+        \ctikzset{
+          bipoles/length=0.85cm,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48
+        }
+        \coordinate (top) at (0,3.4);
+        \coordinate (bottom) at (0,0);
+        \node[npn,nobase,anchor=C,scale=1.15,transform shape] (q1) at (-0.85,1.7) {};
+        \node[npn,nobase,rotate=180,anchor=E,scale=1.15,transform shape] (q2) at (0.85,3.2) {};
+        \draw (top) -| (-0.85,3.4) to[D-,l_=$\mathrm{D}_1$] (q1.C);
+        \draw (q1.E) |- (bottom);
+        \draw (top) -| (q2.E);
+        \draw (bottom) -- (0.85,0) to[D-,l_=$\mathrm{D}_2$] (q2.C);
+        \draw (q1.nobase) -- ++(-0.22,0);
+        \draw (q2.nobase) -- ++(0.22,0);
+        \node[right=3pt] at (q1.C |- q1.nobase) {$\mathrm{Q}_1$};
+        \node[left=3pt] at (q2.C |- q2.nobase) {$\mathrm{Q}_2$};
+        \draw (top) node[circ] {} -- (0,4.35) node[ocirc] {} node[above] {$1$};
+        \draw (bottom) node[circ] {} -- (0,-0.45) node[ocirc] {} node[below] {$0$};
+        \draw[-{Latex[length=1.5mm]}] (-0.42,4.2) -- (-0.42,3.55) node[midway,left] {$i$};
+        \node[right] at (1.85,3.15) {$+$};
+        \node[right] at (1.85,1.7) {$v$};
+        \node[right] at (1.85,0.25) {$-$};
+      \end{notescircuit}\par
+      \caption{串联支路反并联}
+      \label{pic0307a}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.84]
+        \ctikzset{
+          bipoles/length=0.85cm,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48
+        }
+        \coordinate (top) at (0,3.4);
+        \coordinate (bottom) at (0,0);
+        \coordinate (middle) at (-0.85,1.7);
+        \node[npn,nobase,xscale=-1,anchor=E,scale=1.15,transform shape] (q1) at (0.65,1.7) {};
+        \node[npn,nobase,rotate=180,anchor=E,scale=1.15,transform shape] (q2) at (0.65,1.7) {};
+        \draw (top) -| (q1.C);
+        \draw (q2.C) |- (bottom);
+        \draw (top) -- (-0.85,3.4);
+        \draw (bottom) -- (-0.85,0);
+        \draw (middle) to[D-,l=$\mathrm{D}_1$] (-0.85,3.4);
+        \draw (middle) to[D-,l_=$\mathrm{D}_2$] (-0.85,0);
+        \draw (middle) node[circ] {} -- (q1.E) node[circ] {};
+        \draw (q1.nobase) -- ++(0.22,0);
+        \draw (q2.nobase) -- ++(0.22,0);
+        \node[left=3pt] at (q1.C |- q1.nobase) {$\mathrm{Q}_1$};
+        \node[left=3pt] at (q2.C |- q2.nobase) {$\mathrm{Q}_2$};
+        \draw (top) node[circ] {} -- (0,4.35) node[ocirc] {} node[above] {$1$};
+        \draw (bottom) node[circ] {} -- (0,-0.45) node[ocirc] {} node[below] {$0$};
+        \draw[-{Latex[length=1.5mm]}] (-0.42,4.2) -- (-0.42,3.55) node[midway,left] {$i$};
+        \node[right] at (1.85,3.15) {$+$};
+        \node[right] at (1.85,1.7) {$v$};
+        \node[right] at (1.85,0.25) {$-$};
+      \end{notescircuit}\par
+      \caption{共射组合}
+      \label{pic0307b}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[b]{0.31\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.84]
+        \ctikzset{
+          bipoles/length=0.85cm,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48
+        }
+        \coordinate (top) at (0,3.4);
+        \coordinate (right) at (1.7,1.7);
+        \coordinate (bottom) at (0,0);
+        \coordinate (left) at (-1.7,1.7);
+        \ctikzset{label/align=straight}
+        \draw (top) to[D-,l_=$\mathrm{D}_1$] (left);
+        \draw (bottom) to[D-,l=$\mathrm{D}_4$] (left);
+        \draw (right) to[D-,l_=$\mathrm{D}_2$] (top);
+        \draw (right) to[D-,l=$\mathrm{D}_3$] (bottom);
+        \node[npn,nobase,rotate=90,anchor=C,scale=1.15,transform shape] (q) at (-0.75,1.7) {};
+        \draw (left) node[circ] {} -- (q.C);
+        \draw (q.E) -- (right) node[circ] {};
+        \draw (q.nobase) -- ++(0,-0.22);
+        \node[above=2pt] at ($(q.C)!0.5!(q.E)$) {$\mathrm{Q}$};
+        \draw (top) node[circ] {} -- (0,4.35) node[ocirc] {} node[above] {$1$};
+        \draw (bottom) node[circ] {} -- (0,-0.45) node[ocirc] {} node[below] {$0$};
+        \draw[-{Latex[length=1.5mm]}] (-0.42,4.2) -- (-0.42,3.55) node[midway,left] {$i$};
+        \node[right] at (2.0,3.15) {$+$};
+        \node[right] at (2.0,1.7) {$v$};
+        \node[right] at (2.0,0.25) {$-$};
+      \end{notescircuit}\par
+      \caption{二极管全桥与三极管}
+      \label{pic0307c}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{四象限开关的组合结构}
+    \label{pic0307}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0308}{
+  \begin{figure}[H]
+    \vspace{-0.3cm}
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \begin{notesplot}[scale=0.96]
+        \draw[axis] (-2.8,0) -- (3.0,0) node[right] {$v$};
+        \draw[axis] (0,-2.0) -- (0,2.5) node[above] {$i$};
+        \draw[guide] (-2.05,-1.85) -- (-2.05,1.8);
+        \draw[guide] (1.7,0) -- (1.7,2.15);
+        \draw[waveform] (-2.36,-1.85)
+        .. controls (-2.24,-0.55) and (-2.2,-0.18) .. (-1.65,-0.16)
+        -- (-0.35,-0.1) .. controls (-0.16,-0.08) and (-0.1,0) .. (0,0)
+        -- (0.85,0) .. controls (1.65,0) and (1.88,0.1) .. (1.95,2.15);
+        \node[below left] at (0,0) {$0$};
+        \node[above left] at (-2.05,0) {$-V_{\mathrm{br}}$};
+        \node[below] at (1.7,0) {$V_{\mathrm{F}}$};
+        \node[align=center] at (-2.6,1.55) {击穿};
+        \node[align=center] at (-1.02,1.55) {反向阻断};
+        \node[align=center] at (2.8,1.55) {正向导通};
+      \end{notesplot}\par
+      \caption{静态伏安特性}
+      \label{pic0308a}
+    \end{subfigure}%
+    \hspace{0.03\textwidth}%
+    \begin{subfigure}[b]{0.30\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm}
+        \draw (0,2.8) node[ocirc] {} to[D-] (3.6,2.8) node[ocirc] {};
+        \draw[-{Latex[length=1.5mm]}] (1.15,3.32) -- (2.45,3.32) node[midway,above] {$i$};
+        \node[anchor=base] at (1.15,2.32) {$+$};
+        \node[anchor=base] at (1.8,2.32) {$v$};
+        \node[anchor=base] at (2.45,2.32) {$-$};
+        \node at (1.8,1.85) {二极管};
+        \draw (0,0.55) node[ocirc] {} to[sD-] (3.6,0.55) node[ocirc] {};
+        \draw[-{Latex[length=1.5mm]}] (1.15,1.07) -- (2.45,1.07) node[midway,above] {$i$};
+        \node[anchor=base] at (1.15,0.07) {$+$};
+        \node[anchor=base] at (1.8,0.07) {$v$};
+        \node[anchor=base] at (2.45,0.07) {$-$};
+        \node at (1.8,-0.4) {肖特基二极管};
+      \end{notescircuit}\par
+      \caption{两类二极管的符号}
+      \label{pic0308b}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{二极管的静态特性与种类}
+    \vspace{-0.3cm}
+    \label{pic0308}
+  \end{figure}
+}
+
+\DefineFigure{pic0309}{
+  \begin{figure}[H]
+    \centering
+    \begin{notesplot}[scale=0.94]
+      \def\ycurrentplateau{1.0}
+      \coordinate (rr-start) at (6.4,\ycurrentplateau);
+      \coordinate (rr-control-a) at (6.68,-0.55);
+      \coordinate (rr-control-b) at (7.12,-1.8);
+      \coordinate (rr-peak) at (7.6,-1.8);
+      \path[name path=rr-falling] (rr-start)
+      .. controls (rr-control-a) and (rr-control-b) .. (rr-peak);
+      \path[name path=rr-zero-axis] (6.4,0) -- (7.6,0);
+      \path[name intersections={of=rr-falling and rr-zero-axis,by=rr-zero}];
+      \fill[gray!15] (1.4,-2.0) rectangle (3.1,5.6);
+      \fill[gray!15] (6.4,-2.0) rectangle (7.6,5.6);
+      \fill[gray!15] (7.6,-2.0) rectangle (8.8,5.6);
+      \begin{scope}
+        \clip (6.4,-2.0) rectangle (8.8,0);
+        \fill[gray!30] (rr-start)
+        .. controls (rr-control-a) and (rr-control-b) .. (rr-peak)
+        .. controls (8.05,-1.8) and (8.3,0) .. (8.8,0) -- cycle;
+      \end{scope}
+      \foreach \x in {1.4,3.1,6.4,8.8} {
+          \draw[guide] (\x,-2.0) -- (\x,5.6);
+        }
+      \draw[axis] (0.8,3.7) -- (10.25,3.7) node[right] {$t$};
+      \draw[axis] (0.8,2.2) -- (0.8,5.95) node[left] {$v(t)$};
+      \draw[waveform] (0.8,2.5) -- (1.4,2.5)
+      .. controls (1.8,2.5) and (1.9,5.2) .. (2.25,5.2)
+      .. controls (2.65,5.2) and (2.65,4.05) .. (3.1,4.05)
+      -- (7.6,4.05)
+      .. controls (8.05,4.05) and (8.25,2.5) .. (8.8,2.5) -- (10.0,2.5);
+      \node[left] at (0.8,3.7) {$0$};
+      \node[right] at (10.0,2.5) {$-V_{\mathrm{R}}$};
+      \node[above] at (4.7,4.05) {$V_{\mathrm{F}}$};
+      \node[align=center] (cm) at (2.25,6.2) {电导调制};
+      \draw[axis] (cm.south) -- (2.25,5.3);
+      \node[align=center] (charge) at (6.65,6.2) {移除少子电荷};
+      \draw[axis] (charge.south) -- (6.85,4.2);
+      \node[align=center] (junction) at (9.1,6.2) {结电容充电};
+      \draw[axis] (junction.south) -- (8.2,3.85);
+      \draw[axis] (0.8,0) -- (10.25,0) node[right] {$t$};
+      \draw[axis] (0.8,-2.05) -- (0.8,1.9) node[left] {$i(t)$};
+      \draw[waveform] (0.8,0) -- (1.4,0)
+      .. controls (1.6,0) and (1.65,\ycurrentplateau) .. (1.95,\ycurrentplateau)
+      -- (rr-start)
+      .. controls (rr-control-a) and (rr-control-b) .. (rr-peak)
+      .. controls (8.05,-1.8) and (8.3,0) .. (8.8,0) -- (10.0,0);
+      \node[left] at (0.8,0) {$0$};
+      \node[above] at (4.7,\ycurrentplateau) {$I_0$};
+      \draw[guide] (rr-zero) -- (rr-zero |- 0,1.75);
+      \draw[measure] (rr-zero |- 0,1.75) -- (8.8,1.75)
+      node[midway,above,inner sep=2pt] (rr-time) {$t_{\mathrm{rr}}$};
+      \node[inner sep=2pt] (area) at (7.56,-0.70) {$-Q_{\mathrm{rr}}$};
+      \draw[guide] (7.6,-2.0) -- (rr-peak |- area.south);
+      \draw[guide] (rr-peak |- area.north) -- (rr-peak |- rr-time.south);
+      \draw[guide] (rr-peak |- rr-time.north) -- (7.6,5.6);
+      \draw[line width=0.5pt] (6.64,-0.12) -- (6.64,-0.83) -- (6.86,-0.83) -- cycle;
+      \node[left=6pt] at (6.64,-0.48) {$\dfrac{\mathrm{d}i}{\mathrm{d}t}$};
+      \foreach \x/\n in {1.03/1,2.25/2,4.75/3,7.0/4,8.2/5,9.5/6} {
+          \node at (\x,-2.35) {$(\n)$};
+        }
+      \node at (2.25,-2.85) {开通损耗};
+      \node at (7.6,-2.85) {关断损耗};
+    \end{notesplot}
+    \caption{二极管开通与关断波形}
+    \label{pic0309}
+  \end{figure}
+}
+
+\DefineFigure{pic0310}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.40\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm,
+          tripoles/nigfete/base width=0.32,
+          tripoles/nigfete/gate width=0.40}
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \node[nigfete,nogate,rotate=90,anchor=D] (q) at (1.1,0) {};
+          \draw (q.inner down |- q.nogate) -- ++(0,-0.22) coordinate (gate);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (q.D);
+        \draw (q.S) -- (3.6,0) node[ocirc] {};
+        \coordinate (gate-port) at (gate |- 0,-0.85);
+        \draw (gate) -- (gate-port) node[ocirc] {};
+        \draw (3.0,0) -- (3.0,0.70) to[D-] (0.85,0.70) -- (0.85,0);
+        \node[above=6pt] at (1.925,0.70) {$\mathrm{D}_{\mathrm b}$};
+        \node[circ] at (0.85,0) {};
+        \node[circ] at (3.0,0) {};
+        \node[left=2pt] at (0,0) {$\mathrm{D}$};
+        \node[right=2pt] at (3.6,0) {$\mathrm{S}$};
+        \node[right=2pt] at (gate-port) {$\mathrm{G}$};
+        \draw[-{Latex[length=1.5mm]}] (0.05,0.32) -- (0.70,0.32)
+        node[midway,above] {$i_{\mathrm{D}}$};
+        \node[anchor=base] at (1.15,-1.35) {$+$};
+        \node[anchor=base] at (1.8,-1.35) {$v_{\mathrm{DS}}$};
+        \node[anchor=base] at (2.45,-1.35) {$-$};
+        \path (0,-2.25);
+      \end{notescircuit}\par
+      \caption{MOSFET 与体二极管}
+      \label{pic0310a}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{0.56\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm,
+          tripoles/nigfete/base width=0.32,
+          tripoles/nigfete/gate width=0.40}
+        \begin{scope}[scale around={1.15:(2.8,0)},transform shape]
+          \node[nigfete,nogate,rotate=90,anchor=D] (q) at (2.1,0) {};
+          \draw (q.inner down |- q.nogate) -- ++(0,-0.22) coordinate (gate);
+        \end{scope}
+        \coordinate (drain) at (1.05,0);
+        \coordinate (source) at (5.15,0);
+        \coordinate (gate-bus) at (gate |- 0,-0.95);
+        \coordinate (gate-port) at (gate |- 0,-1.95);
+        \draw (0,0) node[ocirc] {} -- (q.D);
+        \draw (q.S) to[european resistor,l=$R_{\mathrm{on}}$] (source)
+        -- (5.75,0) node[ocirc] {};
+        \draw (source) -- (5.15,0.70) to[D-] (1.05,0.70) -- (drain);
+        \node[above=6pt] at (3.1,0.70) {$\mathrm{D}_{\mathrm b}$};
+        \draw (1.05,0.70) -- (1.05,1.70)
+        to[C,l=$C_{\mathrm{ds}}$] (5.15,1.70) -- (5.15,0.70);
+        \draw (drain) -- (1.05,-0.95)
+        to[C,l_=$C_{\mathrm{gd}}$] (gate-bus)
+        to[C,l_=$C_{\mathrm{gs}}$] (5.15,-0.95) -- (source);
+        \draw (gate) -- (gate-port) node[ocirc] {};
+        \node[circ] at (drain) {};
+        \node[circ] at (source) {};
+        \node[circ] at (1.05,0.70) {};
+        \node[circ] at (5.15,0.70) {};
+        \node[circ] at (gate-bus) {};
+        \node[left=2pt] at (0,0) {$\mathrm{D}$};
+        \node[right=2pt] at (5.75,0) {$\mathrm{S}$};
+        \node[right=2pt] at (gate-port) {$\mathrm{G}$};
+        \path (0,-2.25);
+      \end{notescircuit}\par
+      \caption{寄生参数模型}
+      \label{pic0310b}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{MOSFET 的端口方向与寄生参数}
+    \label{pic0310}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0311}{
+  \begin{figure}[H]
+    \centering
+    \begin{notesplot}[scale=0.95]
+      \def\turnonlosscurve{
+        (1.2,0)
+        .. controls (1.46,0) and (1.58,2.25) .. (1.95,2.25)
+        .. controls (2.30,2.25) and (2.40,0.18) .. (2.7,0.18)
+      }
+      \def\turnofflosscurve{
+        (7.0,0.18)
+        .. controls (7.16,0.18) and (7.19,2.25) .. (7.45,2.25)
+        .. controls (7.78,2.25) and (8.02,0) .. (8.3,0)
+      }
+      \fill[gray!15] (1.2,0) rectangle (2.7,6.0);
+      \fill[gray!15] (7.0,0) rectangle (8.3,6.0);
+      \fill[gray!30] \turnonlosscurve -- (2.7,0) -- cycle;
+      \fill[gray!30] (2.7,0) rectangle (7.0,0.18);
+      \fill[gray!30] (7.0,0) -- \turnofflosscurve -- cycle;
+      \foreach \x in {1.2,2.7,7.0,8.3} {
+          \draw[guide] (\x,0) -- (\x,6.0);
+        }
+      \draw[axis] (0.7,3.5) -- (9.4,3.5) node[right] {$t$};
+      \draw[axis] (0.7,3.5) -- (0.7,6.3) node[left] {$v(t),\,i(t)$};
+      \draw[waveform] (0.7,3.5) -- (1.2,3.5) -- (1.95,5.8)
+      -- (7.45,5.8) -- (8.3,3.5) -- (9.1,3.5);
+      \draw[waveform] (0.7,5.65) -- (1.7,5.65) -- (2.7,3.7)
+      -- (7.0,3.7) -- (7.8,5.65) -- (9.1,5.65);
+      \draw[axis] (0.7,0) -- (9.4,0) node[right] {$t$};
+      \draw[axis] (0.7,0) -- (0.7,2.8) node[left] {$p(t)$};
+      \draw[waveform] (0.7,0) -- \turnonlosscurve
+      -- \turnofflosscurve -- (9.1,0);
+      \node[above] at (4.6,5.8) {$i_{\mathrm{D}}(t)=I_{\mathrm{D,on}}$};
+      \node[above] at (4.6,3.7) {$v_{\mathrm{DS}}(t)=V_{\mathrm{DS,on}}$};
+      \node[left] at (0.7,5.65) {$V_{\mathrm{DS,off}}$};
+      \node[left] at (0.7,3.5) {$0$};
+      \node[left] at (0.7,0) {$0$};
+      \node at (1.95,0.85) {$E_{\mathrm{on}}$};
+      \node at (7.65,0.85) {$E_{\mathrm{off}}$};
+      \node[above] at (4.85,0.18) {$p_{\mathrm{cond}}=I_{\mathrm{D,on}}^2R_{\mathrm{on}}$};
+      \draw[measure] (1.2,2.85) -- (2.7,2.85)
+      node[midway,above,inner sep=1.5pt] {$\Delta t_{\mathrm{on}}$};
+      \draw[measure] (7.0,2.85) -- (8.3,2.85)
+      node[midway,above,inner sep=1.5pt] {$\Delta t_{\mathrm{off}}$};
+      \foreach \x/\n in {1.2/0,2.7/1,7.0/2,8.3/3} {
+          \node[anchor=base] at (\x,-0.35) {$t_{\n}$};
+        }
+      \foreach \x/\n in {1.95/1,4.85/2,7.65/3} {
+          \node[anchor=base] at (\x,-0.8) {$(\n)$};
+        }
+      \node[anchor=base] at (1.95,-1.25) {开通损耗};
+      \node[anchor=base] at (4.85,-1.25) {通态损耗};
+      \node[anchor=base] at (7.65,-1.25) {关断损耗};
+    \end{notesplot}
+    \vspace{-0.15cm}
+    \caption{MOSFET 电压、电流波形与损耗示意}
+    \vspace{-0.4cm}
+    \label{pic0311}
+  \end{figure}
+}
+
+\DefineFigure{pic0312}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \begin{notescircuit}[scale=0.90]
+      \ctikzset{tripoles/nigfete/base width=0.32,
+        tripoles/nigfete/gate width=0.40}
+      \node[nigfete,nogate,rotate=90,anchor=center] (q) at (1.65,2.0) {};
+      \draw (q.inner down |- q.nogate) -- ++(0,-0.22) coordinate (gate);
+      \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.0) -- (q.D);
+      \draw (q.S) -- (3.15,2.0) -- (3.75,2.0)
+      to[L,l=$L$,name=ind] (5.25,2.0) -- (5.60,2.0) -- (6.65,2.0);
+      \coordinate (gate-port) at (gate |- 0,1.15);
+      \draw (gate) -- (gate-port) node[ocirc] {};
+      \node[left=2pt] at (gate-port) {$c(t)$};
+      \node[below=3pt,xshift=-2pt] at (q.S) {$\mathrm{Q}$};
+      \draw (3.15,0) to[D-] (3.15,2.0);
+      \node[left=4pt] at (3.15,1.0) {$\mathrm{D}$};
+      \draw (5.60,2.0) to[C,l_=$C$] (5.60,0);
+      \draw (6.65,2.0) to[european resistor,l_=$R$] (6.65,0) -- (0,0);
+      \foreach \x/\y in {3.15/2.0,3.15/0,5.60/2.0,5.60/0} {
+          \node[circ] at (\x,\y) {};
+        }
+      \draw[-{Latex[length=1.5mm]}] (0.12,2.0) -- (0.52,2.0)
+      node[midway,above] {$i_{\mathrm{Q}}$};
+      \draw[-{Latex[length=1.5mm]}] (0,0.12) -- (0,0.52)
+      node[midway,left] {$i_{\mathrm{in}}$};
+      \draw[-{Latex[length=1.5mm]}] (3.27,2.0) -- (3.67,2.0)
+      node[midway,above] {$i_{\mathrm{L}}$};
+      \draw[-{Latex[length=1.5mm]}] (3.15,0.12) -- (3.15,0.52)
+      node[midway,left] {$i_{\mathrm{D}}$};
+      \draw[-{Latex[length=1.5mm]}] (5.60,1.92) -- (5.60,1.52)
+      node[midway,right] {$i_{\mathrm{C}}$};
+      \node[below=4pt] at (ind.center) {$+\;v_{\mathrm{L}}\;-$};
+      \node[above] at (q.center) {$+\;v_{\mathrm{Q}}\;-$};
+      \node[left=1pt] at (0,1.35) {$+$};
+      \node[left=1pt] at (0,0.65) {$-$};
+      \node at (3.65,1.72) {$+$};
+      \node at (3.65,1.0) {$v_{\mathrm{d}}$};
+      \node at (3.65,0.28) {$-$};
+      \node[right] at (6.65,2.0) {$+$};
+      \node[right] at (6.65,0) {$-$};
+      \path (6.65,2.0) -- node[right] {$v_{\mathrm{out}}$} (6.65,0);
+    \end{notescircuit}
+    \vspace{-0.15cm}
+    \caption{计及开关过渡与二极管反向恢复的 Buck 电路}
+    \label{pic0312}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0313}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \begin{notesplot}[scale=0.94]
+      \def\rrpulse{
+        (0,0) .. controls (0,0.28) and (0.10,0.70) .. (0.22,0.70)
+        .. controls (0.34,0.70) and (0.38,0) .. (0.50,0)
+      }
+      \fill[gray!15] (0.7,0.4) rectangle (1.2,11.9);
+      \fill[gray!15] (8.7,0.4) rectangle (9.2,11.9);
+      \foreach \x in {0.7,8.7} {
+          \begin{scope}[shift={(\x,11.1)}]
+            \fill[gray!30] \rrpulse -- cycle;
+          \end{scope}
+          \begin{scope}[shift={(\x,5.6)},yscale=-1]
+            \fill[gray!30] \rrpulse -- cycle;
+          \end{scope}
+        }
+      \foreach \x in {0.7,1.2,4.4,8.7,9.2} {
+          \draw[guide] (\x,0.4) -- (\x,13.0);
+        }
+      \foreach \y/\ylow/\ytop/\name in {
+      10.0/9.8/12.1/{i_{\mathrm{Q}}(t)},
+      7.8/7.6/9.35/{v_{\mathrm{Q}}(t)},
+      5.6/4.75/7.15/{i_{\mathrm{D}}(t)},
+      2.6/2.4/4.15/{v_{\mathrm{d}}(t)},
+      0.4/0.2/1.95/{c(t)}} {
+      \draw[axis] (0.2,\y) -- (10.7,\y) node[right] {$t$};
+      \draw[axis] (0.2,\ylow) -- (0.2,\ytop) node[left] {$\name$};
+      \node[left] at (0.2,\y) {$0$};
+      }
+      \draw[waveform] (0.2,10.0) -- (0.7,10.0) -- (0.7,11.1);
+      \draw[waveform] (1.2,11.1) -- (4.4,11.1) -- (4.4,10.0)
+      -- (8.7,10.0) -- (8.7,11.1);
+      \draw[waveform] (9.2,11.1) -- (10.4,11.1);
+      \draw[waveform] (0.2,6.7) -- (0.7,6.7) -- (0.7,5.6);
+      \draw[waveform] (1.2,5.6) -- (4.4,5.6) -- (4.4,6.7)
+      -- (8.7,6.7) -- (8.7,5.6);
+      \draw[waveform] (9.2,5.6) -- (10.4,5.6);
+      \foreach \x in {0.7,8.7} {
+          \begin{scope}[shift={(\x,11.1)}]
+            \draw[waveform] \rrpulse;
+          \end{scope}
+          \begin{scope}[shift={(\x,5.6)},yscale=-1]
+            \draw[waveform] \rrpulse;
+          \end{scope}
+        }
+      \node[above] at (3.0,11.1) {$I_{\mathrm{L}}$};
+      \node[above] at (5.7,6.7) {$I_{\mathrm{L}}$};
+      \node[anchor=west,inner sep=2pt] (qrup) at (9.65,11.65) {$Q_{\mathrm{rr}}$};
+      \draw[axis] (qrup.west) -- (9.05,11.40);
+      \node[anchor=west,inner sep=2pt] (qrdown) at (9.65,5.07) {$-Q_{\mathrm{rr}}$};
+      \draw[axis] (qrdown.west) -- (9.05,5.35);
+      \draw[waveform] (0.2,8.9) -- (1.2,8.9) -- (1.2,7.8)
+      -- (4.4,7.8) -- (4.4,8.9) -- (9.2,8.9) -- (9.2,7.8) -- (10.4,7.8);
+      \node[above] at (6.3,8.9) {$V_{\mathrm{in}}$};
+      \draw[measure] (8.7,13.0) -- (9.2,13.0)
+      node[midway,above,inner sep=1.5pt] {$t_{\mathrm{rr}}$};
+      \draw[measure] (1.2,12.4) -- (4.4,12.4)
+      node[midway,above,inner sep=1.5pt] {$DT_{\mathrm{s}}$};
+      \draw[measure] (4.4,12.4) -- (9.2,12.4)
+      node[midway,above,inner sep=1.5pt] {$D'T_{\mathrm{s}}$};
+      \draw[waveform] (0.2,2.6) -- (1.2,2.6) -- (1.2,3.7)
+      -- (4.4,3.7) -- (4.4,2.6) -- (9.2,2.6) -- (9.2,3.7) -- (10.4,3.7);
+      \node[above] at (2.8,3.7) {$V_{\mathrm{in}}$};
+      \draw[waveform] (0.2,0.4) -- (0.7,0.4) -- (0.7,1.5)
+      -- (4.4,1.5) -- (4.4,0.4) -- (8.7,0.4) -- (8.7,1.5) -- (10.4,1.5);
+      \node[left] at (0.2,1.5) {$1$};
+      \draw[measure] (0.7,13.0) -- (4.4,13.0)
+      node[midway,above,inner sep=1.5pt] {$D_{\mathrm{c}}T_{\mathrm{s}}$};
+      \node[below] at (1.2,0.4) {$0$};
+      \node[below] at (9.2,0.4) {$T_{\mathrm{s}}$};
+      \foreach \x/\n in {0.95/1,2.8/2,6.55/3} {
+          \node[anchor=base] at (\x,-0.50) {$(\n)$};
+        }
+    \end{notesplot}
+    \vspace{-0.15cm}
+    \caption{Buck 电路的主要波形与反向恢复电荷}
+    \label{pic0313}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0314}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-on) at (0,0);
+        \draw (gnd-on) to[V,l_=$V_{\mathrm{in}}$] (0,1.8)
+        to[L,l=$L$,i>^=$i_{\mathrm{L}}$,name=ind-on] (2.55,1.8) coordinate (out-on)
+        -- ++(1.05,0) coordinate (load-on);
+        \node[left=1pt] at (0,1.25) {$+$};
+        \node[left=1pt] at (0,0.55) {$-$};
+        \node[below=4pt] at (ind-on.center) {$+\;v_{\mathrm{L}}\;-$};
+        \draw (out-on) to[C,l_=$C$] (out-on |- gnd-on);
+        \draw (load-on) to[european resistor,l_=$R$] (load-on |- gnd-on) -- (gnd-on);
+        \node[right] at (load-on) {$+$};
+        \node[right] at (load-on |- gnd-on) {$-$};
+        \path (load-on) -- node[right] {$v_{\mathrm{out}}$} (load-on |- gnd-on);
+      \end{notescircuit}\par
+      \caption{状态 1：$v_{\mathrm{d}}=V_{\mathrm{in}}$}
+      \label{pic0314a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.9]
+        \coordinate (gnd-off) at (0,0);
+        \draw (gnd-off) -- (0,1.8)
+        to[L,l=$L$,i>^=$i_{\mathrm{L}}$,name=ind-off] (2.55,1.8) coordinate (out-off)
+        -- ++(1.05,0) coordinate (load-off);
+        \node[below=4pt] at (ind-off.center) {$+\;v_{\mathrm{L}}\;-$};
+        \draw (out-off) to[C,l_=$C$] (out-off |- gnd-off);
+        \draw (load-off) to[european resistor,l_=$R$] (load-off |- gnd-off) -- (gnd-off);
+        \node[right] at (load-off) {$+$};
+        \node[right] at (load-off |- gnd-off) {$-$};
+        \path (load-off) -- node[right] {$v_{\mathrm{out}}$} (load-off |- gnd-off);
+      \end{notescircuit}\par
+      \caption{状态 2：$v_{\mathrm{d}}=0$}
+      \label{pic0314b}
+    \end{subfigure}
+    \vspace{-0.15cm}
+    \caption{Buck 输出回路的两种等效状态}
+    \label{pic0314}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0315}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=4pt}
+    \begin{subfigure}[b]{0.49\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.67]
+        \ctikzset{sources/symbol/sign rotation=straight}
+        \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.4) -- (4.15,2.4);
+        \draw (4.15,0) -- (0,0);
+        \draw (1.65,2.4) to[american current source] (1.65,0);
+        \draw (2.90,2.4) to[american controlled current source] (2.90,0);
+        \draw (4.15,2.4) to[american controlled current source] (4.15,0);
+        \foreach \x in {1.65,2.90} {
+            \node[circ] at (\x,2.4) {};
+            \node[circ] at (\x,0) {};
+          }
+        \node[anchor=base] at (1.65,-1.00) {$\dfrac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}$};
+        \node[anchor=base] at (2.90,-1.00) {$\dfrac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}$};
+        \node[anchor=base] at (4.15,-1.00) {$DI_{\mathrm{L}}$};
+        \draw[-{Latex[length=1.5mm]}] (0.25,2.4) -- (1.05,2.4)
+        node[midway,above] {$I_{\mathrm{in}}$};
+        \node[left=1pt] at (0,1.65) {$+$};
+        \node[left=1pt] at (0,0.75) {$-$};
+        \draw (5.85,2.4) to[american controlled voltage source] (5.85,0);
+        \node[anchor=base] at (5.85,-1.00) {$DV_{\mathrm{in}}$};
+        \draw (5.85,2.4) -- (8.85,2.4)
+        to[european resistor,l_=$R$] (8.85,0) -- (5.85,0);
+        \draw[-{Latex[length=1.5mm]}] (7.95,2.4) -- (8.65,2.4)
+        node[midway,above] {$I_{\mathrm{L}}$};
+        \node at (9.40,2.4) {$+$};
+        \node at (9.40,1.2) {$V_{\mathrm{out}}$};
+        \node at (9.40,0) {$-$};
+      \end{notescircuit}\par
+      \caption{受控源模型}
+      \label{pic0315a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+      \centering
+      \begin{notescircuit}[scale=0.68]
+        \ctikzset{sources/symbol/sign rotation=straight}
+        \node[transformer] (tr) at (5.00,1.2) {};
+        \node[above] at (5.00,3.0) {$1:D$};
+        \node[circ] at (tr.outer dot A1) {};
+        \node[circ] at (tr.outer dot B1) {};
+        \coordinate (dcmark) at ($(tr-L1.a)!{0.5/\ctikzvalof{bipoles/americaninductor/coils}}!(tr-L1.b)$);
+        \draw (tr.outer dot A1 |- dcmark) -- (tr.outer dot B1 |- dcmark);
+        \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.4) -- (4.05,2.4) -| (tr.A1);
+        \draw (tr.A2) |- (0,0);
+        \draw (1.65,2.4) to[american current source] (1.65,0);
+        \draw (3.05,2.4) to[american controlled current source] (3.05,0);
+        \foreach \x in {1.65,3.05} {
+            \node[circ] at (\x,2.4) {};
+            \node[circ] at (\x,0) {};
+          }
+        \node[anchor=base] at (1.65,-1.00) {$\dfrac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}$};
+        \node[anchor=base] at (3.05,-1.00) {$\dfrac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}$};
+        \node[left=1pt] at (0,1.65) {$+$};
+        \node[left=1pt] at (0,0.75) {$-$};
+        \draw (tr.B1) |- (7.25,2.4) to[european resistor,l_=$R$] (7.25,0) -| (tr.B2);
+        \draw[-{Latex[length=1.5mm]}] (0.25,2.4) -- (1.05,2.4)
+        node[midway,above] {$I_{\mathrm{in}}$};
+        \draw[-{Latex[length=1.5mm]}] (5.90,2.4) -- (6.70,2.4)
+        node[midway,above] {$I_{\mathrm{L}}$};
+        \node at (7.80,2.4) {$+$};
+        \node at (7.80,1.2) {$V_{\mathrm{out}}$};
+        \node at (7.80,0) {$-$};
+      \end{notescircuit}\par
+      \caption{直流变压器模型}
+      \label{pic0315b}
+    \end{subfigure}
+    \vspace{-0.15cm}
+    \caption{Buck 反向恢复损耗的平均等效模型}
+    \label{pic0315}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0316}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \begin{notesplot}[scale=0.94]
+      \draw[axis] (0,0) -- (7.7,0) node[right] {$D$};
+      \draw[axis] (0,0) -- (0,3.6) node[left] {$\eta$};
+      \draw[guide] (0,3.0) -- (7.1,3.0);
+      \node[left] at (0,3.0) {$1$};
+      \draw[line width=0.6pt] (7.0,0) -- (7.0,0.12);
+      \node[below] at (7.0,0) {$1$};
+      \node[below left] at (0,0) {$0$};
+      \draw[waveform] plot[domain=0:0.97,samples=201,variable=\duty]
+      ({7*\duty},{3*(\duty)^2/((\duty)^2+0.02*\duty+0.01)});
+    \end{notesplot}
+    \vspace{-0.15cm}
+    \caption{效率随占空比变化的趋势}
+    \label{pic0316}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0317}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \begin{minipage}[c][2.60cm][c]{\linewidth}
+        \centering
+        \begin{notescircuit}[scale=0.96]
+          \ctikzset{bipoles/length=0.85cm,
+            tripoles/npn/base width=0.42,
+            tripoles/npn/width=0.48}
+          \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+            \node[npn,nobase,rotate=90,anchor=C] (q) at (1.1,0) {};
+            \draw (q.nobase) -- ++(0,-0.22) coordinate (base);
+          \end{scope}
+          \draw (0,0) node[ocirc] {} -- (q.C);
+          \draw (q.E) -- (3.6,0) node[ocirc] {};
+          \coordinate (base-port) at (base |- 0,-1.0);
+          \draw (base) -- (base-port) node[ocirc] {};
+          \node[left=2pt] at (0,0) {$\mathrm C$};
+          \node[right=2pt] at (3.6,0) {$\mathrm E$};
+          \node[right=2pt] at (base-port) {$\mathrm B$};
+          \node[above=3pt] at ($(q.C)!0.5!(q.E)$) {$\mathrm Q$};
+        \end{notescircuit}
+      \end{minipage}\par
+      \caption{NPN 型 BJT}
+      \label{pic0317a}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \begin{minipage}[c][2.60cm][c]{\linewidth}
+        \centering
+        \begin{notescircuit}[scale=0.96]
+          \ctikzset{bipoles/length=0.85cm,
+            tripoles/npn/base width=0.42,
+            tripoles/npn/width=0.48}
+          \begin{scope}[scale around={1.15:(1.8,-1.00)},transform shape]
+            \node[npn,nobase,rotate=90,anchor=C] (q1) at (1.1,-1.00) {};
+            \draw (q1.nobase) -- ++(0,-0.22) coordinate (base-one);
+          \end{scope}
+          \begin{scope}[scale around={1.15:(3.9,0)},transform shape]
+            \node[npn,nobase,rotate=90,anchor=C] (q2) at (3.2,0) {};
+            \draw (q2.nobase) -- ++(0,-0.22) coordinate (base-two);
+          \end{scope}
+          \coordinate (collector-bus) at (0.55,0);
+          \coordinate (base-port) at (base-one |- 0,-1.95);
+          \draw (0,0) node[ocirc] {} -- (q2.C);
+          \draw (collector-bus) |- (q1.C);
+          \draw (q1.E) -| (base-two);
+          \draw (q2.E) -- (5.75,0) node[ocirc] {};
+          \draw (base-one) -- (base-port) node[ocirc] {};
+          \node[circ] at (collector-bus) {};
+          \node[left=2pt] at (0,0) {$\mathrm C$};
+          \node[right=2pt] at (5.75,0) {$\mathrm E$};
+          \node[right=2pt] at (base-port) {$\mathrm B$};
+          \node[above=3pt] at ($(q1.C)!0.5!(q1.E)$) {$\mathrm Q_1$};
+          \node[above=3pt] at ($(q2.C)!0.5!(q2.E)$) {$\mathrm Q_2$};
+        \end{notescircuit}
+      \end{minipage}\par
+      \caption{达林顿复合结构}
+      \label{pic0317b}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{BJT 符号与达林顿复合结构}
+    \label{pic0317}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0318}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \begin{minipage}[c][2.60cm][c]{\linewidth}
+        \centering
+        \begin{notescircuit}[scale=0.96]
+          \ctikzset{bipoles/length=0.85cm,
+            tripoles/nigbt/base width=0.32,
+            tripoles/nigbt/gate width=0.40,
+            tripoles/nigbt/outer base height=0}
+          \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+            \node[nigbt,nogate,rotate=90,anchor=C] (q) at (1.1,0) {};
+            \coordinate (gate-left) at
+            ($(q.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(q.inner up |- q.nogate)$);
+            \coordinate (gate-right) at
+            ($(q.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(q.inner down |- q.nogate)$);
+            \draw[line cap=butt,line join=miter]
+            (gate-left) -- (gate-right) -- ++(0,-0.22) coordinate (gate);
+          \end{scope}
+          \draw (0,0) node[ocirc] {} -- (q.C);
+          \draw (q.E) -- (3.6,0) node[ocirc] {};
+          \coordinate (gate-port) at (gate |- 0,-1.0);
+          \draw (gate) -- (gate-port) node[ocirc] {};
+          \node[left=2pt] at (0,0) {$\mathrm C$};
+          \node[right=2pt] at (3.6,0) {$\mathrm E$};
+          \node[right=2pt] at (gate-port) {$\mathrm G$};
+          \node[above=3pt] at ($(q.C)!0.5!(q.E)$) {$\mathrm Q$};
+        \end{notescircuit}
+      \end{minipage}\par
+      \caption{IGBT 符号}
+      \label{pic0318a}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \begin{minipage}[c][2.60cm][c]{\linewidth}
+        \centering
+        \begin{notescircuit}[scale=0.96]
+          \ctikzset{bipoles/length=0.85cm,
+            tripoles/pnp/base width=0.42,
+            tripoles/pnp/width=0.48,
+            tripoles/nigfete/base width=0.32,
+            tripoles/nigfete/gate width=0.40}
+          \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+            \node[pnp,nobase,rotate=90,anchor=E] (qb) at (1.1,0) {};
+            \draw (qb.nobase) -- ++(0,-0.22) coordinate (base);
+          \end{scope}
+          \begin{scope}[scale around={1.15:(3.45,-1.00)},transform shape]
+            \node[nigfete,nogate,rotate=90,anchor=D] (qm) at (2.75,-1.00) {};
+            \draw (qm.inner down |- qm.nogate) -- ++(0,-0.22) coordinate (gate);
+          \end{scope}
+          \coordinate (emitter-bus) at (5.15,0);
+          \coordinate (source-bus) at (5.15,-1.00);
+          \coordinate (gate-port) at (gate |- 0,-1.95);
+          \draw (0,0) node[ocirc] {} -- (qb.E);
+          \draw (qb.C) -- (5.75,0) node[ocirc] {};
+          \draw (base) |- (qm.D);
+          \draw (qm.S) -- (source-bus) -- (emitter-bus);
+          \draw (gate) -- (gate-port) node[ocirc] {};
+          \node[circ] at (emitter-bus) {};
+          \node[left=2pt] at (0,0) {$\mathrm C$};
+          \node[right=2pt] at (5.75,0) {$\mathrm E$};
+          \node[right=2pt] at (gate-port) {$\mathrm G$};
+          \node[above=3pt] at ($(qb.E)!0.5!(qb.C)$) {$\mathrm Q_{\mathrm B}$};
+          \node[above=3pt] at ($(qm.D)!0.5!(qm.S)$) {$\mathrm Q_{\mathrm M}$};
+          \draw[-{Latex[length=1.5mm]}]
+          ($(qm.S)!0.15!(source-bus)$) -- ($(qm.S)!0.85!(source-bus)$)
+          node[midway,above] {$i_1$};
+          \draw[-{Latex[length=1.5mm]}] (4.30,0) -- (4.95,0)
+          node[midway,above] {$i_2$};
+        \end{notescircuit}
+      \end{minipage}\par
+      \caption{简化等效结构}
+      \label{pic0318b}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{IGBT 符号与简化等效结构}
+    \label{pic0318}
+    \vspace{-0.3cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0319}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.36\textwidth}
+      \centering
+      \begin{minipage}[c][8.10cm][c]{\linewidth}
+        \centering
+        \begin{notescircuit}[scale=0.90]
+          \node[npn] (q) at (2.6,1.9) {};
+          \draw (0,0) to[V,l_=$v_{\mathrm{s}}(t)$] (0,1.9)
+          -- (0.9,1.9) to[european resistor,l=$R_{\mathrm B}$] (q.B);
+          \draw (q.E) -- (q.E |- 0,0) -- (0,0);
+          \draw (q.C) to[european resistor,l=$R_{\mathrm L}$] (q.C |- 0,4.6)
+          -- (q.C |- 0,4.9) node[ocirc] {} node[above] {$V_{\mathrm{CC}}$};
+          \node[right=5pt] at (q.center) {$\mathrm Q$};
+          \draw[-{Latex[length=1.5mm]}] (0.15,1.9) -- (0.75,1.9)
+          node[midway,above] {$i_{\mathrm B}$};
+          \draw[-{Latex[length=1.5mm]}] (q.C) ++(0,0.5) -- ++(0,-0.42)
+          node[midway,left] {$i_{\mathrm C}$};
+          \node at (1.6,1.45) {$+$};
+          \node at (1.6,0.9) {$v_{\mathrm{BE}}$};
+          \node at (1.6,0.35) {$-$};
+          \node at (3.7,2.65) {$+$};
+          \node at (3.7,1.75) {$v_{\mathrm{CE}}$};
+          \node at (3.7,0.65) {$-$};
+        \end{notescircuit}
+      \end{minipage}\par
+      \caption{驱动电路}
+      \label{pic0319a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.61\textwidth}
+      \centering
+      \begin{minipage}[c][8.10cm][c]{\linewidth}
+        \centering
+        \begin{notesplot}[xscale=0.85,yscale=0.48]
+          \fill[gray!15] (1.4,0) rectangle (3.4,13.6);
+          \fill[gray!15] (5.1,0) rectangle (7.2,13.6);
+          \node[above,inner sep=2pt] (vcc-label) at (1.55,4.2) {$V_{\mathrm{CC}}$};
+          \foreach \x in {2.2,3.4,5.1,6.1,7.2} {
+              \draw[guide] (\x,0) -- (\x,13.6);
+            }
+          \coordinate (vcc-guide) at (1.4,0);
+          \draw[guide] (vcc-guide) -- (vcc-guide |- vcc-label.south);
+          \draw[guide] (vcc-guide |- vcc-label.north) -- (1.4,13.6);
+          \foreach \y/\low/\name in {12/11.2/{v_{\mathrm s}(t)},9/8.2/{v_{\mathrm{BE}}(t)},6/5.05/{i_{\mathrm B}(t)},3/3/{v_{\mathrm{CE}}(t)},0/0/{i_{\mathrm C}(t)}} {
+          \draw[axis] (0.8,\y) -- (8.3,\y) node[right] {$t$};
+          \draw[axis] (0.8,\low) -- (0.8,\y+1.65)
+          node[left,yshift=-4pt] {$\name$};
+          }
+          \draw[waveform] (0.8,11.45) -- (1.4,11.45) -- (1.4,13.2)
+          -- (5.1,13.2) -- (5.1,11.45) -- (8.0,11.45);
+          \node[above] at (4.2,13.2) {$V_{\mathrm{s2}}$};
+          \node[below right,inner sep=2pt] at (8.0,11.45) {$-V_{\mathrm{s1}}$};
+          \node[left] at (0.8,12) {$0$};
+          \draw[waveform] (0.8,8.45) -- (1.4,8.45)
+          .. controls (1.7,8.45) and (1.8,9.9) .. (2.2,9.9)
+          -- (5.1,9.9)
+          .. controls (5.45,9.9) and (5.7,9.6) .. (6.1,9.6)
+          .. controls (6.5,9.6) and (6.8,8.45) .. (7.2,8.45) -- (8.0,8.45);
+          \node[above] at (4.2,9.9) {$V_{\mathrm{BE(sat)}}$};
+          \node[below right,inner sep=2pt] at (8.0,8.45) {$-V_{\mathrm{s1}}$};
+          \node[left] at (0.8,9) {$0$};
+          \draw[waveform] (0.8,6) -- (1.4,6) -- (1.4,7.2)
+          .. controls (1.6,6.75) and (1.8,6.75) .. (2.2,6.75)
+          -- (5.1,6.75) -- (5.1,5.1) -- (6.1,5.1)
+          .. controls (6.55,5.1) and (6.8,6) .. (7.2,6) -- (8.0,6);
+          \node[above] at (4.2,6.75) {$I_{\mathrm{B1}}$};
+          \node[below] at (5.6,5.1) {$-I_{\mathrm{B2}}$};
+          \node[left] at (0.8,6) {$0$};
+          \draw[waveform] (0.8,4.2) -- (2.2,4.2)
+          .. controls (2.5,4.2) and (3.0,3.2) .. (3.4,3.2)
+          -- (6.1,3.2)
+          .. controls (6.4,3.2) and (6.8,4.2) .. (7.2,4.2) -- (8.0,4.2);
+          \node[above] at (4.4,3.2) {$V_{\mathrm{CE(sat)}}$};
+          \node[left] at (0.8,3) {$0$};
+          \draw[waveform] (0.8,0) -- (2.2,0)
+          .. controls (2.5,0) and (3.0,1.2) .. (3.4,1.2)
+          -- (6.1,1.2)
+          .. controls (6.4,1.2) and (6.8,0) .. (7.2,0) -- (8.0,0);
+          \node[above] at (4.4,1.2) {$I_{\mathrm{C,on}}$};
+          \node[left] at (0.8,0) {$0$};
+          \foreach \xa/\xb/\name in {1.4/2.2/{t_{\mathrm d}},2.2/3.4/{t_{\mathrm r}},5.1/6.1/{t_{\mathrm{stg}}},6.1/7.2/{t_{\mathrm f}}} {
+          \draw[measure] (\xa,14.0) -- (\xb,14.0) node[midway,above] {$\name$};
+          }
+          \foreach \x/\n in {1.4/0,2.2/1,3.4/2,5.1/3,6.1/4,7.2/5} {
+              \node[below] at (\x,0) {$t_{\n}$};
+            }
+          \foreach \x/\n in {1.8/1,2.8/2,4.25/3,5.6/4,6.65/5} {
+              \node[anchor=base] at (\x,-1.85) {$(\n)$};
+            }
+        \end{notesplot}
+      \end{minipage}\par
+      \caption{开关过程波形}
+      \label{pic0319b}
+    \end{subfigure}
+    \vspace{-0.15cm}
+    \caption{BJT 驱动电路与开关过程波形}
+    \label{pic0319}
+    \vspace{-0.15cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0320}{
+  \begin{figure}[H]
+    \centering
+    \begin{notesplot}[scale=0.90]
+      \fill[gray!15] (2.2,0) rectangle (8.2,9.25);
+      \fill[gray!30] (2.2,0) -- (3.4,1.8) -- (4.6,0.675)
+      .. controls (4.95,0.346875) and (6.2,0) .. (8.2,0) -- cycle;
+      \foreach \x in {2.2,3.4,4.6,8.2} {
+          \draw[guide] (\x,0) -- (\x,9.25);
+        }
+      \draw[measure] (2.2,9.65) -- (8.2,9.65) node[midway,above] {$t_{\mathrm{off}}$};
+      \draw[axis] (0.8,7.0) -- (10.15,7.0) node[right] {$t$};
+      \draw[axis] (0.8,7.0) -- (0.8,9.25) node[left] {$v(t),\,i(t)$};
+      \draw[waveform] (0.8,7.0) -- (2.2,7.0) -- (3.4,8.6) -- (9.8,8.6);
+      \draw[waveform] (0.8,8.2) -- (3.4,8.2) -- (4.6,7.45)
+      .. controls (4.95,7.23125) and (6.2,7.0) .. (8.2,7.0) -- (9.8,7.0);
+      \node[left] at (0.8,8.2) {$I_{\mathrm L}$};
+      \node[left] at (0.8,7.0) {$0$};
+      \node[above] at (6.8,8.6) {$v_{\mathrm{CE}}(t)$};
+      \node[right] at (9.8,8.6) {$V_{\mathrm{in}}$};
+      \node (tail) at (7.0,7.9) {$i_{\mathrm C}(t)$（拖尾）};
+      \draw[axis] (tail.south) -- (6.3,7.1);
+      \draw[axis] (0.8,4.0) -- (10.15,4.0) node[right] {$t$};
+      \draw[axis] (0.8,2.6) -- (0.8,5.9) node[left] {$v(t),\,i(t)$};
+      \draw[waveform] (0.8,2.8) -- (2.2,2.8) -- (3.4,4.0) -- (9.8,4.0);
+      \draw[waveform] (0.8,4.0) -- (3.4,4.0) -- (4.6,4.75)
+      .. controls (4.95,4.96875) and (6.2,5.2) .. (8.2,5.2) -- (9.8,5.2);
+      \node[left] at (0.8,2.8) {$-V_{\mathrm{in}}$};
+      \node[left] at (0.8,4.0) {$0$};
+      \node[right] at (9.8,5.2) {$I_{\mathrm L}$};
+      \node[above] at (6.8,5.2) {$i_{\mathrm D}(t)$};
+      \node[below] at (5.8,4.0) {$v_{\mathrm D}(t)$};
+      \draw[axis] (0.8,0) -- (10.15,0) node[right] {$t$};
+      \draw[axis] (0.8,0) -- (0.8,2.1) node[left] {$p_{\mathrm Q}(t)$};
+      \draw[waveform] (0.8,0) -- (2.2,0) -- (3.4,1.8) -- (4.6,0.675)
+      .. controls (4.95,0.346875) and (6.2,0) .. (8.2,0) -- (9.8,0);
+      \node[left] at (0.8,0) {$0$};
+      \node[above left] at (3.4,1.8) {$V_{\mathrm{in}}I_{\mathrm L}$};
+      \node (energy) at (6.4,1.2) {$E_{\mathrm{off}}$};
+      \draw[axis] (energy.south) -- (5.5,0.2);
+      \foreach \x/\n in {2.2/0,3.4/1,4.6/2,8.2/3} {
+          \node[below] at (\x,0) {$t_{\n}$};
+        }
+      \foreach \x/\n in {2.8/1,4.0/2,6.4/3} {
+          \node at (\x,-0.85) {$(\n)$};
+        }
+    \end{notesplot}
+    \caption{IGBT 关断拖尾、二极管响应与关断损耗}
+    \label{pic0320}
+  \end{figure}
+}
+
+\DefineFigure{pic0321}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \begin{minipage}[c][3.00cm][c]{\linewidth}
+        \centering
+        \begin{notescircuit}[scale=0.96]
+          \ctikzset{bipoles/length=0.85cm}
+          \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+            \coordinate (scr-left) at (1.1,0);
+            \coordinate (scr-right) at (2.5,0);
+            \draw (scr-left) to[stroke thyristor,name=scr] (scr-right);
+            \draw (scr.G) -- ++(0,-0.22) coordinate (gate);
+          \end{scope}
+          \draw (0,0) node[ocirc] {} -- (scr-left);
+          \draw (scr-right) -- (3.6,0) node[ocirc] {};
+          \coordinate (gate-port) at (gate |- 0,-0.95);
+          \draw (gate) -- (gate-port) node[ocirc] {};
+          \node[left=2pt] at (0,0) {$\mathrm A$};
+          \node[right=2pt] at (3.6,0) {$\mathrm K$};
+          \node[right=2pt] at (gate-port) {$\mathrm G$};
+        \end{notescircuit}
+      \end{minipage}\par
+      \caption{SCR 符号}
+      \label{pic0321a}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{0.48\textwidth}
+      \centering
+      \begin{minipage}[c][3.00cm][c]{\linewidth}
+        \centering
+        \begin{notescircuit}[scale=0.96]
+          \ctikzset{bipoles/length=0.85cm,
+            tripoles/pnp/base width=0.42,
+            tripoles/pnp/width=0.48,
+            tripoles/npn/base width=0.42,
+            tripoles/npn/width=0.48}
+          \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+            \node[pnp,nobase,rotate=90,xscale=-1,anchor=E] (q1) at (1.1,0) {};
+            \draw (q1.nobase) -- ++(0,0.22) coordinate (base-one);
+          \end{scope}
+          \begin{scope}[scale around={1.15:(3.9,1.35)},transform shape]
+            \node[npn,nobase,rotate=90,anchor=C] (q2) at (3.2,1.35) {};
+            \draw (q2.nobase) -- ++(0,-0.22) coordinate (base-two);
+          \end{scope}
+          \coordinate (gate-bus) at (base-two |- 0,0);
+          \coordinate (gate-port) at (base-two |- 0,-0.95);
+          \draw (0,0) node[ocirc] {} -- (q1.E);
+          \draw (q1.C) -| (base-two);
+          \draw (base-one) |- (q2.C);
+          \draw (q2.E) -- (5.15,1.35) -- (5.15,0)
+          -- (5.75,0) node[ocirc] {};
+          \draw (gate-bus) node[circ] {} -- (gate-port) node[ocirc] {};
+          \node[left=2pt] at (0,0) {$\mathrm A$};
+          \node[right=2pt] at (5.75,0) {$\mathrm K$};
+          \node[right=2pt] at (gate-port) {$\mathrm G$};
+          \node[below=3pt] at ($(q1.E)!0.5!(q1.C)$) {$\mathrm Q_1$};
+          \node[above=3pt] at ($(q2.C)!0.5!(q2.E)$) {$\mathrm Q_2$};
+        \end{notescircuit}
+      \end{minipage}\par
+      \caption{双晶体管模型}
+      \label{pic0321b}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{SCR 符号与双晶体管模型}
+    \label{pic0321}
+    \vspace{-0.15cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0322}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \begin{notesplot}[scale=0.94]
+      \draw[axis] (-2.8,0) -- (6.7,0) node[right] {$v_{\mathrm{AK}}$};
+      \draw[axis] (0,-2.2) -- (0,3.8) node[above] {$i_{\mathrm A}$};
+      \draw[guide] (-2.2,-1.9) -- (-2.2,0);
+      \draw[guide] (5.9,0) -- (5.9,0.35);
+      \draw[waveform] (0,0) -- (-1.9,-0.05)
+      .. controls (-2.3,-0.05) and (-2.3,-0.4) .. (-2.45,-1.9);
+      \foreach \k in {2.6,3.7,4.8,5.9} {
+          \draw[waveform] (0,0) .. controls (1.1,0.04) and (\k,0.04) .. (\k,0.14)
+          .. controls (\k,0.45) and (1.1,0.45) .. (0.7,1.4);
+        }
+      \draw[waveform] (0.7,1.4) -- (0.95,3.45);
+      \node[below left] at (0,0) {$0$};
+      \node[above] at (-2.2,0) {$-V_{\mathrm{br}}$};
+      \node[below] at (5.9,0) {$V_{\mathrm{BO}}$};
+      \node at (-1.15,-0.65) {反向阻断};
+      \node at (-2.05,-2.25) {反向击穿};
+      \node at (3.9,-0.65) {正向阻断};
+      \node at (2.15,2.9) {正向导通};
+      \draw[axis] (5.75,1.05) -- (2.85,1.05)
+      node[midway,above] {$i_{\mathrm G}$ 增大};
+      \node[above right] at (5.9,0.3) {$i_{\mathrm G}=0$};
+    \end{notesplot}
+    \vspace{-0.15cm}
+    \caption{SCR 静态伏安特性}
+    \label{pic0322}
+    \vspace{-0.15cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0323}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \begin{notesplot}[scale=0.94]
+      \draw[axis] (0,0) -- (10.65,0);
+      \draw[axis] (0,0) -- (0,6.95) node[above] {整机功率 $P$};
+      \foreach \x/\lab in {0.8/{200\,\mathrm V},2.6/{650\,\mathrm V},4.4/{1.2\,\mathrm{kV}},5.6/{1.7\,\mathrm{kV}},7.3/{3.3\,\mathrm{kV}},8.6/{4.5\,\mathrm{kV}},10.0/{6.5\,\mathrm{kV}}} {
+      \draw[line width=0.4pt] (\x,0) -- (\x,0.12);
+      \node[below,inner sep=2pt] at (\x,0) {$\lab$};
+      }
+      \foreach \y/\lab in {0/{10\,\mathrm W},0.8/{100\,\mathrm W},1.6/{1\,\mathrm{kW}},2.4/{10\,\mathrm{kW}},3.2/{100\,\mathrm{kW}},4.0/{1\,\mathrm{MW}},4.8/{10\,\mathrm{MW}},5.6/{100\,\mathrm{MW}},6.4/{1\,\mathrm{GW}}} {
+      \draw[line width=0.4pt] (0,\y) -- (0.12,\y);
+      \node[left,inner sep=2pt] at (0,\y) {$\lab$};
+      }
+      \node[below] at (5.3,-0.48) {器件耐压等级};
+      \node at (2.6,0.8) {低功率电源};
+      \node at (2.6,1.98) {计算机电源};
+      \node at (4.4,2.4) {电机驱动};
+      \node at (4.4,2.93) {UPS};
+      \node at (3.5,3.38) {电动汽车主驱};
+      \node at (5.6,3.65) {光伏发电};
+      \node at (5.6,4.52) {风力发电};
+      \node at (8.6,4.24) {轨道牵引};
+      \node at (8.6,4.95) {船舶推进};
+      \node at (8.6,6.4) {直流输电};
+      \node[draw=black,line width=0.6pt,align=left,inner xsep=6pt,inner ysep=5pt] at (8.0,1.1) {采用宽禁带器件：\\效率更高、体积更小};
+      \draw[axis] (2.45,-1.35) -- (0.15,-1.35) node[midway,above] {GaN};
+      \draw[line width=0.8pt] (2.45,-1.73) rectangle (3.95,-0.97);
+      \node at (3.2,-1.35) {交叠区};
+      \draw[axis] (3.95,-1.35) -- (10.3,-1.35) node[midway,above] {SiC};
+    \end{notesplot}
+    \vspace{-0.15cm}
+    \caption{GaN 与 SiC 的应用方向及典型电压、功率等级示意}
+    \label{pic0323}
+    \vspace{-0.15cm}
+  \end{figure}
+}
+
+\DefineFigure{pic0324}{
+  \begin{figure}[H]
+    \vspace{-0.15cm}
+    \centering
+    \captionsetup[subfigure]{skip=2pt}
+    \begin{subfigure}[b]{0.51\textwidth}
+      \centering
+      \begin{minipage}[c][5.95cm][c]{\linewidth}
+        \centering
+        \begin{notesplot}[xscale=0.86,yscale=0.48]
+          \path[use as bounding box] (-0.95,-1.9) rectangle (7.6,9.8);
+          \path[draw=black,fill=white,line width=0.8pt] (0,0) rectangle (1.0,8.0);
+          \path[draw=black,fill=white,line width=0.8pt] (1.0,0) rectangle (4.0,5.6);
+          \path[draw=black,fill=white,line width=0.8pt] (1.65,0) rectangle (4.7,3.6);
+          \path[draw=black,fill=white,line width=0.8pt] (4.0,0.1) rectangle (7.0,2.8);
+          \path[draw=black,fill=white,line width=0.8pt] (0,0) rectangle (2.3,1.6);
+          \path[draw=black,fill=white,line width=0.8pt] (3.25,1.0) rectangle (6.15,4.25);
+          \node[rotate=90] at (0.5,5.0) {SCR};
+          \node at (1.05,0.8) {BJT};
+          \node at (2.5,4.6) {IGBT};
+          \node[align=center] at (2.45,2.7) {Si\\MOSFET};
+          \node at (4.7,2.65) {SiC};
+          \node at (5.55,0.53) {GaN};
+          \draw[axis] (0,0) -- (7.55,0);
+          \draw[axis] (0,0) -- (0,8.65) node[above] {$P\,(\mathrm W)$};
+          \foreach \x/\n in {0/1,1/2,2/3,3/4,4/5,5/6,6/7,7/8} {
+              \draw[line width=0.4pt] (\x,0) -- (\x,0.13);
+              \node[below,inner sep=2pt] at (\x,0) {$10^{\n}$};
+            }
+          \foreach \y/\lab in {0/10,1/100,2/{1\,\mathrm k},3/{10\,\mathrm k},4/{100\,\mathrm k},5/{1\,\mathrm M},6/{10\,\mathrm M},7/{100\,\mathrm M},8/{1\,\mathrm G}} {
+          \draw[line width=0.4pt] (0,\y) -- (0.12,\y);
+          \node[left,inner sep=2pt] at (0,\y) {$\lab$};
+          }
+          \node[below] at (3.5,-0.85) {$f\,(\mathrm{Hz})$};
+        \end{notesplot}
+      \end{minipage}\par
+      \caption{器件的典型应用范围}
+      \label{pic0324a}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{0.47\textwidth}
+      \centering
+      \begin{minipage}[c][5.95cm][c]{\linewidth}
+        \centering
+        \def\applicationXScale{0.76}
+        \def\applicationYScale{0.50}
+        \begin{notesplot}[xscale=\applicationXScale,yscale=\applicationYScale]
+          \path[use as bounding box] (-0.95,-1.824) rectangle (7.25,9.408);
+          \draw[guide] (0.5,8.25) -- (6.95,1.155);
+          \path[draw=black,fill=white,line width=0.8pt]
+          (4.4,0.35) -- (6.65,0.35) -- (6.65,1.485)
+          -- ({5.8/1.1},3.0) -- (4.4,3.0) -- cycle;
+          \path[draw=black,fill=white,line width=0.8pt]
+          (2.1,1.9) -- (4.45,1.9) -- (4.45,3.905)
+          -- ({3.65/1.1},5.15) -- (2.1,5.15) -- cycle;
+          \path[draw=black,fill=white,line width=0.8pt]
+          (0.9,4.35) -- (2.65,4.35) -- (2.65,5.885)
+          -- ({2.05/1.1},6.75) -- (0.9,6.75) -- cycle;
+          \path[draw=black,fill=white,line width=0.8pt]
+          (0.2,6.1) -- (1.5,6.1) -- (1.5,7.15)
+          -- (1.0,7.7) -- (0.2,7.7) -- cycle;
+          \node at (0.8,6.85) {SCR};
+          \node[align=center] at (1.72,5.25) {GTO\\IGCT};
+          \node at (3.2,3.15) {IGBT};
+          \node at (5.45,1.3) {MOSFET};
+          \pgfmathsetmacro{\limitDX}{\applicationXScale*(6.95-0.5)}
+          \pgfmathsetmacro{\limitDY}{\applicationYScale*(1.155-8.25)}
+          \pgfmathsetmacro{\limitLength}{sqrt(\limitDX*\limitDX+\limitDY*\limitDY)}
+          \pgfmathsetmacro{\normalDX}{-0.82*\limitDY/(\limitLength*\applicationXScale)}
+          \pgfmathsetmacro{\normalDY}{0.82*\limitDX/(\limitLength*\applicationYScale)}
+          \foreach \xa/\ya in {2.5/6.3,4.3/4.6,6.15/2.5} {
+              \draw[axis,line width=0.8pt] (\xa,\ya) -- ++(\normalDX,\normalDY);
+            }
+          \node[rotate=-36] at (5.7,4.1) {硅极限};
+          \node[rotate=-36] at (4.9,7.3) {SiC / GaN};
+          \draw[axis] (0,0) -- (7.2,0);
+          \draw[axis] (0,0) -- (0,8.55) node[above] {$S\,(\mathrm{VA})$};
+          \foreach \x/\n in {1/2,2/3,3/4,4/5,5/6,6/7} {
+              \draw[line width=0.4pt] (\x,0) -- (\x,0.12);
+              \node[below,inner sep=2pt] at (\x,0) {$10^{\n}$};
+            }
+          \foreach \y/\lab in {1/100,2/{1\,\mathrm k},3/{10\,\mathrm k},4/{100\,\mathrm k},5/{1\,\mathrm M},6/{10\,\mathrm M}} {
+          \draw[line width=0.4pt] (0,\y) -- (0.12,\y);
+          \node[left,inner sep=2pt] at (0,\y) {$\lab$};
+          }
+          \node[below] at (3.5,-0.75) {$f\,(\mathrm{Hz})$};
+        \end{notesplot}
+      \end{minipage}\par
+      \caption{宽禁带器件的扩展方向}
+      \label{pic0324b}
+    \end{subfigure}\par
+    \vspace{-0.15cm}
+    \caption{功率半导体器件的功率与频率范围示意}
+    \label{pic0324}
+    \vspace{-0.15cm}
+  \end{figure}
+}
