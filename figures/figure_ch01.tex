@@ -237,7 +237,6 @@
     \def\xperiod{10.8}
     \def\xend{11.8}
     \def\ytiming{6.9125}
-    % 电感电压波形
     \fill[gray!30]
     (\xzero,4.9) rectangle (\xduty,6.4);
     \fill[gray!30]
@@ -256,7 +255,6 @@
     \draw[guide] (\xzero,4.2) -- (\xduty,4.2);
     \draw[guide] (\xduty,0) -- (\xduty,\ytiming);
     \draw[guide] (\xperiod,0) -- (\xperiod,\ytiming);
-    % 电感电流波形
     \draw[axis] (\xzero,0) -- (\xend,0) node[right] {$t$};
     \draw[axis] (\xzero,0) -- (\xzero,3.2)
     node[left] {$i_{\mathrm{L}}(t)$};
@@ -272,7 +270,6 @@
     \draw[guide] (\xperiod,0.9) -- (11.25,0.9);
     \draw[{Latex[length=1.8mm]}-{Latex[length=1.8mm]}, line width=0.6pt]
     (11.25,0.9) -- node[right] {$\Delta i_{\mathrm{L,pp}}$} (11.25,2.3);
-    % 一个开关周期内的时间分段
     \node[left] at (\xzero,0) {$0$};
     \node[below] at (\xperiod,0) {$T_{\mathrm{s}}$};
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
@@ -300,12 +297,10 @@
     \def\xzero{1.2}
     \def\xsteady{6.9}
     \def\xend{12.0}
-    % 坐标轴
     \draw[axis] (\xzero,0.6) -- (\xend,0.6) node[right] {$t$};
     \draw[axis] (\xzero,0.6) -- (\xzero,5.0)
     node[left] {$i_{\mathrm{L}}(t)$};
     \node[below left] at (\xzero,0.6) {$0$};
-    % 启动瞬态及其逐周期抬升的电感电流
     \draw[waveform]
     (\xzero,0.6)
     -- (1.76,1.55) -- (2.6,1.45)
@@ -315,7 +310,6 @@
     -- (7.46,3.35) -- (8.3,2.65)
     -- (8.86,3.35) -- (9.7,2.65)
     -- (10.26,3.35) -- (11.1,2.65);
-    % 电流平均值由启动过程逐渐收敛到稳态值
     \draw[guide]
     plot[smooth] coordinates {
         (1.2,0.6) (2.25,1.45) (3.65,2.12)
@@ -323,18 +317,15 @@
       };
     \draw[guide] (\xzero,3.0) -- (11.1,3.0);
     \node[left] at (\xzero,3.0) {$I_{\mathrm{L}}$};
-    % 瞬态与周期稳态的分界
     \draw[guide] (\xsteady,0.6) -- (\xsteady,4.55);
     \node at (4.05,4.9) {启动瞬态};
     \node at (9.0,4.9) {周期稳态};
-    % 两个开关状态对应的电感电流斜率
     \node at (9.25,4.0)
     {$i'_{\mathrm{L}}(t)\approx\dfrac{V_{\mathrm{in}}-V_{\mathrm{out}}(t)}{L}$};
     \draw[annotation] (7.85,3.72) -- (8.77,3.12);
     \node at (8.85,1.55)
     {$i'_{\mathrm{L}}(t)\approx-\dfrac{V_{\mathrm{out}}(t)}{L}$};
     \draw[annotation] (7.80,1.83) -- (9.35,3.00);
-    % 稳态纹波
     \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
     (11.55,2.65) -- node[right] {$\Delta i_{\mathrm{L,pp}}$} (11.55,3.35);
     \draw[guide] (\xsteady,2.65) -- (11.55,2.65);
@@ -364,15 +355,12 @@
     \def\xthreequarter{7.80}
     \def\xperiod{10.5}
     \def\xend{11.8}
-    % 电容电流的正半周期面积，即电容获得的电荷 Q
     \fill[gray!30]
     (\xquarter,4.5) -- (\xhalf,5.35) -- (\xthreequarter,4.5) -- cycle;
     \node at (\xhalf,4.78) {$Q$};
-    % 电流过零点同时也是输出电压纹波的极值点
     \draw[guide] (\xquarter,0.95) -- (\xquarter,5.55);
     \draw[guide] (\xthreequarter,0.95) -- (\xthreequarter,5.55);
     \draw[guide] (\xperiod,0.95) -- (\xperiod,5.55);
-    % 电容电流（近似等于电感电流纹波）
     \draw[axis] (\xzero,4.5) -- (\xend,4.5) node[right] {$t$};
     \draw[axis] (\xzero,3.55) -- (\xzero,6.05)
     node[left] {$i_{\mathrm{C}}(t)$};
@@ -388,7 +376,6 @@
     (11.05,4.5) -- node[right] {$\Delta i_{\mathrm{L,pk}}$} (11.05,5.35);
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
     (\xquarter,3.25) -- node[below] {$T_{\mathrm{s}}/2$} (\xthreequarter,3.25);
-    % 输出电压纹波；极值出现在电容电流过零时刻
     \draw[axis] (\xzero,0.95) -- (\xend,0.95) node[right] {$t$};
     \draw[axis] (\xzero,0.95) -- (\xzero,3.05)
     node[left] {$v_{\mathrm{out}}(t)$};
@@ -554,14 +541,12 @@
     \def\xperiod{10.5}
     \def\xend{11.8}
     \def\ytiming{5.85}
-    % 两个开关状态的时间分段；竖直参考线贯穿上下两幅波形
     \draw[guide] (\xduty,0.35) -- (\xduty,\ytiming);
     \draw[guide] (\xperiod,0.35) -- (\xperiod,\ytiming);
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
     (\xzero,\ytiming) -- node[above] {$DT_{\mathrm{s}}$} (\xduty,\ytiming);
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
     (\xduty,\ytiming) -- node[above] {$D'T_{\mathrm{s}}$} (\xperiod,\ytiming);
-    % Boost 电感电流纹波
     \draw[axis] (\xzero,3.55) -- (\xend,3.55) node[right] {$t$};
     \draw[axis] (\xzero,3.55) -- (\xzero,6.25)
     node[left] {$i_{\mathrm{L}}(t)$};
@@ -578,7 +563,6 @@
     \draw[guide] (\xperiod,4.20) -- (11.05,4.20);
     \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
     (11.05,4.20) -- node[right] {$\Delta i_{\mathrm{L,pp}}$} (11.05,5.50);
-    % Boost 电容电压纹波
     \draw[axis] (\xzero,0.35) -- (\xend,0.35) node[right] {$t$};
     \draw[axis] (\xzero,0.35) -- (\xzero,2.85)
     node[left] {$v_{\mathrm{C}}(t)$};
@@ -781,14 +765,12 @@
     \def\xmeasure{11.95}
     \def\xaxisend{13.0}
     \def\ytiming{7.45}
-    % 两个开关状态的时间分段
     \draw[guide] (\xduty,-0.55) -- (\xduty,\ytiming);
     \draw[guide] (\xperiod,-0.55) -- (\xperiod,\ytiming);
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
     (\xzero,\ytiming) -- node[above] {$DT_{\mathrm{s}}$} (\xduty,\ytiming);
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
     (\xduty,\ytiming) -- node[above] {$D'T_{\mathrm{s}}$} (\xperiod,\ytiming);
-    % 输入电感电流 i_1
     \draw[axis] (\xzero,6.00) -- (\xaxisend,6.00) node[right] {$t$};
     \draw[axis] (\xzero,6.00) -- (\xzero,7.80) node[left] {$i_1(t)$};
     \node[left] at (\xzero,6.00) {$0$};
@@ -800,7 +782,6 @@
     \draw[guide] (\xperiod,6.47) -- (\xmeasure,6.47);
     \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
     (\xmeasure,6.47) -- node[right] {$\Delta i_{1,\mathrm{pp}}$} (\xmeasure,7.03);
-    % 输出电感电流 i_2；按图示参考方向，其平均值可为负
     \begin{scope}[shift={(0,-0.40)}]
       \draw[axis] (\xzero,5.25) -- (\xaxisend,5.25) node[right] {$t$};
       \draw[axis] (\xzero,4.05) -- (\xzero,5.75) node[left] {$i_2(t)$};
@@ -814,7 +795,6 @@
       \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
       (\xmeasure,4.38) -- node[right] {$\Delta i_{2,\mathrm{pp}}$} (\xmeasure,4.92);
     \end{scope}
-    % 能量传递电容 C_1 的电压纹波
     \begin{scope}[shift={(0,-0.40)}]
       \draw[axis] (\xzero,2.20) -- (\xaxisend,2.20) node[right] {$t$};
       \draw[axis] (\xzero,2.20) -- (\xzero,3.55) node[left] {$v_1(t)$};
@@ -828,7 +808,6 @@
       \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
       (\xmeasure,2.60) -- node[right] {$\Delta v_{1,\mathrm{pp}}$} (\xmeasure,3.10);
     \end{scope}
-    % 输出电容 C_2 的电压纹波示意
     \begin{scope}[shift={(0,-0.80)}]
       \draw[axis] (\xzero,1.45) -- (\xaxisend,1.45) node[right] {$t$};
       \draw[axis] (\xzero,0.25) -- (\xzero,1.95) node[left] {$v_2(t)$};
@@ -873,15 +852,12 @@
     \def\xthreequarter{7.80}
     \def\xperiod{10.5}
     \def\xend{11.8}
-    % 输出电容电流负半周对应的电荷变化量幅值 Q
     \fill[gray!30]
     (\xquarter,4.5) -- (\xhalf,3.65) -- (\xthreequarter,4.5) -- cycle;
     \node at (\xhalf,4.18) {$Q$};
-    % 电容电流过零时，输出电压取得极值
     \draw[guide] (\xquarter,0.95) -- (\xquarter,5.55);
     \draw[guide] (\xthreequarter,0.95) -- (\xthreequarter,5.55);
     \draw[guide] (\xperiod,0.95) -- (\xperiod,5.55);
-    % 输出电容电流，近似等于输出电感电流的纹波分量
     \draw[axis] (\xzero,4.5) -- (\xend,4.5) node[right] {$t$};
     \draw[axis] (\xzero,3.55) -- (\xzero,6.05)
     node[left] {$i_{\mathrm{C}2}(t)$};
@@ -897,7 +873,6 @@
     (11.05,3.65) -- node[right] {$\Delta i_{2,\mathrm{pk}}$} (11.05,4.5);
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
     (\xquarter,3.25) -- node[below] {$T_{\mathrm{s}}/2$} (\xthreequarter,3.25);
-    % 输出电压纹波
     \draw[axis] (\xzero,2.70) -- (\xend,2.70) node[right] {$t$};
     \draw[axis] (\xzero,0.95) -- (\xzero,3.05)
     node[left] {$v_2(t)$};

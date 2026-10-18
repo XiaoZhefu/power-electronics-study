@@ -63,6 +63,7 @@
 \usepackage{subcaption}
 \usepackage{unicode-math}
 \usepackage[table]{xcolor}
+\usetikzlibrary{intersections}
 
 \definecolor{reviewgray}{gray}{0.42}
 \DeclareCaptionFont{wuhao}{\zihao{5}}
@@ -503,7 +504,7 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
   \label{pic0302}
 \end{figure}
 
-其中，部分器件会自带反并联体二极管，或者外加反并联二极管，有时会和这些二极管一同绘制； SiC 、 GaN 器件大部分也使用类似 MOS 管的画法。
+部分器件自带体二极管或外接反并联二极管，绘图时可一并表示。
 
 \subsection{器件的象限划分}
 
@@ -572,7 +573,7 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
 
 \subsubsection{三极管、IGBT 与 MOSFET}
 
-三极管、IGBT 为全控 I 象限器件。MOSFET 可阻断单一极性的电压，导通时沟道可双向通流，正向导通电流可受控关断；但由于体二极管（未画出）的存在，沟道关断后其仍能承受反向电流，按上述参考方向归为全控 I、IV 象限器件。
+三极管、IGBT 为全控 I 象限器件。MOSFET 可阻断单一极性的电压，导通时沟道可双向通流，正向导通电流可受控关断；但由于体二极管（未画出）的存在，沟道关断后仍可反向通流，归为 I、IV 象限器件。
 
 \begin{figure}[H]
   \vspace{-0.15cm}
@@ -909,7 +910,7 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
   \label{pic0308}
 \end{figure}
 
-二极管属于双极型、少子器件，可用于较高电压和较大功率的整流场合。肖特基二极管属于单极型、多子器件，硅基器件通常用于较低电压场合，而 SiC 器件也可用于较高电压场合。
+普通 PN 结功率二极管属于双极型、少子器件，可用于较高电压和较大功率的整流场合。肖特基二极管属于单极型、多子器件，硅基器件通常用于较低电压场合，而 SiC 器件也可用于较高电压场合。
 
 \subsection{器件开通与关断过程}
 
@@ -923,6 +924,10 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
     \coordinate (rr-control-a) at (6.68,-0.55);
     \coordinate (rr-control-b) at (7.12,-1.8);
     \coordinate (rr-peak) at (7.6,-1.8);
+    \path[name path=rr-falling] (rr-start)
+    .. controls (rr-control-a) and (rr-control-b) .. (rr-peak);
+    \path[name path=rr-zero-axis] (6.4,0) -- (7.6,0);
+    \path[name intersections={of=rr-falling and rr-zero-axis,by=rr-zero}];
     \fill[gray!15] (1.4,-2.0) rectangle (3.1,5.6);
     \fill[gray!15] (6.4,-2.0) rectangle (7.6,5.6);
     \fill[gray!15] (7.6,-2.0) rectangle (8.8,5.6);
@@ -935,7 +940,7 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
     \foreach \x in {1.4,3.1,6.4,8.8} {
         \draw[guide] (\x,-2.0) -- (\x,5.6);
       }
-    \draw[axis] (0.65,3.7) -- (10.25,3.7) node[right] {$t$};
+    \draw[axis] (0.8,3.7) -- (10.25,3.7) node[right] {$t$};
     \draw[axis] (0.8,2.2) -- (0.8,5.95) node[left] {$v(t)$};
     \draw[waveform] (0.8,2.5) -- (1.4,2.5)
     .. controls (1.8,2.5) and (1.9,5.2) .. (2.25,5.2)
@@ -951,7 +956,7 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
     \draw[axis] (charge.south) -- (6.85,4.2);
     \node[align=center] (junction) at (9.1,6.2) {结电容充电};
     \draw[axis] (junction.south) -- (8.2,3.85);
-    \draw[axis] (0.65,0) -- (10.25,0) node[right] {$t$};
+    \draw[axis] (0.8,0) -- (10.25,0) node[right] {$t$};
     \draw[axis] (0.8,-2.05) -- (0.8,1.9) node[left] {$i(t)$};
     \draw[waveform] (0.8,0) -- (1.4,0)
     .. controls (1.6,0) and (1.65,\ycurrentplateau) .. (1.95,\ycurrentplateau)
@@ -960,7 +965,8 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
     .. controls (8.05,-1.8) and (8.3,0) .. (8.8,0) -- (10.0,0);
     \node[left] at (0.8,0) {$0$};
     \node[above] at (4.7,\ycurrentplateau) {$I_0$};
-    \draw[measure] (6.4,1.75) -- (8.8,1.75)
+    \draw[guide] (rr-zero) -- (rr-zero |- 0,1.75);
+    \draw[measure] (rr-zero |- 0,1.75) -- (8.8,1.75)
     node[midway,above,inner sep=2pt] (rr-time) {$t_{\mathrm{rr}}$};
     \node[inner sep=2pt] (area) at (7.56,-0.70) {$-Q_{\mathrm{rr}}$};
     \draw[guide] (7.6,-2.0) -- (rr-peak |- area.south);
@@ -975,10 +981,10 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
     \node at (7.6,-2.85) {关断损耗};
   \end{notesplot}
   \caption{二极管开通与关断波形}
-  \label{pic0310}
+  \label{pic0309}
 \end{figure}
 
-二极管开通时，由于电导调制效应，端口电压先出现过冲，再降至稳定的正向压降。关断时，电流先从正向电流降至零，再出现短暂的反向电流，随后恢复反向阻断能力。
+普通 PN 结功率二极管开通时，少子积累与电导调制的建立需要时间，端口电压可能先出现过冲，再降至稳定的正向压降。关断时，电流先从正向电流降至零，再出现短暂的反向电流，随后恢复反向阻断能力。
 
 \subsection{器件主要参数}
 
@@ -1004,7 +1010,7 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
 
 \subsection{器件特性}
 
-本节不展开 MOSFET 的微观原理。功率 MOSFET 中存在体二极管，方向从源极指向漏极。当栅极关断受控沟道时，体二极管仍允许反向电流流过，某些情况下可起续流、保护作用；开通时，主要通过沟道实现双向导电。
+本节以 N 沟道功率 MOSFET 为例，不展开其微观原理。其体二极管方向从源极指向漏极。当栅极关断受控沟道时，体二极管仍允许反向电流流过，某些情况下可起续流、保护作用；开通时，主要通过沟道实现双向导电。
 
 \begin{figure}[H]
   \vspace{-0.15cm}
@@ -1039,7 +1045,7 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
       \path (0,-2.25);
     \end{notescircuit}\par
     \caption{MOSFET 与体二极管}
-    \label{pic0311a}
+    \label{pic0310a}
   \end{subfigure}%
   \hfill%
   \begin{subfigure}[b]{0.56\textwidth}
@@ -1078,17 +1084,17 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
       \path (0,-2.25);
     \end{notescircuit}\par
     \caption{寄生参数模型}
-    \label{pic0311b}
+    \label{pic0310b}
   \end{subfigure}\par
   \vspace{-0.15cm}
   \caption{MOSFET 的端口方向与寄生参数}
-  \label{pic0311}
+  \label{pic0310}
   \vspace{-0.3cm}
 \end{figure}
 
 \subsection{器件开通与关断过程}
 
-电力电子中， MOSFET 的工作区间常常位于线性区与截止区，前者代表导通，后者代表关断。 MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同时非零，形成开关损耗；稳定通态仍有通态电阻损耗。
+作为开关使用时，MOSFET 的稳定工作状态为充分导通的线性区和截止区。MOSFET 开通与关断时，漏源电压和漏极电流会在一段时间内同时非零，形成开关损耗；稳定通态仍有通态电阻损耗。
 
 \begin{figure}[H]
   \centering
@@ -1111,13 +1117,13 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
     \foreach \x in {1.2,2.7,7.0,8.3} {
         \draw[guide] (\x,0) -- (\x,6.0);
       }
-    \draw[axis] (0.5,3.5) -- (9.4,3.5) node[right] {$t$};
+    \draw[axis] (0.7,3.5) -- (9.4,3.5) node[right] {$t$};
     \draw[axis] (0.7,3.5) -- (0.7,6.3) node[left] {$v(t),\,i(t)$};
     \draw[waveform] (0.7,3.5) -- (1.2,3.5) -- (1.95,5.8)
     -- (7.45,5.8) -- (8.3,3.5) -- (9.1,3.5);
     \draw[waveform] (0.7,5.65) -- (1.7,5.65) -- (2.7,3.7)
     -- (7.0,3.7) -- (7.8,5.65) -- (9.1,5.65);
-    \draw[axis] (0.5,0) -- (9.4,0) node[right] {$t$};
+    \draw[axis] (0.7,0) -- (9.4,0) node[right] {$t$};
     \draw[axis] (0.7,0) -- (0.7,2.8) node[left] {$p(t)$};
     \draw[waveform] (0.7,0) -- \turnonlosscurve
     -- \turnofflosscurve -- (9.1,0);
@@ -1146,10 +1152,10 @@ $\mathrm{A}$、$\mathrm{B}$ 除了互斥，还应满足各自的通态电流和�
   \vspace{-0.15cm}
   \caption{MOSFET 电压、电流波形与损耗示意}
   \vspace{-0.4cm}
-  \label{pic0313}
+  \label{pic0311}
 \end{figure}
 
-MOSFET 及其栅极驱动的平均损耗分为三部分：
+忽略漏电与体二极管导通损耗时，MOSFET 及其栅极驱动的平均损耗分为三部分：
 \begin{equation}
   P_{\mathrm{loss}}=P_{\mathrm{cond}}+P_{\mathrm{sw}}+P_{\mathrm{drv}}.
   \label{equ0301}
@@ -1170,7 +1176,7 @@ MOSFET 及其栅极驱动的平均损耗分为三部分：
 \end{equation}
 其中，$f_{\mathrm{s}}$ 为开关频率，$E_{\mathrm{on}}$、$E_{\mathrm{off}}$ 分别为单次开通、关断的损耗能量。
 
-栅极驱动损耗近似为
+栅极采用 $0\sim V_{\mathrm{GS}}$ 单极性驱动时，驱动损耗近似为
 \begin{equation}
   P_{\mathrm{drv}}\approx f_{\mathrm{s}}V_{\mathrm{GS}}Q_{\mathrm{g}}.
   \label{equ0304}
@@ -1187,7 +1193,7 @@ MOSFET 及其栅极驱动的平均损耗分为三部分：
 
 最大脉冲漏极电流 $I_{\mathrm{DM}}$：在规定脉宽、占空比和温度条件下，器件允许短时通过的漏极电流峰值。
 
-最大栅源电压 $V_{\mathrm{GS,max}}$：栅源间允许施加的电压限值，正、负方向的额定范围以数据手册为准。
+最大栅源电压 $V_{\mathrm{GS,\max}}$：栅源间允许施加的电压限值，正、负方向的额定范围以数据手册为准。
 
 栅源阈值电压 $V_{\mathrm{GS(th)}}$：漏极电流达到规定微小测试电流时的栅源电压，表示开始形成导电沟道的条件，不能作为充分导通的驱动电压。
 
@@ -1210,668 +1216,1194 @@ MOSFET 及其栅极驱动的平均损耗分为三部分：
 
 \newpage{}
 
-\subsection{器件应用}
-
-应用方面，原稿提到用 MOSFET 代替二极管，以及器件的串联、并联。
-
-图 \ref{pic0314} 给出了半桥驱动示意：逻辑信号经过死区生成、高侧电平移位及栅极驱动后，分别控制上下两个 MOSFET；高侧驱动采用自举供电。
-
-\begin{figure}[H]
-  \centering
-  \begin{notescircuit}[scale=0.96]
-    \node[nigfete] (qh) at (7.2,5.65) {};
-    \node[nigfete] (ql) at (7.2,1.75) {};
-    \coordinate (top) at (qh.D |- 0,7.0);
-    \coordinate (sw) at (qh.S |- 0,3.5);
-    \coordinate (bottom) at (ql.S |- 0,0);
-    \draw (0.75,0) to[V,l_=$V_{\mathrm{in}}$] (0.75,7.0) -- (top) -- (qh.D);
-    \draw (qh.S) -- (sw) -- (ql.D);
-    \draw (ql.S) -- (bottom);
-    \draw (0.75,0) -- (12.7,0);
-    \draw (top) -- (8.35,7.0);
-    \draw (8.35,3.5) to[D-,l=$\mathrm{D}_1$] (8.35,7.0);
-    \draw (8.35,0) to[D-,l=$\mathrm{D}_2$] (8.35,3.5);
-    \draw (sw) -- (9.1,3.5) to[L,l=$L$] (10.75,3.5) -- (12.7,3.5)
-    to[european resistor,l_=$R$] (12.7,0);
-    \draw (11.3,3.5) to[C,l_=$C$] (11.3,0);
-    \node[circ] at (sw) {};
-    \node[circ] at (8.35,3.5) {};
-    \node[above left=3pt] at (qh.center) {$\mathrm{Q}_1$};
-    \node[above left=3pt] at (ql.center) {$\mathrm{Q}_2$};
-    \draw[-{Latex[length=1.5mm]}] (8.5,3.5) -- (9.05,3.5)
-    node[midway,above] {$i_{\mathrm{L}}$};
-    \node at (9.15,3.05) {$+$};
-    \node at (9.15,1.75) {$v_{\mathrm{s}}(t)$};
-    \node at (9.15,0.35) {$-$};
-    % 逻辑控制、死区生成及低侧驱动。
-    \draw (1.6,0.65) rectangle (2.9,1.6);
-    \node[align=center] at (2.25,1.125) {死区\\生成};
-    \draw[-{Latex[length=1.5mm]},densely dashed] (2.25,-0.75) -- (2.25,0.65);
-    \node[below] at (2.25,-0.75) {$c(t)$};
-    \draw (3.35,1.15) -- (3.35,2.35) -- (4.5,1.75) -- cycle;
-    \node[below] at (5.15,1.05) {$\mathrm{DR}_{\mathrm{LS}}$};
-    \draw[-{Latex[length=1.5mm]}] (2.65,1.6) -- (2.65,2.75)
-    -- (3.1,2.75) -- (3.1,1.75) -- (3.35,1.75);
-    \node[above] at (2.8,2.75) {$c_{\mathrm{LS}}(t)$};
-    \draw (4.5,1.75) -- (ql.G);
-    \draw (3.9,1.44) -- (3.9,0);
-    \draw (3.9,2.06) -- (3.9,3.1);
-    \node[above] at (3.9,3.1) {$+V_{\mathrm{drv}}$};
-    % 高侧电平移位、驱动及自举电源。
-    \draw (1.7,3.8) rectangle (3.2,4.7);
-    \node[align=center] at (2.45,4.25) {电平\\移位};
-    \draw[-{Latex[length=1.5mm]}] (1.95,1.6) -- (1.95,3.8);
-    \node[left] at (1.95,2.55) {$c_{\mathrm{HS}}(t)$};
-    \draw (4.0,5.05) -- (4.0,6.25) -- (5.1,5.65) -- cycle;
-    \node[below] at (5.0,3.75) {$\mathrm{DR}_{\mathrm{HS}}$};
-    \draw[-{Latex[length=1.5mm]}] (3.2,4.25) -- (3.55,4.25)
-    -- (3.55,5.65) -- (4.0,5.65);
-    \draw (4.4,6.03) -- (4.4,6.7);
-    \draw (2.1,6.7) to[D-,l=$\mathrm{D}_{\mathrm{boot}}$] (4.4,6.7) -- (5.85,6.7);
-    \node[left] at (2.1,6.7) {$+V_{\mathrm{drv}}$};
-    \draw (5.85,6.7) -- (5.85,5.45);
-    \draw (5.85,5.45) to[C,l=$C_{\mathrm{boot}}$] (5.85,4.0);
-    \draw (4.4,5.27) -- (4.4,4.0) -- (6.5,4.0) -- (6.5,3.5) -- (sw);
-    \node[circ] at (5.85,4.0) {};
-    % 驱动输出跨过自举电源线，交叉处不相连。
-    \draw (5.1,5.65) -- (5.65,5.65);
-    \draw[preaction={draw=white,line width=3pt}]
-    (5.65,5.65) .. controls (5.65,5.93) and (6.05,5.93) .. (6.05,5.65)
-    -- (qh.G);
-    \draw[-{Latex[length=1.4mm]},line width=0.6pt] (9.0,4.5) -- (12.2,4.5) node[right] {$t$};
-    \draw (9.05,4.5) -- (9.05,5.1) -- (9.65,5.1) -- (9.65,4.5)
-    -- (10.25,4.5) -- (10.25,5.1) -- (10.85,5.1) -- (10.85,4.5)
-    -- (11.45,4.5) -- (11.45,5.1) -- (12.0,5.1);
-    \node[above] at (10.5,5.15) {$V_{\mathrm{in}}$};
-    \node[left] at (9.0,4.5) {$0$};
-    \node[below] at (10.5,4.3) {开关节点电压};
-  \end{notescircuit}
-  \caption{半桥电路、死区控制与自举驱动}
-  \label{pic0314}
-\end{figure}
-
-\reviewnote{新补充的图 \ref{pic0314} 明确给出了死区生成、电平移位、自举电容及上下管驱动；原手写应用条目末尾的括注仍无法可靠辨认。课件的半桥驱动图不等于串并联器件的均压、均流设计，后者仍需另行讨论。}
-
-% ---------- 照片 4：Buck 的开关损耗示例 ----------
 \exampletitle[exa0301]{计及开关过渡与二极管反向恢复的 Buck 变换器}
 
-\examplesubheading{电路与波形}
-
-原稿以 Buck 电路说明开关过渡和二极管反向恢复对输入电流、损耗及效率的影响。以下仍采用 CCM、小纹波近似，暂忽略通态压降、电感铜损和其他损耗，只保留原稿所讨论的两项附加输入电流。
+仍取 CCM、周期稳态和小纹波近似，仅计及开通过渡与二极管反向恢复，忽略通态压降、电感铜损及其他损耗，并将 $t_{\mathrm{rr}}$、$Q_{\mathrm{rr}}$ 视为固定参数。该简化模型用于说明开通过渡与反向恢复对变换比、输入电流和效率的影响。
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
-  \begin{notescircuit}[scale=0.94]
-    \node[nigfete,rotate=90] (q) at (2.1,3.0) {};
-    \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,3.0) -- (q.D);
-    \draw (q.S) -- (4.0,3.0) -- (4.65,3.0) to[L,l=$L$,name=ind] (6.4,3.0)
-    -- (7.5,3.0) -- (9.25,3.0);
-    \draw (q.G) -- (q.G |- 0,1.65) node[below] {$c(t)$};
-    \node[above=3pt] at (q.D) {$\mathrm{Q}$};
-    \draw (0.9,3.0) -- (0.9,4.0);
-    \draw (3.25,3.0) -- (3.25,4.0) to[D-] (0.9,4.0);
-    \node[above] at (2.1,4.0) {体二极管};
-    \draw (4.0,0) to[D-,l_=$\mathrm{D}$] (4.0,3.0);
-    \draw (7.5,3.0) to[C,l_=$C$] (7.5,0);
-    \draw (9.25,3.0) to[european resistor,l_=$R$] (9.25,0) -- (0,0);
-    \draw[-{Latex[length=1.5mm]}] (0.15,3.0) -- (0.8,3.0)
+  \begin{notescircuit}[scale=0.90]
+    \ctikzset{tripoles/nigfete/base width=0.32,
+      tripoles/nigfete/gate width=0.40}
+    \node[nigfete,nogate,rotate=90,anchor=center] (q) at (1.65,2.0) {};
+    \draw (q.inner down |- q.nogate) -- ++(0,-0.22) coordinate (gate);
+    \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.0) -- (q.D);
+    \draw (q.S) -- (3.15,2.0) -- (3.75,2.0)
+    to[L,l=$L$,name=ind] (5.25,2.0) -- (5.60,2.0) -- (6.65,2.0);
+    \coordinate (gate-port) at (gate |- 0,1.15);
+    \draw (gate) -- (gate-port) node[ocirc] {};
+    \node[left=2pt] at (gate-port) {$c(t)$};
+    \node[below=3pt,xshift=-2pt] at (q.S) {$\mathrm{Q}$};
+    \draw (3.15,0) to[D-] (3.15,2.0);
+    \node[left=4pt] at (3.15,1.0) {$\mathrm{D}$};
+    \draw (5.60,2.0) to[C,l_=$C$] (5.60,0);
+    \draw (6.65,2.0) to[european resistor,l_=$R$] (6.65,0) -- (0,0);
+    \foreach \x/\y in {3.15/2.0,3.15/0,5.60/2.0,5.60/0} {
+        \node[circ] at (\x,\y) {};
+      }
+    \draw[-{Latex[length=1.5mm]}] (0.12,2.0) -- (0.52,2.0)
     node[midway,above] {$i_{\mathrm{Q}}$};
-    \draw[-{Latex[length=1.5mm]}] (0,0.45) -- (0,1.05)
+    \draw[-{Latex[length=1.5mm]}] (0,0.12) -- (0,0.52)
     node[midway,left] {$i_{\mathrm{in}}$};
-    \draw[-{Latex[length=1.5mm]}] (4.05,3.0) -- (4.6,3.0)
+    \draw[-{Latex[length=1.5mm]}] (3.27,2.0) -- (3.67,2.0)
     node[midway,above] {$i_{\mathrm{L}}$};
-    \draw[-{Latex[length=1.5mm]}] (3.4,0.4) -- (3.4,1.1)
+    \draw[-{Latex[length=1.5mm]}] (3.15,0.12) -- (3.15,0.52)
     node[midway,left] {$i_{\mathrm{D}}$};
-    \draw[-{Latex[length=1.5mm]}] (7.5,2.95) -- (7.5,2.3)
+    \draw[-{Latex[length=1.5mm]}] (5.60,1.92) -- (5.60,1.52)
     node[midway,right] {$i_{\mathrm{C}}$};
     \node[below=4pt] at (ind.center) {$+\;v_{\mathrm{L}}\;-$};
-    \node at (1.0,3.55) {$+$};
-    \node at (2.1,3.55) {$v_{\mathrm{Q}}$};
-    \node at (3.2,3.55) {$-$};
-    \node at (4.55,2.45) {$+$};
-    \node at (4.55,1.5) {$v_{\mathrm{d}}$};
-    \node at (4.55,0.45) {$-$};
-    \node at (9.85,3.0) {$+$};
-    \node at (9.85,1.5) {$v_{\mathrm{out}}$};
-    \node at (9.85,0) {$-$};
+    \node[above] at (q.center) {$+\;v_{\mathrm{Q}}\;-$};
+    \node[left=1pt] at (0,1.35) {$+$};
+    \node[left=1pt] at (0,0.65) {$-$};
+    \node at (3.65,1.72) {$+$};
+    \node at (3.65,1.0) {$v_{\mathrm{d}}$};
+    \node at (3.65,0.28) {$-$};
+    \node[right] at (6.65,2.0) {$+$};
+    \node[right] at (6.65,0) {$-$};
+    \path (6.65,2.0) -- node[right] {$v_{\mathrm{out}}$} (6.65,0);
   \end{notescircuit}
-  \caption{用于反向恢复损耗分析的 Buck 电路}
-  \label{pic0315}
+  \vspace{-0.15cm}
+  \caption{计及开关过渡与二极管反向恢复的 Buck 电路}
+  \label{pic0312}
+  \vspace{-0.3cm}
 \end{figure}
 
-图中 $v_{\mathrm{d}}(t)$ 表示开关节点相对输入负端的电压，正端在上；$i_{\mathrm{D}}(t)$ 的正方向向上，与前节二极管的阳极到阴极方向一致。这里的 $v_{\mathrm{d}}$ 是节点电压，不能直接当作前节按阳极到阴极定义的二极管端口电压。
+\examplesubheading{器件分析}
+
+图 \ref{pic0312} 中的 $\mathrm{Q}$ 开通时，$\mathrm{D}$ 先反向恢复，$i_{\mathrm{D}}<0$，故 $i_{\mathrm{Q}}=i_{\mathrm{L}}-i_{\mathrm{D}}>I_{\mathrm{L}}$；恢复后 $v_{\mathrm{d}}$ 升至 $V_{\mathrm{in}}$，如图 \ref{pic0313} 所示。
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
   \begin{notesplot}[scale=0.94]
-    % 有效周期从恢复结束处开始；控制信号提前 t_r 开通。
-    \foreach \x in {1.2,4.4,8.4,9.2} {
-        \draw[guide] (\x,-0.4) -- (\x,11.7);
+    \def\rrpulse{
+      (0,0) .. controls (0,0.28) and (0.10,0.70) .. (0.22,0.70)
+      .. controls (0.34,0.70) and (0.38,0) .. (0.50,0)
+    }
+    \fill[gray!15] (0.7,0.4) rectangle (1.2,11.9);
+    \fill[gray!15] (8.7,0.4) rectangle (9.2,11.9);
+    \foreach \x in {0.7,8.7} {
+        \begin{scope}[shift={(\x,11.1)}]
+          \fill[gray!30] \rrpulse -- cycle;
+        \end{scope}
+        \begin{scope}[shift={(\x,5.6)},yscale=-1]
+          \fill[gray!30] \rrpulse -- cycle;
+        \end{scope}
       }
-    \foreach \y/\name in {9.8/{i_{\mathrm{Q}}(t)},7.4/{v_{\mathrm{Q}}(t)},5.0/{i_{\mathrm{D}}(t)},2.6/{v_{\mathrm{d}}(t)},0.2/{c(t)}} {
-    \draw[axis] (0.1,\y) -- (10.7,\y) node[right] {$t$};
-    \draw[axis] (0.2,\y-0.65) -- (0.2,\y+1.7) node[left] {$\name$};
+    \foreach \x in {0.7,1.2,4.4,8.7,9.2} {
+        \draw[guide] (\x,0.4) -- (\x,13.0);
+      }
+    \foreach \y/\ylow/\ytop/\name in {
+    10.0/9.8/12.1/{i_{\mathrm{Q}}(t)},
+    7.8/7.6/9.35/{v_{\mathrm{Q}}(t)},
+    5.6/4.75/7.15/{i_{\mathrm{D}}(t)},
+    2.6/2.4/4.15/{v_{\mathrm{d}}(t)},
+    0.4/0.2/1.95/{c(t)}} {
+    \draw[axis] (0.2,\y) -- (10.7,\y) node[right] {$t$};
+    \draw[axis] (0.2,\ylow) -- (0.2,\ytop) node[left] {$\name$};
     \node[left] at (0.2,\y) {$0$};
     }
-    \fill[black!16] (0.4,10.9) -- (0.72,11.6)
-    .. controls (0.95,11.6) and (1.05,10.9) .. (1.2,10.9) -- cycle;
-    \fill[black!16] (8.4,10.9) -- (8.72,11.6)
-    .. controls (8.95,11.6) and (9.05,10.9) .. (9.2,10.9) -- cycle;
-    \draw[waveform] (0.2,9.8) -- (0.4,9.8) -- (0.4,10.9) -- (0.72,11.6)
-    .. controls (0.95,11.6) and (1.05,10.9) .. (1.2,10.9)
-    -- (4.4,10.9) -- (4.4,9.8) -- (8.4,9.8) -- (8.4,10.9) -- (8.72,11.6)
-    .. controls (8.95,11.6) and (9.05,10.9) .. (9.2,10.9) -- (10.4,10.9);
-    \node[above] at (3.0,10.9) {$I_{\mathrm{L}}$};
-    \node (qrup) at (9.85,11.65) {$Q_{\mathrm{rr}}$};
-    \draw[axis] (qrup.west) -- (8.8,11.25);
-    \draw[waveform] (0.2,8.5) -- (1.2,8.5) -- (1.2,7.4)
-    -- (4.4,7.4) -- (4.4,8.5) -- (9.2,8.5) -- (9.2,7.4) -- (10.4,7.4);
-    \node[above] at (6.3,8.5) {$V_{\mathrm{in}}$};
-    \draw[measure] (8.4,9.05) -- (9.2,9.05) node[midway,above] {$t_{\mathrm{r}}$};
-    \draw[measure] (1.2,6.9) -- (4.4,6.9) node[midway,below] {$DT_{\mathrm{s}}$};
-    \draw[measure] (4.4,6.9) -- (9.2,6.9) node[midway,below] {$D'T_{\mathrm{s}}$};
-    \fill[black!16] (0.4,5.0) -- (0.72,4.3)
-    .. controls (0.95,4.3) and (1.05,5.0) .. (1.2,5.0) -- cycle;
-    \fill[black!16] (8.4,5.0) -- (8.72,4.3)
-    .. controls (8.95,4.3) and (9.05,5.0) .. (9.2,5.0) -- cycle;
-    \draw[waveform] (0.2,6.1) -- (0.4,6.1) -- (0.4,5.0) -- (0.72,4.3)
-    .. controls (0.95,4.3) and (1.05,5.0) .. (1.2,5.0)
-    -- (4.4,5.0) -- (4.4,6.1) -- (8.4,6.1) -- (8.4,5.0) -- (8.72,4.3)
-    .. controls (8.95,4.3) and (9.05,5.0) .. (9.2,5.0) -- (10.4,5.0);
-    \node[above] at (6.3,6.1) {$I_{\mathrm{L}}$};
-    \node (qrdown) at (9.85,4.4) {$Q_{\mathrm{rr}}$};
-    \draw[axis] (qrdown.west) -- (8.8,4.7);
+    \draw[waveform] (0.2,10.0) -- (0.7,10.0) -- (0.7,11.1);
+    \draw[waveform] (1.2,11.1) -- (4.4,11.1) -- (4.4,10.0)
+    -- (8.7,10.0) -- (8.7,11.1);
+    \draw[waveform] (9.2,11.1) -- (10.4,11.1);
+    \draw[waveform] (0.2,6.7) -- (0.7,6.7) -- (0.7,5.6);
+    \draw[waveform] (1.2,5.6) -- (4.4,5.6) -- (4.4,6.7)
+    -- (8.7,6.7) -- (8.7,5.6);
+    \draw[waveform] (9.2,5.6) -- (10.4,5.6);
+    \foreach \x in {0.7,8.7} {
+        \begin{scope}[shift={(\x,11.1)}]
+          \draw[waveform] \rrpulse;
+        \end{scope}
+        \begin{scope}[shift={(\x,5.6)},yscale=-1]
+          \draw[waveform] \rrpulse;
+        \end{scope}
+      }
+    \node[above] at (3.0,11.1) {$I_{\mathrm{L}}$};
+    \node[above] at (5.7,6.7) {$I_{\mathrm{L}}$};
+    \node[anchor=west,inner sep=2pt] (qrup) at (9.65,11.65) {$Q_{\mathrm{rr}}$};
+    \draw[axis] (qrup.west) -- (9.05,11.40);
+    \node[anchor=west,inner sep=2pt] (qrdown) at (9.65,5.07) {$-Q_{\mathrm{rr}}$};
+    \draw[axis] (qrdown.west) -- (9.05,5.35);
+    \draw[waveform] (0.2,8.9) -- (1.2,8.9) -- (1.2,7.8)
+    -- (4.4,7.8) -- (4.4,8.9) -- (9.2,8.9) -- (9.2,7.8) -- (10.4,7.8);
+    \node[above] at (6.3,8.9) {$V_{\mathrm{in}}$};
+    \draw[measure] (8.7,13.0) -- (9.2,13.0)
+    node[midway,above,inner sep=1.5pt] {$t_{\mathrm{rr}}$};
+    \draw[measure] (1.2,12.4) -- (4.4,12.4)
+    node[midway,above,inner sep=1.5pt] {$DT_{\mathrm{s}}$};
+    \draw[measure] (4.4,12.4) -- (9.2,12.4)
+    node[midway,above,inner sep=1.5pt] {$D'T_{\mathrm{s}}$};
     \draw[waveform] (0.2,2.6) -- (1.2,2.6) -- (1.2,3.7)
     -- (4.4,3.7) -- (4.4,2.6) -- (9.2,2.6) -- (9.2,3.7) -- (10.4,3.7);
     \node[above] at (2.8,3.7) {$V_{\mathrm{in}}$};
-    \draw[waveform] (0.2,0.2) -- (0.4,0.2) -- (0.4,1.3)
-    -- (4.4,1.3) -- (4.4,0.2) -- (8.4,0.2) -- (8.4,1.3) -- (10.4,1.3);
-    \node[left] at (0.2,1.3) {$1$};
-    \draw[measure] (0.4,-0.45) -- (4.4,-0.45)
-    node[midway,below] {$D_{\mathrm{c}}T_{\mathrm{s}}$};
-    \node[below] at (1.2,-0.9) {$0$};
-    \node[below] at (9.2,-0.45) {$T_{\mathrm{s}}$};
+    \draw[waveform] (0.2,0.4) -- (0.7,0.4) -- (0.7,1.5)
+    -- (4.4,1.5) -- (4.4,0.4) -- (8.7,0.4) -- (8.7,1.5) -- (10.4,1.5);
+    \node[left] at (0.2,1.5) {$1$};
+    \draw[measure] (0.7,13.0) -- (4.4,13.0)
+    node[midway,above,inner sep=1.5pt] {$D_{\mathrm{c}}T_{\mathrm{s}}$};
+    \node[below] at (1.2,0.4) {$0$};
+    \node[below] at (9.2,0.4) {$T_{\mathrm{s}}$};
+    \foreach \x/\n in {0.95/1,2.8/2,6.55/3} {
+        \node[anchor=base] at (\x,-0.50) {$(\n)$};
+      }
   \end{notesplot}
+  \vspace{-0.15cm}
   \caption{Buck 电路的主要波形与反向恢复电荷}
-  \label{pic0316}
+  \label{pic0313}
+  \vspace{-0.3cm}
 \end{figure}
 
-\reviewnote{图 \ref{pic0316} 按补充图片重绘，开关电流、电压及恢复电荷统一记为 $i_{\mathrm{Q}}$、$v_{\mathrm{Q}}$ 和 $Q_{\mathrm{rr}}$。$t_{\mathrm{r}}$ 为二极管反向恢复时间；恢复期间开关电流包含负载电流和附加恢复电流。图中以恢复结束后的电压跳变为有效周期起点，控制信号提前 $t_{\mathrm{r}}$ 开通。}
-
-\examplesubheading{平均电流与平衡关系}
-
-原稿给出有效占空比 $D$ 与控制信号占空比 $D_{\mathrm{c}}$ 的修正关系：
+本例将开通过渡简化为持续 $t_{\mathrm{rr}}$ 的反向恢复阶段，其余开关延迟及电压跳变时间忽略。控制信号占空比为 $D_{\mathrm{c}}$，节点电压为高电平的有效占空比为 $D$，有
 \begin{equation}
-  D=D_{\mathrm{c}}-\frac{t_{\mathrm{r}}}{T_{\mathrm{s}}}.
+  D=D_{\mathrm{c}}-\frac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}.
   \label{equ0306}
 \end{equation}
-其中 $t_{\mathrm{r}}$ 按课件表示二极管反向恢复时间，对应前文的 $t_{\mathrm{rr}}$。由电路关系，
-\begin{equation}
-  v_{\mathrm{L}}(t)=v_{\mathrm{d}}(t)-V_{\mathrm{out}}.
-  \label{equ0307}
-\end{equation}
-按原稿将过渡过程中的附加电流面积记为 $t_{\mathrm{r}}I_{\mathrm{L}}$，则输入平均电流为
-\begin{equation}
-  \begin{aligned}
-    I_{\mathrm{in}} & =\langle i_{\mathrm{Q}}\rangle
-    =\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{Q}}(t)\,\mathrm{d}t                                                 \\
-                    & \approx\frac{DT_{\mathrm{s}}I_{\mathrm{L}}+t_{\mathrm{r}}I_{\mathrm{L}}+Q_{\mathrm{rr}}}{T_{\mathrm{s}}}     \\
-                    & =DI_{\mathrm{L}}+\frac{t_{\mathrm{r}}}{T_{\mathrm{s}}}I_{\mathrm{L}}+\frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}.
-  \end{aligned}
-  \label{equ0308}
-\end{equation}
 
-\reviewnote{补充的课件已明确给出式 \eqref{equ0306} 和式 \eqref{equ0308}，并采用反向恢复期间 $t_{\mathrm{r}}I_{\mathrm{L}}$ 与附加恢复电荷 $Q_{\mathrm{rr}}$ 的面积分解。这里保留课件的简化模型；$t_{\mathrm{r}}$ 应与二极管换流条件一起确定，不能套用 MOSFET 电流线性上升过程的三角形面积系数。}
+\examplesubheading{等效电路}
 
-在上述简化模型中，伏秒平衡和电荷平衡写为
-\begin{equation}
-  \left\{
-  \begin{aligned}
-    \langle v_{\mathrm{L}}\rangle & =DV_{\mathrm{in}}-V_{\mathrm{out}}=0,         \\
-    \langle i_{\mathrm{C}}\rangle & =I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}=0.
-  \end{aligned}
-  \right.
-  \label{equ0309}
-\end{equation}
-因此
-\begin{equation}
-  V_{\mathrm{out}}\approx DV_{\mathrm{in}},\qquad
-  I_{\mathrm{L}}\approx\frac{V_{\mathrm{out}}}{R}.
-  \label{equ0310}
-\end{equation}
-
-\examplesubheading{等效模型与效率}
-
-输入端新增的两项平均电流，可以分别用反向恢复电流源和过渡损耗电流源表示，如图 \ref{pic0317} 所示。
+按 $v_{\mathrm{d}}$ 的高、低电平，画出图 \ref{pic0314} 所示的两种输出回路等效状态，持续时间分别为 $DT_{\mathrm{s}}$、$D'T_{\mathrm{s}}$。等效电路与图 \ref{pic0103} 相同，仍按节点电压判定状态。反向恢复期间虽已发出开通信号，输出回路仍按状态 2 处理；$\mathrm{Q}$ 的附加输入电流由图 \ref{pic0313} 单独计入。
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
-  \begin{subfigure}[t]{0.98\textwidth}
+  \begin{subfigure}[t]{0.48\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.87]
-      \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.5) -- (6.3,2.5);
-      \draw (6.3,0) -- (0,0);
-      \draw (2.1,2.5) to[american current source] (2.1,0);
-      \draw (4.2,2.5) to[american controlled current source] (4.2,0);
-      \draw (6.3,2.5) to[american controlled current source] (6.3,0);
-      \node[below] at (2.1,-0.2) {$Q_{\mathrm{rr}}/T_{\mathrm{s}}$};
-      \node[below] at (4.2,-0.2) {$\dfrac{t_{\mathrm{r}}}{T_{\mathrm{s}}}I_{\mathrm{L}}$};
-      \node[below] at (6.3,-0.2) {$DI_{\mathrm{L}}$};
-      \draw[-{Latex[length=1.5mm]}] (0.25,2.5) -- (1.1,2.5)
-      node[midway,above] {$I_{\mathrm{in}}$};
-      \draw (8.5,2.5) to[american controlled voltage source,l_=$DV_{\mathrm{in}}$] (8.5,0);
-      \draw (8.5,2.5) to[L,name=avgind] (10.65,2.5) -- (13.1,2.5)
-      to[european resistor,l_=$R$] (13.1,0) -- (8.5,0);
-      \draw[densely dashed] (11.35,2.5) to[C] (11.35,0);
-      \node[above=4pt] at (avgind.center) {$+\;\langle v_{\mathrm{L}}\rangle=0\;-$};
-      \node[below] at (11.35,-0.2) {$\langle i_{\mathrm{C}}\rangle=0$};
-      \draw[-{Latex[length=1.5mm]}] (12.0,2.5) -- (12.7,2.5)
-      node[midway,above] {$I_{\mathrm{L}}$};
-      \node at (13.75,2.5) {$+$};
-      \node at (13.75,1.25) {$V_{\mathrm{out}}$};
-      \node at (13.75,0) {$-$};
+    \begin{notescircuit}[scale=0.9]
+      \coordinate (gnd-on) at (0,0);
+      \draw (gnd-on) to[V,l_=$V_{\mathrm{in}}$] (0,1.8)
+      to[L,l=$L$,i>^=$i_{\mathrm{L}}$,name=ind-on] (2.55,1.8) coordinate (out-on)
+      -- ++(1.05,0) coordinate (load-on);
+      \node[left=1pt] at (0,1.25) {$+$};
+      \node[left=1pt] at (0,0.55) {$-$};
+      \node[below=4pt] at (ind-on.center) {$+\;v_{\mathrm{L}}\;-$};
+      \draw (out-on) to[C,l_=$C$] (out-on |- gnd-on);
+      \draw (load-on) to[european resistor,l_=$R$] (load-on |- gnd-on) -- (gnd-on);
+      \node[right] at (load-on) {$+$};
+      \node[right] at (load-on |- gnd-on) {$-$};
+      \path (load-on) -- node[right] {$v_{\mathrm{out}}$} (load-on |- gnd-on);
     \end{notescircuit}\par
-    \caption{端口平均模型}
-    \label{pic0317a}
+    \caption{状态 1：$v_{\mathrm{d}}=V_{\mathrm{in}}$}
+    \label{pic0314a}
   \end{subfigure}
-  \par\medskip
-  \begin{subfigure}[t]{0.98\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.91]
-      \node[transformer] (tr) at (8.0,1.5) {};
-      \node[above] at (8.0,3.4) {$1:D$};
-      \node[circ] at (tr.outer dot A1) {};
-      \node[circ] at (tr.outer dot B1) {};
-      \coordinate (dcmark) at ($(tr-L1.a)!{0.5/\ctikzvalof{bipoles/americaninductor/coils}}!(tr-L1.b)$);
-      \draw (tr.outer dot A1 |- dcmark) -- (tr.outer dot B1 |- dcmark);
-      \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,3.0) -- (6.8,3.0) -| (tr.A1);
-      \draw (tr.A2) |- (0,0);
-      \draw (2.3,3.0) to[american current source] (2.3,0);
-      \node[right] at (2.65,1.5) {$Q_{\mathrm{rr}}/T_{\mathrm{s}}$};
-      \draw (4.65,3.0) to[american controlled current source] (4.65,0);
-      \node[right] at (5.0,1.5) {$\dfrac{t_{\mathrm{r}}}{T_{\mathrm{s}}}I_{\mathrm{L}}$};
-      \draw (tr.B1) |- (11.0,3.0) to[european resistor,l_=$R$] (11.0,0) -| (tr.B2);
-      \draw[-{Latex[length=1.5mm]}] (0.3,3.0) -- (1.1,3.0) node[midway,above] {$I_{\mathrm{in}}$};
-      \draw[-{Latex[length=1.5mm]}] (9.35,3.0) -- (10.2,3.0) node[midway,above] {$I_{\mathrm{L}}$};
-      \node[right] at (11.35,3.0) {$+$};
-      \node[right] at (11.35,1.5) {$V_{\mathrm{out}}$};
-      \node[right] at (11.35,0) {$-$};
+    \begin{notescircuit}[scale=0.9]
+      \coordinate (gnd-off) at (0,0);
+      \draw (gnd-off) -- (0,1.8)
+      to[L,l=$L$,i>^=$i_{\mathrm{L}}$,name=ind-off] (2.55,1.8) coordinate (out-off)
+      -- ++(1.05,0) coordinate (load-off);
+      \node[below=4pt] at (ind-off.center) {$+\;v_{\mathrm{L}}\;-$};
+      \draw (out-off) to[C,l_=$C$] (out-off |- gnd-off);
+      \draw (load-off) to[european resistor,l_=$R$] (load-off |- gnd-off) -- (gnd-off);
+      \node[right] at (load-off) {$+$};
+      \node[right] at (load-off |- gnd-off) {$-$};
+      \path (load-off) -- node[right] {$v_{\mathrm{out}}$} (load-off |- gnd-off);
     \end{notescircuit}\par
-    \caption{直流变压器模型}
-    \label{pic0317b}
+    \caption{状态 2：$v_{\mathrm{d}}=0$}
+    \label{pic0314b}
   \end{subfigure}
-  \caption{Buck 反向恢复损耗的平均等效模型}
-  \label{pic0317}
+  \vspace{-0.15cm}
+  \caption{Buck 输出回路的两种等效状态}
+  \label{pic0314}
+  \vspace{-0.3cm}
 \end{figure}
 
-由此可得
+共有 2 个等效状态与 2 个储能元器件，因此共 4 条方程。
+
+\examplesubheading{状态方程}
+\examplesubheading{小纹波近似}
+
+接状态 1 时，
 \begin{align}
-  P_{\mathrm{out}} & \approx V_{\mathrm{out}}I_{\mathrm{L}}, \label{equ0311} \\
-  P_{\mathrm{sw}}  & \approx V_{\mathrm{in}}\left(
-  \frac{t_{\mathrm{r}}}{T_{\mathrm{s}}}I_{\mathrm{L}}+
-  \frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}\right), \label{equ0312}             \\
-  P_{\mathrm{in}}  & \approx V_{\mathrm{in}}\left(
-  DI_{\mathrm{L}}+\frac{t_{\mathrm{r}}}{T_{\mathrm{s}}}I_{\mathrm{L}}+
-  \frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}\right). \label{equ0313}
+   & \left\{
+  \begin{aligned}
+    v_{\mathrm{L}}(t) & =V_{\mathrm{in}}-v_{\mathrm{out}}(t)
+    \approx V_{\mathrm{in}}-V_{\mathrm{out}},                            \\
+    i_{\mathrm{C}}(t) & =i_{\mathrm{L}}(t)-\frac{v_{\mathrm{out}}(t)}{R}
+    \approx I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}.
+  \end{aligned}
+  \right.
+  \label{equ0307} \\
+  \intertext{\qquad{}接状态 2 时，}
+   & \left\{
+  \begin{aligned}
+    v_{\mathrm{L}}(t) & =-v_{\mathrm{out}}(t)
+    \approx -V_{\mathrm{out}},                                           \\
+    i_{\mathrm{C}}(t) & =i_{\mathrm{L}}(t)-\frac{v_{\mathrm{out}}(t)}{R}
+    \approx I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}.
+  \end{aligned}
+  \right.
+  \label{equ0308}
 \end{align}
-原稿在此模型下保留理想电压变换比：
-\begin{equation}
-  M(D)=\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}\approx D.
+
+\examplesubheading{变换比与平均状态量}
+
+由伏秒平衡，
+\begin{alignat}{2}
+  \phantom{\Rightarrow}
+   & \;                                                                & \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t
+   & \approx D(V_{\mathrm{in}}-V_{\mathrm{out}})-D'V_{\mathrm{out}}=0,
+  \label{equ0309}                                                                                                                                      \\
+  \Rightarrow
+   & \;                                                                & V_{\mathrm{out}}
+   & \approx DV_{\mathrm{in}},
+  \label{equ0310}                                                                                                                                      \\
+  \Rightarrow
+   & \;                                                                & M(D)
+   & =\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}
+  \approx D=D_{\mathrm{c}}-f_{\mathrm{s}}t_{\mathrm{rr}}.
+  \label{equ0311}                                                                                                                                      \\
+  \intertext{\qquad{}由电荷平衡，}
+  \phantom{\Rightarrow}
+   & \;                                                                & \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{C}}(t)\,\mathrm{d}t
+   & \approx D\left(I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}\right)
+  +D'\left(I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}\right)=0,
+  \label{equ0312} \displaybreak[1]                                                                                                                     \\
+  \Rightarrow
+   & \;                                                                & V_{\mathrm{out}}
+   & \approx RI_{\mathrm{L}},
+  \label{equ0313}                                                                                                                                      \\
+  \Rightarrow
+   & \;                                                                & I_{\mathrm{L}}
+   & \approx\frac{V_{\mathrm{out}}}{R}
+  \approx\frac{DV_{\mathrm{in}}}{R}.
   \label{equ0314}
-\end{equation}
-将 $f_{\mathrm{s}}=1/T_{\mathrm{s}}$ 与式 \eqref{equ0310} 代入，效率整理为
+\end{alignat}
+
+输入平均电流由图 \ref{pic0313} 中 $i_{\mathrm{Q}}$ 的波形面积求得：
 \begin{equation}
   \begin{aligned}
-    \eta & =\frac{P_{\mathrm{out}}}{P_{\mathrm{in}}}                              \\
-         & \approx\frac{1}{1+f_{\mathrm{s}}\left(
-    \dfrac{t_{\mathrm{r}}}{D}+\dfrac{Q_{\mathrm{rr}}R}{DV_{\mathrm{out}}}\right)} \\
-         & =\frac{1}{1+f_{\mathrm{s}}\left(
-    \dfrac{t_{\mathrm{r}}}{D}+\dfrac{Q_{\mathrm{rr}}R}{D^2V_{\mathrm{in}}}\right)}.
+    I_{\mathrm{in}}
+     & =\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{Q}}(t)\,\mathrm{d}t                            \\
+     & \approx\frac{DT_{\mathrm{s}}I_{\mathrm{L}}+t_{\mathrm{rr}}I_{\mathrm{L}}+Q_{\mathrm{rr}}}{T_{\mathrm{s}}} \\
+     & =DI_{\mathrm{L}}+\frac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}
+    +\frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}.
   \end{aligned}
   \label{equ0315}
 \end{equation}
 
+\examplesubheading{电感电流与电容电压纹波}
+
+纹波波形同图 \ref{pic0104}、图 \ref{pic0106}，其中 $D$ 取有效占空比。沿用前章推导，
+\begin{equation}
+  \begin{aligned}
+    \Delta i_{\mathrm{L,pp}}
+     & \approx\frac{V_{\mathrm{in}}-V_{\mathrm{out}}}{L}DT_{\mathrm{s}}
+    \approx\frac{V_{\mathrm{in}}DD'T_{\mathrm{s}}}{L},                  \\
+    \Delta v_{\mathrm{out,pp}}
+     & \approx\frac{\Delta i_{\mathrm{L,pp}}T_{\mathrm{s}}}{8C}.
+  \end{aligned}
+  \label{equ0316}
+\end{equation}
+
+\examplesubheading{建立等效电路模型}
+
+式 \eqref{equ0309} 和式 \eqref{equ0312} 分别给出输出端口的 KVL、KCL，式 \eqref{equ0315} 补充输入端口的 KCL。分别用受控源表示，得图 \ref{pic0315}\subref{pic0315a}；再将 $DV_{\mathrm{in}}$ 与 $DI_{\mathrm{L}}$ 合并为直流变压器，得图 \ref{pic0315}\subref{pic0315b}。 $Q_{\mathrm{rr}}/T_{\mathrm{s}}$ 和 $t_{\mathrm{rr}}I_{\mathrm{L}}/T_{\mathrm{s}}$ 为额外电流，保留原样。
+
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
-  \begin{notescircuit}[scale=0.94]
-    \draw[-{Latex[length=1.7mm]},line width=0.6pt] (0,0) -- (7.7,0) node[right] {$D$};
-    \draw[-{Latex[length=1.7mm]},line width=0.6pt] (0,0) -- (0,3.6) node[above] {$\eta$};
-    \draw[densely dashed,reviewgray] (0,3.0) -- (7.1,3.0);
-    \node[left] at (0,3.0) {$1$};
-    \node[below] at (7.0,0) {$1$};
-    \node[below left] at (0,0) {$0$};
-    \draw (0.25,0.06) .. controls (1.15,0.1) and (1.7,1.55) .. (2.7,2.0)
-    .. controls (4.3,2.65) and (5.7,2.75) .. (7.0,2.78);
-  \end{notescircuit}
-  \caption{效率随占空比变化的趋势}
-  \label{pic0318}
+  \captionsetup[subfigure]{skip=4pt}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.67]
+      \ctikzset{sources/symbol/sign rotation=straight}
+      \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.4) -- (4.15,2.4);
+      \draw (4.15,0) -- (0,0);
+      \draw (1.65,2.4) to[american current source] (1.65,0);
+      \draw (2.90,2.4) to[american controlled current source] (2.90,0);
+      \draw (4.15,2.4) to[american controlled current source] (4.15,0);
+      \foreach \x in {1.65,2.90} {
+          \node[circ] at (\x,2.4) {};
+          \node[circ] at (\x,0) {};
+        }
+      \node[anchor=base] at (1.65,-1.00) {$\dfrac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}$};
+      \node[anchor=base] at (2.90,-1.00) {$\dfrac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}$};
+      \node[anchor=base] at (4.15,-1.00) {$DI_{\mathrm{L}}$};
+      \draw[-{Latex[length=1.5mm]}] (0.25,2.4) -- (1.05,2.4)
+      node[midway,above] {$I_{\mathrm{in}}$};
+      \node[left=1pt] at (0,1.65) {$+$};
+      \node[left=1pt] at (0,0.75) {$-$};
+      \draw (5.85,2.4) to[american controlled voltage source] (5.85,0);
+      \node[anchor=base] at (5.85,-1.00) {$DV_{\mathrm{in}}$};
+      \draw (5.85,2.4) -- (8.85,2.4)
+      to[european resistor,l_=$R$] (8.85,0) -- (5.85,0);
+      \draw[-{Latex[length=1.5mm]}] (7.95,2.4) -- (8.65,2.4)
+      node[midway,above] {$I_{\mathrm{L}}$};
+      \node at (9.40,2.4) {$+$};
+      \node at (9.40,1.2) {$V_{\mathrm{out}}$};
+      \node at (9.40,0) {$-$};
+    \end{notescircuit}\par
+    \caption{受控源模型}
+    \label{pic0315a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.68]
+      \ctikzset{sources/symbol/sign rotation=straight}
+      \node[transformer] (tr) at (5.00,1.2) {};
+      \node[above] at (5.00,3.0) {$1:D$};
+      \node[circ] at (tr.outer dot A1) {};
+      \node[circ] at (tr.outer dot B1) {};
+      \coordinate (dcmark) at ($(tr-L1.a)!{0.5/\ctikzvalof{bipoles/americaninductor/coils}}!(tr-L1.b)$);
+      \draw (tr.outer dot A1 |- dcmark) -- (tr.outer dot B1 |- dcmark);
+      \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.4) -- (4.05,2.4) -| (tr.A1);
+      \draw (tr.A2) |- (0,0);
+      \draw (1.65,2.4) to[american current source] (1.65,0);
+      \draw (3.05,2.4) to[american controlled current source] (3.05,0);
+      \foreach \x in {1.65,3.05} {
+          \node[circ] at (\x,2.4) {};
+          \node[circ] at (\x,0) {};
+        }
+      \node[anchor=base] at (1.65,-1.00) {$\dfrac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}$};
+      \node[anchor=base] at (3.05,-1.00) {$\dfrac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}$};
+      \node[left=1pt] at (0,1.65) {$+$};
+      \node[left=1pt] at (0,0.75) {$-$};
+      \draw (tr.B1) |- (7.25,2.4) to[european resistor,l_=$R$] (7.25,0) -| (tr.B2);
+      \draw[-{Latex[length=1.5mm]}] (0.25,2.4) -- (1.05,2.4)
+      node[midway,above] {$I_{\mathrm{in}}$};
+      \draw[-{Latex[length=1.5mm]}] (5.90,2.4) -- (6.70,2.4)
+      node[midway,above] {$I_{\mathrm{L}}$};
+      \node at (7.80,2.4) {$+$};
+      \node at (7.80,1.2) {$V_{\mathrm{out}}$};
+      \node at (7.80,0) {$-$};
+    \end{notescircuit}\par
+    \caption{直流变压器模型}
+    \label{pic0315b}
+  \end{subfigure}
+  \vspace{-0.15cm}
+  \caption{Buck 反向恢复损耗的平均等效模型}
+  \label{pic0315}
+  \vspace{-0.3cm}
 \end{figure}
 
-\reviewnote{式 \eqref{equ0315} 原稿末项的分母有涂改，这里由前面的输入、输出功率关系整理为 $DV_{\mathrm{out}}$，再用模型关系 $V_{\mathrm{out}}=DV_{\mathrm{in}}$ 换成 $D^2V_{\mathrm{in}}$；这一步属于代数校核，不是逐字照录。$Q_{\mathrm{rr}}$ 实际随电流、温度和换流条件变化，图 \ref{pic0318} 仅反映把参数固定时的模型趋势；接近 $D=0$ 时还需核对 CCM 条件。该模型把损耗表现为输入附加电流，不能据此断言实际 Buck 的变换比不受开关过程影响。}
+\examplesubheading{效率与高效率条件}
 
-% ---------- 照片 2：BJT、IGBT、SCR、宽禁带器件及应用 ----------
-\section{BJT 与 IGBT}
-
-\subsection{器件符号与组合模型}
-
-原稿先给出 NPN 型 BJT 的符号，再画出两个 BJT 组成的复合结构，旁注“BJT 在功率电路中用得少”。
+在上述直流平均模型中，
+\begin{align}
+  P_{\mathrm{in}}
+                   & \approx V_{\mathrm{in}}\left(DI_{\mathrm{L}}
+  +\frac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}
+  +\frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}\right),\label{equ0317}            \\
+  P_{\mathrm{out}} & \approx V_{\mathrm{out}}I_{\mathrm{L}},\label{equ0318} \\
+  P_{\mathrm{sw}}  & =P_{\mathrm{in}}-P_{\mathrm{out}}
+  \approx V_{\mathrm{in}}\left(\frac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}
+  +\frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}\right).\label{equ0319}
+\end{align}
+将 $f_{\mathrm{s}}=1/T_{\mathrm{s}}$ 与式 \eqref{equ0314} 代入，得
+\begin{equation}
+  \begin{aligned}
+    \eta & =\frac{P_{\mathrm{out}}}{P_{\mathrm{in}}}
+    \approx\frac{1}{1+f_{\mathrm{s}}\left(
+    \dfrac{t_{\mathrm{rr}}}{D}+\dfrac{Q_{\mathrm{rr}}R}{DV_{\mathrm{out}}}\right)} \\
+         & =\frac{1}{1+f_{\mathrm{s}}\left(
+    \dfrac{t_{\mathrm{rr}}}{D}+\dfrac{Q_{\mathrm{rr}}R}{D^2V_{\mathrm{in}}}\right)}.
+  \end{aligned}
+  \label{equ0320}
+\end{equation}
+要使效率接近 1，应满足
+\begin{equation}
+  f_{\mathrm{s}}t_{\mathrm{rr}}\ll D,\quad
+  f_{\mathrm{s}}Q_{\mathrm{rr}}\ll DI_{\mathrm{L}}.
+  \label{equ0321}
+\end{equation}
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
-  \begin{subfigure}[t]{0.35\textwidth}
+  \begin{notesplot}[scale=0.94]
+    \draw[axis] (0,0) -- (7.7,0) node[right] {$D$};
+    \draw[axis] (0,0) -- (0,3.6) node[left] {$\eta$};
+    \draw[guide] (0,3.0) -- (7.1,3.0);
+    \node[left] at (0,3.0) {$1$};
+    \draw[line width=0.6pt] (7.0,0) -- (7.0,0.12);
+    \node[below] at (7.0,0) {$1$};
+    \node[below left] at (0,0) {$0$};
+    \draw[waveform] plot[domain=0:0.97,samples=201,variable=\duty]
+    ({7*\duty},{3*(\duty)^2/((\duty)^2+0.02*\duty+0.01)});
+  \end{notesplot}
+  \vspace{-0.15cm}
+  \caption{效率随占空比变化的趋势}
+  \label{pic0316}
+  \vspace{-0.3cm}
+\end{figure}
+
+图 \ref{pic0316} 仅表示 $t_{\mathrm{rr}}$、$Q_{\mathrm{rr}}$ 固定时的模型趋势，当 $t_{\mathrm{rr}}=Q_{\mathrm{rr}}=0$ 时，退化为前章的理想 Buck 关系。
+
+\newpage{}
+
+\section{BJT 与 IGBT}
+
+\subsection{器件特性}
+
+BJT 即三极管，是电流控制型器件，基极、集电极、发射极分别记为 $\mathrm B$、$\mathrm C$、$\mathrm E$ ，导通期间需要持续提供基极电流。
+
+\begin{figure}[H]
+  \vspace{-0.15cm}
+  \centering
+  \captionsetup[subfigure]{skip=2pt}
+  \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.98]
-      \node[npn] (q) at (1.1,1.7) {};
-      \draw (q.C) -- (q.C |- 0,3.25) node[ocirc] {} node[above] {$\mathrm{C}$};
-      \draw (q.E) -- (q.E |- 0,0.15) node[ocirc] {} node[below] {$\mathrm{E}$};
-      \draw (q.B) -- (-0.2,1.7) node[ocirc] {} node[left] {$\mathrm{B}$};
-      \node[right=5pt] at (q.center) {$\mathrm{Q}$};
-    \end{notescircuit}\par
+    \begin{minipage}[c][2.60cm][c]{\linewidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48}
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \node[npn,nobase,rotate=90,anchor=C] (q) at (1.1,0) {};
+          \draw (q.nobase) -- ++(0,-0.22) coordinate (base);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (q.C);
+        \draw (q.E) -- (3.6,0) node[ocirc] {};
+        \coordinate (base-port) at (base |- 0,-1.0);
+        \draw (base) -- (base-port) node[ocirc] {};
+        \node[left=2pt] at (0,0) {$\mathrm C$};
+        \node[right=2pt] at (3.6,0) {$\mathrm E$};
+        \node[right=2pt] at (base-port) {$\mathrm B$};
+        \node[above=3pt] at ($(q.C)!0.5!(q.E)$) {$\mathrm Q$};
+      \end{notescircuit}
+    \end{minipage}\par
     \caption{NPN 型 BJT}
+    \label{pic0317a}
+  \end{subfigure}%
+  \hfill%
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{minipage}[c][2.60cm][c]{\linewidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48}
+        \begin{scope}[scale around={1.15:(1.8,-1.00)},transform shape]
+          \node[npn,nobase,rotate=90,anchor=C] (q1) at (1.1,-1.00) {};
+          \draw (q1.nobase) -- ++(0,-0.22) coordinate (base-one);
+        \end{scope}
+        \begin{scope}[scale around={1.15:(3.9,0)},transform shape]
+          \node[npn,nobase,rotate=90,anchor=C] (q2) at (3.2,0) {};
+          \draw (q2.nobase) -- ++(0,-0.22) coordinate (base-two);
+        \end{scope}
+        \coordinate (collector-bus) at (0.55,0);
+        \coordinate (base-port) at (base-one |- 0,-1.95);
+        \draw (0,0) node[ocirc] {} -- (q2.C);
+        \draw (collector-bus) |- (q1.C);
+        \draw (q1.E) -| (base-two);
+        \draw (q2.E) -- (5.75,0) node[ocirc] {};
+        \draw (base-one) -- (base-port) node[ocirc] {};
+        \node[circ] at (collector-bus) {};
+        \node[left=2pt] at (0,0) {$\mathrm C$};
+        \node[right=2pt] at (5.75,0) {$\mathrm E$};
+        \node[right=2pt] at (base-port) {$\mathrm B$};
+        \node[above=3pt] at ($(q1.C)!0.5!(q1.E)$) {$\mathrm Q_1$};
+        \node[above=3pt] at ($(q2.C)!0.5!(q2.E)$) {$\mathrm Q_2$};
+      \end{notescircuit}
+    \end{minipage}\par
+    \caption{达林顿复合结构}
+    \label{pic0317b}
+  \end{subfigure}\par
+  \vspace{-0.15cm}
+  \caption{BJT 符号与达林顿复合结构}
+  \label{pic0317}
+  \vspace{-0.3cm}
+\end{figure}
+
+IGBT 是绝缘栅双极型晶体管，栅极、集电极、发射极分别记为 $\mathrm G$、$\mathrm C$、$\mathrm E$，通过栅极、发射极间电压控制开通与关断。
+
+\begin{figure}[H]
+  \vspace{-0.15cm}
+  \centering
+  \captionsetup[subfigure]{skip=2pt}
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{minipage}[c][2.60cm][c]{\linewidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm,
+          tripoles/nigbt/base width=0.32,
+          tripoles/nigbt/gate width=0.40,
+          tripoles/nigbt/outer base height=0}
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \node[nigbt,nogate,rotate=90,anchor=C] (q) at (1.1,0) {};
+          \coordinate (gate-left) at
+          ($(q.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(q.inner up |- q.nogate)$);
+          \coordinate (gate-right) at
+          ($(q.nogate)!{0.30/\ctikzvalof{tripoles/nigbt/gate height}}!(q.inner down |- q.nogate)$);
+          \draw[line cap=butt,line join=miter]
+          (gate-left) -- (gate-right) -- ++(0,-0.22) coordinate (gate);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (q.C);
+        \draw (q.E) -- (3.6,0) node[ocirc] {};
+        \coordinate (gate-port) at (gate |- 0,-1.0);
+        \draw (gate) -- (gate-port) node[ocirc] {};
+        \node[left=2pt] at (0,0) {$\mathrm C$};
+        \node[right=2pt] at (3.6,0) {$\mathrm E$};
+        \node[right=2pt] at (gate-port) {$\mathrm G$};
+        \node[above=3pt] at ($(q.C)!0.5!(q.E)$) {$\mathrm Q$};
+      \end{notescircuit}
+    \end{minipage}\par
+    \caption{IGBT 符号}
+    \label{pic0318a}
+  \end{subfigure}%
+  \hfill%
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{minipage}[c][2.60cm][c]{\linewidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm,
+          tripoles/pnp/base width=0.42,
+          tripoles/pnp/width=0.48,
+          tripoles/nigfete/base width=0.32,
+          tripoles/nigfete/gate width=0.40}
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \node[pnp,nobase,rotate=90,anchor=E] (qb) at (1.1,0) {};
+          \draw (qb.nobase) -- ++(0,-0.22) coordinate (base);
+        \end{scope}
+        \begin{scope}[scale around={1.15:(3.45,-1.00)},transform shape]
+          \node[nigfete,nogate,rotate=90,anchor=D] (qm) at (2.75,-1.00) {};
+          \draw (qm.inner down |- qm.nogate) -- ++(0,-0.22) coordinate (gate);
+        \end{scope}
+        \coordinate (emitter-bus) at (5.15,0);
+        \coordinate (source-bus) at (5.15,-1.00);
+        \coordinate (gate-port) at (gate |- 0,-1.95);
+        \draw (0,0) node[ocirc] {} -- (qb.E);
+        \draw (qb.C) -- (5.75,0) node[ocirc] {};
+        \draw (base) |- (qm.D);
+        \draw (qm.S) -- (source-bus) -- (emitter-bus);
+        \draw (gate) -- (gate-port) node[ocirc] {};
+        \node[circ] at (emitter-bus) {};
+        \node[left=2pt] at (0,0) {$\mathrm C$};
+        \node[right=2pt] at (5.75,0) {$\mathrm E$};
+        \node[right=2pt] at (gate-port) {$\mathrm G$};
+        \node[above=3pt] at ($(qb.E)!0.5!(qb.C)$) {$\mathrm Q_{\mathrm B}$};
+        \node[above=3pt] at ($(qm.D)!0.5!(qm.S)$) {$\mathrm Q_{\mathrm M}$};
+        \draw[-{Latex[length=1.5mm]}]
+        ($(qm.S)!0.15!(source-bus)$) -- ($(qm.S)!0.85!(source-bus)$)
+        node[midway,above] {$i_1$};
+        \draw[-{Latex[length=1.5mm]}] (4.30,0) -- (4.95,0)
+        node[midway,above] {$i_2$};
+      \end{notescircuit}
+    \end{minipage}\par
+    \caption{简化等效结构}
+    \label{pic0318b}
+  \end{subfigure}\par
+  \vspace{-0.15cm}
+  \caption{IGBT 符号与简化等效结构}
+  \label{pic0318}
+  \vspace{-0.3cm}
+\end{figure}
+
+\subsection{器件开通与关断过程}
+
+BJT 的驱动电路与开关波形如图 \ref{pic0319} 所示。
+
+\begin{figure}[H]
+  \vspace{-0.15cm}
+  \centering
+  \captionsetup[subfigure]{skip=2pt}
+  \begin{subfigure}[b]{0.36\textwidth}
+    \centering
+    \begin{minipage}[c][8.10cm][c]{\linewidth}
+      \centering
+      \begin{notescircuit}[scale=0.90]
+        \node[npn] (q) at (2.6,1.9) {};
+        \draw (0,0) to[V,l_=$v_{\mathrm{s}}(t)$] (0,1.9)
+        -- (0.9,1.9) to[european resistor,l=$R_{\mathrm B}$] (q.B);
+        \draw (q.E) -- (q.E |- 0,0) -- (0,0);
+        \draw (q.C) to[european resistor,l=$R_{\mathrm L}$] (q.C |- 0,4.6)
+        -- (q.C |- 0,4.9) node[ocirc] {} node[above] {$V_{\mathrm{CC}}$};
+        \node[right=5pt] at (q.center) {$\mathrm Q$};
+        \draw[-{Latex[length=1.5mm]}] (0.15,1.9) -- (0.75,1.9)
+        node[midway,above] {$i_{\mathrm B}$};
+        \draw[-{Latex[length=1.5mm]}] (q.C) ++(0,0.5) -- ++(0,-0.42)
+        node[midway,left] {$i_{\mathrm C}$};
+        \node at (1.6,1.45) {$+$};
+        \node at (1.6,0.9) {$v_{\mathrm{BE}}$};
+        \node at (1.6,0.35) {$-$};
+        \node at (3.7,2.65) {$+$};
+        \node at (3.7,1.75) {$v_{\mathrm{CE}}$};
+        \node at (3.7,0.65) {$-$};
+      \end{notescircuit}
+    \end{minipage}\par
+    \caption{驱动电路}
     \label{pic0319a}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.60\textwidth}
+  \begin{subfigure}[b]{0.61\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.98]
-      \node[npn] (q1) at (1.35,2.7) {};
-      \node[npn] (q2) at (3.55,1.15) {};
-      \coordinate (base) at (-0.1,2.7);
-      \draw (base) node[ocirc] {} node[left] {$\mathrm{B}$} -- (q1.B);
-      \draw (q1.C) |- (4.3,4.0) -- (4.3,4.4) node[ocirc] {} node[above] {$\mathrm{C}$};
-      \draw (q2.C) -| (4.3,4.0);
-      \draw (q1.E) |- (q2.B);
-      \draw (q2.E) -- (q2.E |- 0,0) node[ocirc] {} node[below] {$\mathrm{E}$};
-      \draw[densely dashed,reviewgray] (q2.B) -- (q2.B |- 0,1.8)
-      to[D-,l_=$\mathrm{D}$] (-0.1,1.8) -- (base);
-      \node[left=4pt] at (q1.center) {$\mathrm{Q}_1$};
-      \node[left=4pt] at (q2.center) {$\mathrm{Q}_2$};
-    \end{notescircuit}\par
-    \caption{达林顿复合结构}
+    \begin{minipage}[c][8.10cm][c]{\linewidth}
+      \centering
+      \begin{notesplot}[xscale=0.85,yscale=0.48]
+        \fill[gray!15] (1.4,0) rectangle (3.4,13.6);
+        \fill[gray!15] (5.1,0) rectangle (7.2,13.6);
+        \node[above,inner sep=2pt] (vcc-label) at (1.55,4.2) {$V_{\mathrm{CC}}$};
+        \foreach \x in {2.2,3.4,5.1,6.1,7.2} {
+            \draw[guide] (\x,0) -- (\x,13.6);
+          }
+        \coordinate (vcc-guide) at (1.4,0);
+        \draw[guide] (vcc-guide) -- (vcc-guide |- vcc-label.south);
+        \draw[guide] (vcc-guide |- vcc-label.north) -- (1.4,13.6);
+        \foreach \y/\low/\name in {12/11.2/{v_{\mathrm s}(t)},9/8.2/{v_{\mathrm{BE}}(t)},6/5.05/{i_{\mathrm B}(t)},3/3/{v_{\mathrm{CE}}(t)},0/0/{i_{\mathrm C}(t)}} {
+        \draw[axis] (0.8,\y) -- (8.3,\y) node[right] {$t$};
+        \draw[axis] (0.8,\low) -- (0.8,\y+1.65)
+        node[left,yshift=-4pt] {$\name$};
+        }
+        \draw[waveform] (0.8,11.45) -- (1.4,11.45) -- (1.4,13.2)
+        -- (5.1,13.2) -- (5.1,11.45) -- (8.0,11.45);
+        \node[above] at (4.2,13.2) {$V_{\mathrm{s2}}$};
+        \node[below right,inner sep=2pt] at (8.0,11.45) {$-V_{\mathrm{s1}}$};
+        \node[left] at (0.8,12) {$0$};
+        \draw[waveform] (0.8,8.45) -- (1.4,8.45)
+        .. controls (1.7,8.45) and (1.8,9.9) .. (2.2,9.9)
+        -- (5.1,9.9)
+        .. controls (5.45,9.9) and (5.7,9.6) .. (6.1,9.6)
+        .. controls (6.5,9.6) and (6.8,8.45) .. (7.2,8.45) -- (8.0,8.45);
+        \node[above] at (4.2,9.9) {$V_{\mathrm{BE(sat)}}$};
+        \node[below right,inner sep=2pt] at (8.0,8.45) {$-V_{\mathrm{s1}}$};
+        \node[left] at (0.8,9) {$0$};
+        \draw[waveform] (0.8,6) -- (1.4,6) -- (1.4,7.2)
+        .. controls (1.6,6.75) and (1.8,6.75) .. (2.2,6.75)
+        -- (5.1,6.75) -- (5.1,5.1) -- (6.1,5.1)
+        .. controls (6.55,5.1) and (6.8,6) .. (7.2,6) -- (8.0,6);
+        \node[above] at (4.2,6.75) {$I_{\mathrm{B1}}$};
+        \node[below] at (5.6,5.1) {$-I_{\mathrm{B2}}$};
+        \node[left] at (0.8,6) {$0$};
+        \draw[waveform] (0.8,4.2) -- (2.2,4.2)
+        .. controls (2.5,4.2) and (3.0,3.2) .. (3.4,3.2)
+        -- (6.1,3.2)
+        .. controls (6.4,3.2) and (6.8,4.2) .. (7.2,4.2) -- (8.0,4.2);
+        \node[above] at (4.4,3.2) {$V_{\mathrm{CE(sat)}}$};
+        \node[left] at (0.8,3) {$0$};
+        \draw[waveform] (0.8,0) -- (2.2,0)
+        .. controls (2.5,0) and (3.0,1.2) .. (3.4,1.2)
+        -- (6.1,1.2)
+        .. controls (6.4,1.2) and (6.8,0) .. (7.2,0) -- (8.0,0);
+        \node[above] at (4.4,1.2) {$I_{\mathrm{C,on}}$};
+        \node[left] at (0.8,0) {$0$};
+        \foreach \xa/\xb/\name in {1.4/2.2/{t_{\mathrm d}},2.2/3.4/{t_{\mathrm r}},5.1/6.1/{t_{\mathrm{stg}}},6.1/7.2/{t_{\mathrm f}}} {
+        \draw[measure] (\xa,14.0) -- (\xb,14.0) node[midway,above] {$\name$};
+        }
+        \foreach \x/\n in {1.4/0,2.2/1,3.4/2,5.1/3,6.1/4,7.2/5} {
+            \node[below] at (\x,0) {$t_{\n}$};
+          }
+        \foreach \x/\n in {1.8/1,2.8/2,4.25/3,5.6/4,6.65/5} {
+            \node[anchor=base] at (\x,-1.85) {$(\n)$};
+          }
+      \end{notesplot}
+    \end{minipage}\par
+    \caption{开关过程波形}
     \label{pic0319b}
   \end{subfigure}
-  \caption{BJT 符号与达林顿复合结构}
-  \label{pic0319}
-\end{figure}
-
-\reviewnote{图 \ref{pic0319b} 主连接按达林顿结构识别：两个集电极相连，$\mathrm{Q}_1$ 的发射极接 $\mathrm{Q}_2$ 的基极。原稿附加二极管的连接点及支路用途没有文字说明，暂用灰色虚线表示待核部分。“BJT 在功率电路中用得少”是原稿的比较性旁注，应限定所讨论的应用，不能理解为 BJT 不用于功率电路。}
-
-BJT 的驱动电路及开通、关断波形见图 \ref{pic0320}，图中给出了基极电压、电流与集电极电压、电流的对应关系。
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.36\textwidth}
-    \centering
-    \begin{notescircuit}[scale=0.92]
-      \node[npn] (q) at (2.6,1.9) {};
-      \draw (0,0) to[V,l_=$v_{\mathrm{s}}(t)$] (0,1.9) -- (q.B);
-      \draw (q.E) -- (q.E |- 0,0) -- (0,0);
-      \draw (q.C) to[european resistor,l=$R_{\mathrm{L}}$] (q.C |- 0,4.6)
-      -- (q.C |- 0,4.9);
-      \draw ($(q.C |- 0,4.9)+(-0.15,-0.05)$) -- ++(0.3,0.15);
-      \node[above] at (q.C |- 0,5.0) {$V_{\mathrm{CC}}$};
-      \draw[-{Latex[length=1.5mm]}] (0.6,1.9) -- (1.3,1.9)
-      node[midway,above] {$i_{\mathrm{B}}(t)$};
-      \draw[-{Latex[length=1.5mm]}] (q.C) ++(0,0.5) -- ++(0,-0.42)
-      node[midway,left] {$i_{\mathrm{C}}(t)$};
-      \node at (1.6,1.45) {$+$};
-      \node at (1.6,0.9) {$v_{\mathrm{BE}}$};
-      \node at (1.6,0.35) {$-$};
-      \node at (3.7,2.65) {$+$};
-      \node at (3.7,1.75) {$v_{\mathrm{CE}}$};
-      \node at (3.7,0.65) {$-$};
-    \end{notescircuit}\par
-    \caption{驱动电路}
-    \label{pic0320a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.61\textwidth}
-    \centering
-    \begin{notesplot}[scale=0.84]
-      \fill[black!6] (1.45,-0.55) rectangle (3.0,13.6);
-      \fill[black!10] (5.3,-0.55) rectangle (7.0,13.6);
-      \foreach \x in {1.45,1.9,2.5,3.0,5.3,5.75,6.4,7.0} {
-          \draw[guide] (\x,-0.55) -- (\x,13.6);
-        }
-      \foreach \y/\low/\name in {12.0/11.2/{v_{\mathrm{s}}(t)},9.0/8.2/{v_{\mathrm{BE}}(t)},6.0/5.05/{i_{\mathrm{B}}(t)},3.0/3.0/{v_{\mathrm{CE}}(t)},0/0/{i_{\mathrm{C}}(t)}} {
-      \draw[axis] (0.65,\y) -- (8.3,\y) node[right] {$t$};
-      \draw[axis] (0.8,\low) -- (0.8,\y+1.65) node[left,yshift=-4pt] {$\name$};
-      }
-      \draw[waveform] (0.8,11.45) -- (1.45,11.45) -- (1.45,13.2)
-      -- (5.3,13.2) -- (5.3,11.45) -- (8.0,11.45);
-      \node[above] at (4.0,13.2) {$V_{\mathrm{s2}}$};
-      \node[left] at (0.8,11.45) {$-V_{\mathrm{s1}}$};
-      \draw[waveform] (0.8,8.45) -- (1.45,8.45)
-      .. controls (1.7,8.45) and (1.75,9.95) .. (2.0,9.95)
-      .. controls (2.15,9.95) and (2.2,9.8) .. (2.5,9.8)
-      -- (6.4,9.8) -- (7.0,8.45) -- (8.0,8.45);
-      \node[above] at (4.0,9.8) {$0.7\,\mathrm{V}$};
-      \node[left] at (0.8,8.45) {$-V_{\mathrm{s1}}$};
-      \draw[waveform] (0.8,6.0) -- (1.45,6.0) -- (1.45,7.2)
-      .. controls (1.6,6.75) and (1.7,6.75) .. (1.9,6.75)
-      -- (5.3,6.75) -- (5.3,5.1) -- (6.4,5.1)
-      .. controls (6.65,5.1) and (6.8,6.0) .. (7.0,6.0) -- (8.0,6.0);
-      \node[above] at (4.0,6.75) {$I_{\mathrm{B1}}$};
-      \node[below] at (5.85,5.1) {$-I_{\mathrm{B2}}$};
-      \node[left] at (0.8,6.0) {$0$};
-      \draw[waveform] (0.8,4.05) -- (1.9,4.05)
-      .. controls (2.2,4.05) and (2.45,3.2) .. (3.0,3.2)
-      -- (5.75,3.2) -- (6.4,4.05) -- (8.0,4.05);
-      \node[left] at (0.8,4.05) {$V_{\mathrm{CC}}$};
-      \node[above] at (4.0,3.2) {$V_{\mathrm{CE,on}}$};
-      \draw[waveform] (0.8,0.0) -- (1.9,0.0)
-      .. controls (2.05,0.6) and (2.25,1.15) .. (2.5,1.15)
-      -- (5.75,1.15) -- (6.4,0.0) -- (8.0,0.0);
-      \node[above] at (4.0,1.15) {$I_{\mathrm{C,on}}$};
-      \node[left] at (0.8,0.0) {$0$};
-      \foreach \x/\n in {1.12/1,1.675/2,2.2/3,2.75/4,4.15/5,5.525/6,6.075/7,6.7/8,7.5/9} {
-          \node at (\x,-0.75) {$(\n)$};
-        }
-      \node at (2.2,-1.3) {开通损耗};
-      \node at (6.15,-1.3) {关断损耗};
-    \end{notesplot}\par
-    \caption{开关过程波形}
-    \label{pic0320b}
-  \end{subfigure}
+  \vspace{-0.15cm}
   \caption{BJT 驱动电路与开关过程波形}
-  \label{pic0320}
+  \label{pic0319}
+  \vspace{-0.15cm}
 \end{figure}
 
-原稿随后给出 IGBT 符号及一个由 MOSFET 与 BJT 组成的简化等效模型，表示其兼有绝缘栅输入与双极型导电特性。
+BJT 开通时，基极电流使集电极电流上升、集电极电压下降；关断时需移除存储电荷，反向基极电流可加快这一过程。开关过程中的电压、电流重叠会产生损耗。
+
+IGBT 关断时，沟道先关断，但存储少子不能立即消失，因此产生电流拖尾，如图 \ref{pic0320} 所示。
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[t]{0.35\textwidth}
-    \centering
-    \begin{notescircuit}[scale=0.98]
-      \node[nigbt] (q) at (1.1,1.7) {};
-      \draw (q.C) -- (q.C |- 0,3.25) node[ocirc] {} node[above] {$\mathrm{C}$};
-      \draw (q.E) -- (q.E |- 0,0.15) node[ocirc] {} node[below] {$\mathrm{E}$};
-      \draw (q.G) -- (-0.2,1.7) node[ocirc] {} node[left] {$\mathrm{G}$};
-      \node[right=5pt] at (q.center) {$\mathrm{Q}$};
-    \end{notescircuit}\par
-    \caption{IGBT 符号}
-    \label{pic0321a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.60\textwidth}
-    \centering
-    \begin{notescircuit}[scale=0.96]
-      \node[nigfete] (qm) at (1.25,1.5) {};
-      \node[pnp,yscale=-1,transform shape] (qb) at (3.55,2.8) {};
-      \draw (qm.G) -- (-0.15,1.5) node[ocirc] {} node[left] {$\mathrm{G}$};
-      \draw (qm.D) |- (qb.B);
-      \draw (qb.E) -- (qb.E |- 0,4.35) node[ocirc] {} node[above] {$\mathrm{C}$};
-      \draw (qb.C) -- (qb.C |- 0,0.3) -- (qm.S |- 0,0.3) -- (qm.S);
-      \draw (qb.C |- 0,0.3) -- ++(0,-0.7) node[ocirc] {} node[below] {$\mathrm{E}$};
-      \draw[-{Latex[length=1.5mm]}]
-      ($(qm.S)!0.15!(qm.S |- 0,0.3)$) -- ($(qm.S)!0.8!(qm.S |- 0,0.3)$)
-      node[midway,left] {$i_1$};
-      \draw[-{Latex[length=1.5mm]}] (qb.C) ++(0,-0.35) -- ++(0,-0.6)
-      node[midway,right] {$i_2$};
-      \node[circ] at (qb.C |- 0,0.3) {};
-    \end{notescircuit}\par
-    \caption{简化等效结构}
-    \label{pic0321b}
-  \end{subfigure}
-  \caption{IGBT 符号与简化等效结构}
-  \label{pic0321}
-\end{figure}
-
-\reviewnote{图 \ref{pic0321b} 按补充图片重绘为 MOSFET 与 PNP 管的简化等效结构，$i_1$、$i_2$ 为两条导电支路的电流。该图不包含全部寄生器件及内部电阻，不能当作完整内部模型；器件结构可继续对照\href{https://toshiba.semicon-storage.com/us/semiconductor/knowledge/faq/mosfet_igbt/igbt-001.html.html}{东芝的 IGBT 说明}。}
-
-图 \ref{pic0322} 给出 IGBT 关断时的电流拖尾、续流二极管响应及瞬时功率波形，图中 $W_{\mathrm{off}}$ 为关断过程的功率积分面积。
-
-\begin{figure}[H]
-  \centering
-  \begin{notesplot}[scale=0.95]
-    \foreach \x in {2.6,3.8,5.2,8.4} {
-        \draw[guide] (\x,-0.2) -- (\x,11.5);
+  \begin{notesplot}[scale=0.90]
+    \fill[gray!15] (2.2,0) rectangle (8.2,9.25);
+    \fill[gray!30] (2.2,0) -- (3.4,1.8) -- (4.6,0.675)
+    .. controls (4.95,0.346875) and (6.2,0) .. (8.2,0) -- cycle;
+    \foreach \x in {2.2,3.4,4.6,8.2} {
+        \draw[guide] (\x,0) -- (\x,9.25);
       }
-    \draw[axis] (1.05,9.0) -- (10.15,9.0) node[right] {$t$};
-    \draw[axis] (1.2,9.0) -- (1.2,11.6);
-    \draw[waveform] (1.2,9.0) -- (2.6,9.0) -- (3.8,11.0) -- (9.8,11.0);
-    \draw[waveform,densely dashed] (1.2,10.4) -- (3.8,10.4) -- (5.2,9.85)
-    .. controls (6.1,9.65) and (7.1,9.25) .. (8.4,9.0) -- (9.8,9.0);
-    \node[left] at (1.2,10.4) {$I_{\mathrm{L}}$};
-    \node[left] at (1.2,9.0) {$0$};
-    \node[above] at (7.0,11.0) {$v_{\mathrm{A}}(t)$};
-    \node[right] at (9.8,11.0) {$V_{\mathrm{in}}$};
-    \node[align=center] (tail) at (7.1,10.25) {$i_{\mathrm{A}}(t)$（虚线）\\电流拖尾};
-    \draw[axis] (tail.south) -- (6.7,9.42);
-    \node[align=center,left] at (0.85,11.0) {IGBT};
-    \draw[axis] (1.05,5.0) -- (10.15,5.0) node[right] {$t$};
-    \draw[axis] (1.2,3.0) -- (1.2,6.65);
-    \draw[waveform] (1.2,3.0) -- (2.6,3.0) -- (3.8,5.0) -- (9.8,5.0);
-    \draw[waveform,densely dashed] (1.2,5.0) -- (3.8,5.0) -- (5.2,5.55)
-    .. controls (6.1,5.75) and (7.1,6.15) .. (8.4,6.4) -- (9.8,6.4);
-    \node[left] at (1.2,3.0) {$-V_{\mathrm{in}}$};
-    \node[left] at (1.2,5.0) {$0$};
-    \node[right] at (9.8,6.4) {$I_{\mathrm{L}}$};
-    \node[above] at (7.0,6.6) {$i_{\mathrm{B}}(t)$（虚线）};
-    \node[above left] at (3.0,3.9) {$v_{\mathrm{B}}(t)$};
-    \node[align=center,left] at (0.85,6.4) {续流\\二极管};
-    \draw[axis] (1.05,0.0) -- (10.15,0.0) node[right] {$t$};
-    \draw[axis] (1.2,0.0) -- (1.2,2.65) node[left,yshift=-3pt] {$p_{\mathrm{A}}(t)$};
-    \fill[black!12] (2.6,0.0) -- (3.8,2.4) -- (5.2,{2.4*0.85/1.4})
-    .. controls (6.1,{2.4*0.65/1.4}) and (7.1,{2.4*0.25/1.4}) .. (8.4,0.0) -- cycle;
-    \draw[waveform] (1.2,0.0) -- (2.6,0.0) -- (3.8,2.4) -- (5.2,{2.4*0.85/1.4})
-    .. controls (6.1,{2.4*0.65/1.4}) and (7.1,{2.4*0.25/1.4}) .. (8.4,0.0) -- (9.8,0.0);
-    \node[left] at (1.2,0.0) {$0$};
-    \node[above left] at (3.8,2.4) {$V_{\mathrm{in}}I_{\mathrm{L}}$};
-    \node (energy) at (6.5,1.85) {$W_{\mathrm{off}}$};
-    \draw[axis] (energy.south) -- (6.1,0.55);
-    \foreach \x/\n in {2.6/0,3.8/1,5.2/2,8.4/3} {
-        \node[below] at (\x,-0.1) {$t_{\n}$};
+    \draw[measure] (2.2,9.65) -- (8.2,9.65) node[midway,above] {$t_{\mathrm{off}}$};
+    \draw[axis] (0.8,7.0) -- (10.15,7.0) node[right] {$t$};
+    \draw[axis] (0.8,7.0) -- (0.8,9.25) node[left] {$v(t),\,i(t)$};
+    \draw[waveform] (0.8,7.0) -- (2.2,7.0) -- (3.4,8.6) -- (9.8,8.6);
+    \draw[waveform] (0.8,8.2) -- (3.4,8.2) -- (4.6,7.45)
+    .. controls (4.95,7.23125) and (6.2,7.0) .. (8.2,7.0) -- (9.8,7.0);
+    \node[left] at (0.8,8.2) {$I_{\mathrm L}$};
+    \node[left] at (0.8,7.0) {$0$};
+    \node[above] at (6.8,8.6) {$v_{\mathrm{CE}}(t)$};
+    \node[right] at (9.8,8.6) {$V_{\mathrm{in}}$};
+    \node (tail) at (7.0,7.9) {$i_{\mathrm C}(t)$（拖尾）};
+    \draw[axis] (tail.south) -- (6.3,7.1);
+    \draw[axis] (0.8,4.0) -- (10.15,4.0) node[right] {$t$};
+    \draw[axis] (0.8,2.6) -- (0.8,5.9) node[left] {$v(t),\,i(t)$};
+    \draw[waveform] (0.8,2.8) -- (2.2,2.8) -- (3.4,4.0) -- (9.8,4.0);
+    \draw[waveform] (0.8,4.0) -- (3.4,4.0) -- (4.6,4.75)
+    .. controls (4.95,4.96875) and (6.2,5.2) .. (8.2,5.2) -- (9.8,5.2);
+    \node[left] at (0.8,2.8) {$-V_{\mathrm{in}}$};
+    \node[left] at (0.8,4.0) {$0$};
+    \node[right] at (9.8,5.2) {$I_{\mathrm L}$};
+    \node[above] at (6.8,5.2) {$i_{\mathrm D}(t)$};
+    \node[below] at (5.8,4.0) {$v_{\mathrm D}(t)$};
+    \draw[axis] (0.8,0) -- (10.15,0) node[right] {$t$};
+    \draw[axis] (0.8,0) -- (0.8,2.1) node[left] {$p_{\mathrm Q}(t)$};
+    \draw[waveform] (0.8,0) -- (2.2,0) -- (3.4,1.8) -- (4.6,0.675)
+    .. controls (4.95,0.346875) and (6.2,0) .. (8.2,0) -- (9.8,0);
+    \node[left] at (0.8,0) {$0$};
+    \node[above left] at (3.4,1.8) {$V_{\mathrm{in}}I_{\mathrm L}$};
+    \node (energy) at (6.4,1.2) {$E_{\mathrm{off}}$};
+    \draw[axis] (energy.south) -- (5.5,0.2);
+    \foreach \x/\n in {2.2/0,3.4/1,4.6/2,8.2/3} {
+        \node[below] at (\x,0) {$t_{\n}$};
+      }
+    \foreach \x/\n in {2.8/1,4.0/2,6.4/3} {
+        \node at (\x,-0.85) {$(\n)$};
       }
   \end{notesplot}
   \caption{IGBT 关断拖尾、二极管响应与关断损耗}
-  \label{pic0322}
+  \label{pic0320}
 \end{figure}
 
-\subsection{主要参数}
+图中，阶段 (1) 为集电极电压上升；阶段 (2) 为集电极电流快速下降，电流逐渐转移至二极管；阶段 (3) 为电流拖尾。拖尾期间 IGBT 已承受较高电压，仍有功率损耗。
 
-原稿列出的参数为“额定\ldots{}；额定\ldots{}；$V_{\mathrm{F}}$；$t_{\mathrm{f}}$”。其中，两个额定量的具体名称未写完整，暂保留为待补内容。
+将导通压降近似为常数时，BJT 与 IGBT 的导通损耗可写为
+\begin{equation}
+  P_{\mathrm{cond}}\approx V_{\mathrm{CE(sat)}}I_{\mathrm{C,av}},
+  \label{equ0322}
+\end{equation}
+其中 $I_{\mathrm{C,av}}$ 为一个开关周期内的集电极电流平均值。
 
-\reviewnote{$V_{\mathrm{F}}$ 疑指通态压降，但 BJT 与 IGBT 通常需要明确相应的集电极、发射极端口及测试条件；$t_{\mathrm{f}}$ 疑为电流下降时间，不能直接等同于完整关断时间。原稿没有足够信息确定这四项参数的正式名称，暂不补成确定结论。}
+\subsection{器件主要参数}
 
-\section{晶闸管（SCR）}
+BJT 与 IGBT 的常用参数及其含义如下。
 
-普通晶闸管是半控器件：可以通过门极控制开通，但不能仅通过撤去门极信号控制关断。原稿用相互耦合的 PNP 与 NPN 管表示其再生作用，阳极、阴极、门极分别记为 $\mathrm{A}$、$\mathrm{K}$、$\mathrm{G}$。
+集电极、发射极额定电压：BJT 常用 $V_{\mathrm{CEO}}$，表示基极开路时允许承受的集电极、发射极电压上限；IGBT 常用 $V_{\mathrm{CES}}$，表示栅极、发射极短接时相应的电压上限。
+
+额定集电极电流 $I_{\mathrm C}$：在规定温度、驱动和散热条件下，器件允许连续通过的集电极电流上限。
+
+脉冲集电极电流 $I_{\mathrm{CM}}$：在规定脉宽、占空比和结温条件下，器件允许短时通过的集电极电流峰值。
+
+集电极、发射极饱和压降 $V_{\mathrm{CE(sat)}}$：在规定集电极电流、驱动和结温下，器件导通时的压降，用于评估通态损耗。
+
+直流电流增益 $h_{\mathrm{FE}}$：BJT 在规定放大区工作条件下，集电极电流与基极电流的比值。饱和驱动时采用的强迫电流增益 $I_{\mathrm C}/I_{\mathrm B}$ 应与其区分。
+
+栅极、发射极极限电压 $V_{\mathrm{GES}}$：IGBT 栅极、发射极之间允许施加的电压上限，正、负极限应分别按数据手册取值。
+
+栅极阈值电压 $V_{\mathrm{GE(th)}}$：IGBT 在规定小电流条件下开始导通时的栅极、发射极电压，不代表充分导通所需的驱动电压。
+
+栅极电荷 $Q_{\mathrm g}$：IGBT 在规定工作条件下完成栅极充电所需的总电荷量，与驱动能力及驱动损耗有关。
+
+开关时间：BJT 主要包括延迟时间 $t_{\mathrm d}$、上升时间 $t_{\mathrm r}$、存储时间 $t_{\mathrm{stg}}$ 和下降时间 $t_{\mathrm f}$；IGBT 常列出开通、关断延迟时间及电流上升、下降时间。具体起止判据应按数据手册取值，$t_{\mathrm f}$ 不能直接代替完整关断时间。
+
+单次开关能量 $E_{\mathrm{on}}$、$E_{\mathrm{off}}$：在规定电压、电流、温度和驱动条件下，开通、关断过程的功率积分，用于计算开关损耗；IGBT 的 $E_{\mathrm{off}}$ 包括规定积分范围内的拖尾损耗。
+
+\newpage{}
+
+\section{SCR}
+
+\subsection{器件特性}
+
+普通单向晶闸管（SCR）是半控型器件，阳极、阴极、门极分别记为 $\mathrm A$、$\mathrm K$、$\mathrm G$。门极可控制开通，导通并锁定后撤去门极信号不能使其关断。
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
-  \begin{subfigure}[t]{0.35\textwidth}
+  \captionsetup[subfigure]{skip=2pt}
+  \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.98]
-      \draw (1.25,3.8) node[ocirc] {} to[thyristor,name=scr] (1.25,0) node[ocirc] {};
-      \node[above] at (1.25,3.8) {$\mathrm{A}$};
-      \node[below] at (1.25,0) {$\mathrm{K}$};
-      \node[left] at (scr.G) {$\mathrm{G}$};
-    \end{notescircuit}\par
+    \begin{minipage}[c][3.00cm][c]{\linewidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm}
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \coordinate (scr-left) at (1.1,0);
+          \coordinate (scr-right) at (2.5,0);
+          \draw (scr-left) to[stroke thyristor,name=scr] (scr-right);
+          \draw (scr.G) -- ++(0,-0.22) coordinate (gate);
+        \end{scope}
+        \draw (0,0) node[ocirc] {} -- (scr-left);
+        \draw (scr-right) -- (3.6,0) node[ocirc] {};
+        \coordinate (gate-port) at (gate |- 0,-0.95);
+        \draw (gate) -- (gate-port) node[ocirc] {};
+        \node[left=2pt] at (0,0) {$\mathrm A$};
+        \node[right=2pt] at (3.6,0) {$\mathrm K$};
+        \node[right=2pt] at (gate-port) {$\mathrm G$};
+      \end{notescircuit}
+    \end{minipage}\par
     \caption{SCR 符号}
-    \label{pic0323a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.60\textwidth}
+    \label{pic0321a}
+  \end{subfigure}%
+  \hfill%
+  \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \begin{notescircuit}[scale=0.98]
-      \node[pnp,rotate=180] (qp) at (1.5,2.8) {};
-      \node[npn] (qn) at (3.7,1.1) {};
-      \draw (qp.E) -- (qp.E |- 0,4.1) node[ocirc] {} node[above] {$\mathrm{A}$};
-      \draw (qn.E) -- (qn.E |- 0,-0.35) node[ocirc] {} node[below] {$\mathrm{K}$};
-      \draw (qp.B) -| (qn.C);
-      \draw (qp.C) |- (qn.B);
-      \draw (-0.1,1.1) node[ocirc] {} node[left] {$\mathrm{G}$} -- (qn.B);
-      \node[circ] at (qp.C |- qn.B) {};
-      \node[left=5pt] at (qp.center) {PNP};
-      \node[right=5pt] at (qn.center) {NPN};
-    \end{notescircuit}\par
-    \caption{双晶体管等效结构}
-    \label{pic0323b}
-  \end{subfigure}
-  \caption{晶闸管符号与双晶体管模型}
-  \label{pic0323}
+    \begin{minipage}[c][3.00cm][c]{\linewidth}
+      \centering
+      \begin{notescircuit}[scale=0.96]
+        \ctikzset{bipoles/length=0.85cm,
+          tripoles/pnp/base width=0.42,
+          tripoles/pnp/width=0.48,
+          tripoles/npn/base width=0.42,
+          tripoles/npn/width=0.48}
+        \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
+          \node[pnp,nobase,rotate=90,xscale=-1,anchor=E] (q1) at (1.1,0) {};
+          \draw (q1.nobase) -- ++(0,0.22) coordinate (base-one);
+        \end{scope}
+        \begin{scope}[scale around={1.15:(3.9,1.35)},transform shape]
+          \node[npn,nobase,rotate=90,anchor=C] (q2) at (3.2,1.35) {};
+          \draw (q2.nobase) -- ++(0,-0.22) coordinate (base-two);
+        \end{scope}
+        \coordinate (gate-bus) at (base-two |- 0,0);
+        \coordinate (gate-port) at (base-two |- 0,-0.95);
+        \draw (0,0) node[ocirc] {} -- (q1.E);
+        \draw (q1.C) -| (base-two);
+        \draw (base-one) |- (q2.C);
+        \draw (q2.E) -- (5.15,1.35) -- (5.15,0)
+        -- (5.75,0) node[ocirc] {};
+        \draw (gate-bus) node[circ] {} -- (gate-port) node[ocirc] {};
+        \node[left=2pt] at (0,0) {$\mathrm A$};
+        \node[right=2pt] at (5.75,0) {$\mathrm K$};
+        \node[right=2pt] at (gate-port) {$\mathrm G$};
+        \node[below=3pt] at ($(q1.E)!0.5!(q1.C)$) {$\mathrm Q_1$};
+        \node[above=3pt] at ($(q2.C)!0.5!(q2.E)$) {$\mathrm Q_2$};
+      \end{notescircuit}
+    \end{minipage}\par
+    \caption{双晶体管模型}
+    \label{pic0321b}
+  \end{subfigure}\par
+  \vspace{-0.15cm}
+  \caption{SCR 符号与双晶体管模型}
+  \label{pic0321}
+  \vspace{-0.15cm}
 \end{figure}
 
-\reviewnote{原稿写“关断要等功率电路停下”，这只是口语化描述。普通 SCR 关断需要阳极电流降到维持电流以下，并满足恢复阻断能力所需的时间和电路条件；不要求整个功率电路停止运行。可对照\href{https://www.st.com/resource/en/application_note/cd00003853-thyristors-and-triacs-holding-current--an-important-parameter-stmicroelectronics.pdf}{ST 关于维持电流的说明}。这里讨论普通 SCR，不包括 GTO 等可关断晶闸管。}
+图 \ref{pic0321b} 中，$\mathrm Q_1$ 为 PNP 管，$\mathrm Q_2$ 为 NPN 管，两管的集电极分别接至对方基极，形成正反馈。门极触发后，两管相互增强，使器件由阻断转入导通。
 
-图 \ref{pic0324} 给出 SCR 的静态伏安特性，包括反向阻断、反向击穿、正向阻断与正向导通区域，并标示门极电流增大时曲线的变化方向。
+SCR 的静态伏安特性如图 \ref{pic0322} 所示。正向偏置时可由门极触发导通；反向偏置时阻断，超过反向击穿电压后进入击穿区。$V_{\mathrm{BO}}$ 为门极开路时的正向转折电压，门极触发可使器件在较低的正向电压下导通。
 
 \begin{figure}[H]
+  \vspace{-0.15cm}
   \centering
-  \begin{notesplot}[scale=0.96]
-    \draw[axis] (-3.8,0) -- (7.7,0) node[right] {$v_{\mathrm{AK}}$};
-    \draw[axis] (0,-2.8) -- (0,4.5) node[above] {$i_{\mathrm{A}}$};
-    \draw[waveform] (0,0) -- (-2.55,-0.05)
-    .. controls (-3.25,-0.05) and (-3.25,-0.4) .. (-3.38,-2.55);
-    \foreach \k in {3.2,4.4,5.6,6.8} {
+  \begin{notesplot}[scale=0.94]
+    \draw[axis] (-2.8,0) -- (6.7,0) node[right] {$v_{\mathrm{AK}}$};
+    \draw[axis] (0,-2.2) -- (0,3.8) node[above] {$i_{\mathrm A}$};
+    \draw[guide] (-2.2,-1.9) -- (-2.2,0);
+    \draw[guide] (5.9,0) -- (5.9,0.35);
+    \draw[waveform] (0,0) -- (-1.9,-0.05)
+    .. controls (-2.3,-0.05) and (-2.3,-0.4) .. (-2.45,-1.9);
+    \foreach \k in {2.6,3.7,4.8,5.9} {
         \draw[waveform] (0,0) .. controls (1.1,0.04) and (\k,0.04) .. (\k,0.14)
-        .. controls (\k,0.55) and (1.1,0.6) .. (0.9,1.7);
+        .. controls (\k,0.45) and (1.1,0.45) .. (0.7,1.4);
       }
-    \draw[waveform] (0.9,1.7) -- (1.12,4.2);
+    \draw[waveform] (0.7,1.4) -- (0.95,3.45);
     \node[below left] at (0,0) {$0$};
-    \node[align=center] at (-1.65,-0.9) {反向阻断};
-    \node[align=center] at (-2.7,-2.85) {反向击穿};
-    \node[align=center] at (4.6,-0.75) {正向阻断};
-    \node[align=center] at (2.4,3.55) {正向导通};
-    \draw[axis] (6.65,0.85) -- (3.25,0.85) node[midway,above] {$i_{\mathrm{G}}$ 增大};
-    \node[above] at (6.8,0.23) {$i_{\mathrm{G}}=0$};
+    \node[above] at (-2.2,0) {$-V_{\mathrm{br}}$};
+    \node[below] at (5.9,0) {$V_{\mathrm{BO}}$};
+    \node at (-1.15,-0.65) {反向阻断};
+    \node at (-2.05,-2.25) {反向击穿};
+    \node at (3.9,-0.65) {正向阻断};
+    \node at (2.15,2.9) {正向导通};
+    \draw[axis] (5.75,1.05) -- (2.85,1.05)
+    node[midway,above] {$i_{\mathrm G}$ 增大};
+    \node[above right] at (5.9,0.3) {$i_{\mathrm G}=0$};
   \end{notesplot}
-  \caption{SCR 静态伏安特性与门极电流的影响}
-  \label{pic0324}
+  \vspace{-0.15cm}
+  \caption{SCR 静态伏安特性}
+  \label{pic0322}
+  \vspace{-0.15cm}
 \end{figure}
+
+\subsection{器件开通与关断过程}
+
+开通时，在正向偏置的 SCR 门极施加正向触发电流。阳极电流达到锁定电流 $I_{\mathrm L}$ 后，即使撤去门极信号，器件仍能保持导通。
+
+关断时，需要使阳极电流降至维持电流 $I_{\mathrm H}$ 以下。电流过零后，还需在规定反向偏置条件下留出不小于关断时间 $t_{\mathrm q}$ 的恢复时间，才能重新承受正向电压。交流电路可利用电流自然过零换流，直流电路则需由外部电路创造关断条件。
+
+\subsection{器件主要参数}
+
+SCR 的常用参数及其含义如下。
+
+断态重复峰值电压 $V_{\mathrm{DRM}}$ 与反向重复峰值电压 $V_{\mathrm{RRM}}$：在规定条件下，器件允许重复承受的正向阻断电压和反向电压峰值上限。
+
+额定通态平均电流 $I_{\mathrm{T(AV)}}$：在规定波形、温度和散热条件下，器件允许通过的通态电流平均值上限；数据手册也常给出通态电流有效值上限 $I_{\mathrm{T(RMS)}}$。
+
+非重复通态浪涌电流 $I_{\mathrm{TSM}}$：在规定脉冲波形和持续时间下，器件能够短时承受的非重复通态电流峰值。
+
+通态峰值电压 $V_{\mathrm{TM}}$：在规定通态峰值电流和结温下，器件导通时两端的电压，用于评估通态损耗。
+
+门极触发电流 $I_{\mathrm{GT}}$ 与门极触发电压 $V_{\mathrm{GT}}$：在规定条件下，使器件由正向阻断转为导通所需的门极电流及相应的门极、阴极电压。
+
+锁定电流 $I_{\mathrm L}$：开通后撤去门极触发脉冲时，能使器件保持导通的最小阳极电流。
+
+维持电流 $I_{\mathrm H}$：门极无驱动时，器件维持已建立的导通状态所需的最小阳极电流，通常小于锁定电流。
+
+关断时间 $t_{\mathrm q}$：在规定换流条件下，阳极电流过零后，器件恢复正向阻断能力所需的最小时间。
+
+临界电压上升率 $(\mathrm{d}v/\mathrm{d}t)_{\mathrm{cr}}$ 与允许电流上升率 $(\mathrm{d}i/\mathrm{d}t)_{\mathrm{cr}}$：分别限制断态电压上升过快引起的误开通，以及开通过程中电流上升过快引起的局部过热。
+
+\newpage{}
 
 \section{宽禁带器件}
 
-原稿标题为“宽禁带器件”，并注明 WBG（Wide Bandgap）。原稿给出了通态电阻、面积与耐压之间的关系：
-\begin{equation}
-  AR_{\mathrm{on}}=\frac{k}{\mu_{\mathrm{n}}\varepsilon_{\mathrm{s}}E_{\mathrm{c}}^3}V_{\mathrm{B}}^2
-  \qquad\text{（原稿关系式，适用范围待核）}.
-  \label{equ0316}
-\end{equation}
-按该关系式的通常含义，$A$ 为有效面积，$AR_{\mathrm{on}}$ 为比通态电阻，$\mu_{\mathrm{n}}$ 为电子迁移率，$\varepsilon_{\mathrm{s}}$ 为半导体介电常数，$E_{\mathrm{c}}$ 为临界击穿电场，$V_{\mathrm{B}}$ 为击穿电压；$k$ 是原稿未定义的系数。
-
-\reviewnote{分子手写暂识别为 $k$，需确认是否为具体常数。式 \eqref{equ0316} 更适合说明理想单极型器件漂移区的耐压与比电阻关系，不宜直接当作所有实际器件总通态电阻的精确公式。实际总电阻还包含沟道、接触等贡献，可对照\href{https://www.infineon.com/dgdl/Infineon-High-performance_SiC_MOSFET_technology_for_power_electronics_design-Article-v01_00-EN.pdf?fileId=5546d4626e651a41016e889ccd0d1c5e}{Infineon 的 SiC MOSFET 技术说明}核对适用范围。}
-
-\subsection{SiC}
-
-原稿注明 SiC 适用于高压、较大功率场合，并提到在部分场合替代 IGBT，理由是可以提高工作频率。旁注为“同一频率下损耗更小”。
-
-\reviewnote{“替代 IGBT”“同一频率下损耗更小”应限定耐压、电流、温度、驱动和拓扑等比较条件，不能作为对所有 SiC 与 IGBT 产品都成立的结论。原稿未提供具体型号或比较工况，暂按概括性旁注保留。}
-
-\subsection{GaN}
-
-原稿注明 GaN“正在替换 MOS 管”；其前一句手写无法可靠辨认，暂记为\textcolor{reviewgray}{【原稿此处待辨】}。
-
-\reviewnote{GaN 功率器件常为 HEMT 结构，应与硅、SiC MOSFET 的器件结构区分。原稿比较语句未给出具体应用范围，且 GaN 的反向导通机理不能直接套用前述体二极管模型，参见\href{https://www.ti.com/document-viewer/lit/html/SLUAAL9}{TI 的 GaN 损耗说明}。}
+宽禁带功率器件主要采用 SiC、GaN 等材料。SiC 器件适用于高压、较大功率场合，在部分场合正在逐渐替代 IGBT 以提高电路工作频率。GaN 器件常为 HEMT 结构，可在部分高频电源中替代硅 MOSFET。
 
 \section{器件应用}
 
 \subsection{各类器件的应用范围}
 
-原稿仅写“各器件适用范围（图）”。本次补充的十张课件截图也未包含该应用范围图，仍待补充。
+\begin{figure}[H]
+  \vspace{-0.15cm}
+  \centering
+  \begin{notesplot}[scale=0.94]
+    \draw[axis] (0,0) -- (10.65,0);
+    \draw[axis] (0,0) -- (0,6.95) node[above] {整机功率 $P$};
+    \foreach \x/\lab in {0.8/{200\,\mathrm V},2.6/{650\,\mathrm V},4.4/{1.2\,\mathrm{kV}},5.6/{1.7\,\mathrm{kV}},7.3/{3.3\,\mathrm{kV}},8.6/{4.5\,\mathrm{kV}},10.0/{6.5\,\mathrm{kV}}} {
+    \draw[line width=0.4pt] (\x,0) -- (\x,0.12);
+    \node[below,inner sep=2pt] at (\x,0) {$\lab$};
+    }
+    \foreach \y/\lab in {0/{10\,\mathrm W},0.8/{100\,\mathrm W},1.6/{1\,\mathrm{kW}},2.4/{10\,\mathrm{kW}},3.2/{100\,\mathrm{kW}},4.0/{1\,\mathrm{MW}},4.8/{10\,\mathrm{MW}},5.6/{100\,\mathrm{MW}},6.4/{1\,\mathrm{GW}}} {
+    \draw[line width=0.4pt] (0,\y) -- (0.12,\y);
+    \node[left,inner sep=2pt] at (0,\y) {$\lab$};
+    }
+    \node[below] at (5.3,-0.48) {器件耐压等级};
+    \node at (2.6,0.8) {低功率电源};
+    \node at (2.6,1.98) {计算机电源};
+    \node at (4.4,2.4) {电机驱动};
+    \node at (4.4,2.93) {UPS};
+    \node at (3.5,3.38) {电动汽车主驱};
+    \node at (5.6,3.65) {光伏发电};
+    \node at (5.6,4.52) {风力发电};
+    \node at (8.6,4.24) {轨道牵引};
+    \node at (8.6,4.95) {船舶推进};
+    \node at (8.6,6.4) {直流输电};
+    \node[draw=black,line width=0.6pt,align=left,inner xsep=6pt,inner ysep=5pt] at (8.0,1.1) {采用宽禁带器件：\\效率更高、体积更小};
+    \draw[axis] (2.45,-1.35) -- (0.15,-1.35) node[midway,above] {GaN};
+    \draw[line width=0.8pt] (2.45,-1.73) rectangle (3.95,-0.97);
+    \node at (3.2,-1.35) {交叠区};
+    \draw[axis] (3.95,-1.35) -- (10.3,-1.35) node[midway,above] {SiC};
+  \end{notesplot}
+  \vspace{-0.15cm}
+  \caption{GaN 与 SiC 的应用方向及典型电压、功率等级示意}
+  \label{pic0323}
+  \vspace{-0.15cm}
+\end{figure}
 
-\figureplaceholder{应用范围图（原稿缺图）}{需补充原图或明确所需的坐标、器件类别与适用区间；现有照片和本次课件截图均没有提供该图，暂不据此编造范围边界。}
+\begin{figure}[H]
+  \vspace{-0.15cm}
+  \centering
+  \captionsetup[subfigure]{skip=2pt}
+  \begin{subfigure}[b]{0.51\textwidth}
+    \centering
+    \begin{minipage}[c][5.95cm][c]{\linewidth}
+      \centering
+      \begin{notesplot}[xscale=0.86,yscale=0.48]
+        \path[use as bounding box] (-0.95,-1.9) rectangle (7.6,9.8);
+        \path[draw=black,fill=white,line width=0.8pt] (0,0) rectangle (1.0,8.0);
+        \path[draw=black,fill=white,line width=0.8pt] (1.0,0) rectangle (4.0,5.6);
+        \path[draw=black,fill=white,line width=0.8pt] (1.65,0) rectangle (4.7,3.6);
+        \path[draw=black,fill=white,line width=0.8pt] (4.0,0.1) rectangle (7.0,2.8);
+        \path[draw=black,fill=white,line width=0.8pt] (0,0) rectangle (2.3,1.6);
+        \path[draw=black,fill=white,line width=0.8pt] (3.25,1.0) rectangle (6.15,4.25);
+        \node[rotate=90] at (0.5,5.0) {SCR};
+        \node at (1.05,0.8) {BJT};
+        \node at (2.5,4.6) {IGBT};
+        \node[align=center] at (2.45,2.7) {Si\\MOSFET};
+        \node at (4.7,2.65) {SiC};
+        \node at (5.55,0.53) {GaN};
+        \draw[axis] (0,0) -- (7.55,0);
+        \draw[axis] (0,0) -- (0,8.65) node[above] {$P\,(\mathrm W)$};
+        \foreach \x/\n in {0/1,1/2,2/3,3/4,4/5,5/6,6/7,7/8} {
+            \draw[line width=0.4pt] (\x,0) -- (\x,0.13);
+            \node[below,inner sep=2pt] at (\x,0) {$10^{\n}$};
+          }
+        \foreach \y/\lab in {0/10,1/100,2/{1\,\mathrm k},3/{10\,\mathrm k},4/{100\,\mathrm k},5/{1\,\mathrm M},6/{10\,\mathrm M},7/{100\,\mathrm M},8/{1\,\mathrm G}} {
+        \draw[line width=0.4pt] (0,\y) -- (0.12,\y);
+        \node[left,inner sep=2pt] at (0,\y) {$\lab$};
+        }
+        \node[below] at (3.5,-0.85) {$f\,(\mathrm{Hz})$};
+      \end{notesplot}
+    \end{minipage}\par
+    \caption{器件的典型应用范围}
+    \label{pic0324a}
+  \end{subfigure}%
+  \hfill%
+  \begin{subfigure}[b]{0.47\textwidth}
+    \centering
+    \begin{minipage}[c][5.95cm][c]{\linewidth}
+      \centering
+      \def\applicationXScale{0.76}
+      \def\applicationYScale{0.50}
+      \begin{notesplot}[xscale=\applicationXScale,yscale=\applicationYScale]
+        \path[use as bounding box] (-0.95,-1.824) rectangle (7.25,9.408);
+        \draw[guide] (0.5,8.25) -- (6.95,1.155);
+        \path[draw=black,fill=white,line width=0.8pt]
+        (4.4,0.35) -- (6.65,0.35) -- (6.65,1.485)
+        -- ({5.8/1.1},3.0) -- (4.4,3.0) -- cycle;
+        \path[draw=black,fill=white,line width=0.8pt]
+        (2.1,1.9) -- (4.45,1.9) -- (4.45,3.905)
+        -- ({3.65/1.1},5.15) -- (2.1,5.15) -- cycle;
+        \path[draw=black,fill=white,line width=0.8pt]
+        (0.9,4.35) -- (2.65,4.35) -- (2.65,5.885)
+        -- ({2.05/1.1},6.75) -- (0.9,6.75) -- cycle;
+        \path[draw=black,fill=white,line width=0.8pt]
+        (0.2,6.1) -- (1.5,6.1) -- (1.5,7.15)
+        -- (1.0,7.7) -- (0.2,7.7) -- cycle;
+        \node at (0.8,6.85) {SCR};
+        \node[align=center] at (1.72,5.25) {GTO\\IGCT};
+        \node at (3.2,3.15) {IGBT};
+        \node at (5.45,1.3) {MOSFET};
+        \pgfmathsetmacro{\limitDX}{\applicationXScale*(6.95-0.5)}
+        \pgfmathsetmacro{\limitDY}{\applicationYScale*(1.155-8.25)}
+        \pgfmathsetmacro{\limitLength}{sqrt(\limitDX*\limitDX+\limitDY*\limitDY)}
+        \pgfmathsetmacro{\normalDX}{-0.82*\limitDY/(\limitLength*\applicationXScale)}
+        \pgfmathsetmacro{\normalDY}{0.82*\limitDX/(\limitLength*\applicationYScale)}
+        \foreach \xa/\ya in {2.5/6.3,4.3/4.6,6.15/2.5} {
+            \draw[axis,line width=0.8pt] (\xa,\ya) -- ++(\normalDX,\normalDY);
+          }
+        \node[rotate=-36] at (5.7,4.1) {硅极限};
+        \node[rotate=-36] at (4.9,7.3) {SiC / GaN};
+        \draw[axis] (0,0) -- (7.2,0);
+        \draw[axis] (0,0) -- (0,8.55) node[above] {$S\,(\mathrm{VA})$};
+        \foreach \x/\n in {1/2,2/3,3/4,4/5,5/6,6/7} {
+            \draw[line width=0.4pt] (\x,0) -- (\x,0.12);
+            \node[below,inner sep=2pt] at (\x,0) {$10^{\n}$};
+          }
+        \foreach \y/\lab in {1/100,2/{1\,\mathrm k},3/{10\,\mathrm k},4/{100\,\mathrm k},5/{1\,\mathrm M},6/{10\,\mathrm M}} {
+        \draw[line width=0.4pt] (0,\y) -- (0.12,\y);
+        \node[left,inner sep=2pt] at (0,\y) {$\lab$};
+        }
+        \node[below] at (3.5,-0.75) {$f\,(\mathrm{Hz})$};
+      \end{notesplot}
+    \end{minipage}\par
+    \caption{宽禁带器件的扩展方向}
+    \label{pic0324b}
+  \end{subfigure}\par
+  \vspace{-0.15cm}
+  \caption{功率半导体器件的功率与频率范围示意}
+  \label{pic0324}
+  \vspace{-0.15cm}
+\end{figure}
+
+\clearpage
+
+\section{第三章符号汇总}
+
+本节汇总本章主要符号。电路量中，大写表示直流分量或平均值，小写表示瞬时量；器件参数按本章定义。$x$ 和 $y$ 表示任意字符串。未列举的符号不是主要符号。
+
+\begingroup
+\small
+\addtolength{\abovecaptionskip}{-0.2cm}
+\setlength{\tabcolsep}{3pt}
+\setlength{\dashlinedash}{1.5pt}
+\setlength{\dashlinegap}{1.5pt}
+\renewcommand{\arraystretch}{1.10}
+\edef\symboltablearrayrulewidth{\the\arrayrulewidth}
+\newcommand{\symboltablerule}[1]{%
+  \noalign{\global\arrayrulewidth=#1\relax}%
+  \hline
+  \noalign{\global\arrayrulewidth=\symboltablearrayrulewidth\relax}%
+}
+\begin{longtable}{
+  >{\centering\arraybackslash}p{0.160\textwidth}
+  >{\centering\arraybackslash}p{0.300\textwidth}:
+  >{\centering\arraybackslash}p{0.160\textwidth}
+  >{\centering\arraybackslash}p{0.300\textwidth}}
+  \caption{第三章符号汇总}\label{tab0301}                                                                                                                                                                                  \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{时间}}                                                                                                                                                                \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $T_x$                                              & 周期                                                 & $f_x$                                              & 频率                                                 \\
+  $D$                                                & 有效占空比                                              & $D'$                                               & 互补占空比                                              \\
+  $D_{\mathrm{c}}$                                   & 控制信号占空比                                            & $c(t)$                                             & 开关控制信号                                             \\
+  $t_x$                                              & 器件特征时间                                             & $\Delta t_x$                                       & 开关过渡时间                                             \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电压}}                                                                                                                                                                \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $V_x$                                              & 直流分量或平均值                                           & $v_x(t)$                                           & 瞬时量                                                \\
+  $V_{x(y)}$                                         & 端口 $x$ 在条件 $y$ 下的电压                                & $V_{xy}$                                           & 端子 $x$ 对 $y$ 的电压                                   \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电流}}                                                                                                                                                                \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $I_x$                                              & 直流分量或平均值                                           & $i_x(t)$                                           & 瞬时量                                                \\
+  $I_{x,y}$                                          & 电流统计量                                              &                                                    &                                                    \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电荷与器件参数}}                                                                                                                                                           \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $Q_x$                                              & 电荷                                                 & $R_x$                                              & 电阻                                                 \\
+  $C_{xy}$                                           & 端子 $x$、$y$ 间的电容                                    &                                                    &                                                    \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{功率、能量与效率}}                                                                                                                                                          \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $P_x$                                              & 平均功率                                               & $p_x(t)$                                           & 瞬时功率                                               \\
+  $E_x$                                              & 单次开关损耗能量                                           & $\eta$                                             & 变换器效率                                              \\
+  $M(D)$                                             & 直流电压变换比                                            &                                                    &                                                    \\
+  \symboltablerule{\heavyrulewidth}
+\end{longtable}
+
+\endgroup
+
+\clearpage
+
+\begingroup
+\small
+\addtolength{\abovecaptionskip}{-0.2cm}
+\setlength{\tabcolsep}{3pt}
+\setlength{\dashlinedash}{1.5pt}
+\setlength{\dashlinegap}{1.5pt}
+\renewcommand{\arraystretch}{1.10}
+\edef\symboltablearrayrulewidth{\the\arrayrulewidth}
+\newcommand{\symboltablerule}[1]{%
+  \noalign{\global\arrayrulewidth=#1\relax}%
+  \hline
+  \noalign{\global\arrayrulewidth=\symboltablearrayrulewidth\relax}%
+}
+\begin{longtable}{
+  >{\centering\arraybackslash}p{0.160\textwidth}
+  >{\centering\arraybackslash}p{0.300\textwidth}:
+  >{\centering\arraybackslash}p{0.160\textwidth}
+  >{\centering\arraybackslash}p{0.300\textwidth}}
+  \caption{第三章符号通用标记汇总}\label{tab0302}                                                                                                                                                                              \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{数学与统计标记}}                                                                                                                                                           \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $x_{y,\mathrm{av}}$                                & 平均值                                                & $x_{y,\mathrm{rms}}$                               & 有效值                                                \\
+  $\Delta x_{y,\mathrm{pp}}$                         & 峰峰值                                                & $\langle x_y\rangle$                               & 单周期内均值                                             \\
+  $x_{1},\;x_{2},\;\cdots$                           & 量、元器件或时刻的序号                                        &                                                    &                                                    \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{电路位置与对象标记}}                                                                                                                                                         \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $x_{\mathrm{in}}$                                  & 输入                                                 & $x_{\mathrm{out}}$                                 & 输出                                                 \\
+  $x_{\mathrm L}$                                    & 电感                                                 & $x_{\mathrm C}$                                    & 电容                                                 \\
+  $x_{\mathrm D}$                                    & 二极管                                                & $x_{\mathrm Q}$                                    & 开关管                                                \\
+  $x_{\mathrm s}$                                    & 开关                                                 &                                                    &                                                    \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{器件端口标记}}                                                                                                                                                            \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $x_{\mathrm G}$                                    & MOSFET、IGBT 的栅极                                    & $x_{\mathrm G}$                                    & SCR 的门极                                            \\
+  $x_{\mathrm D}$                                    & MOSFET 的漏极                                         & $x_{\mathrm S}$                                    & MOSFET 的源极                                         \\
+  $x_{\mathrm B}$                                    & BJT 的基极                                            & $x_{\mathrm C}$                                    & BJT、IGBT 的集电极                                      \\
+  $x_{\mathrm E}$                                    & BJT、IGBT 的发射极                                      & $x_{\mathrm A},\;x_{\mathrm K}$                    & SCR 的阳极、阴极                                         \\
+  $x_{\mathrm{GS}}$                                  & 栅极、源极之间                                            & $x_{\mathrm{DS}}$                                  & 漏极、源极之间                                            \\
+  $x_{\mathrm{BE}}$                                  & 基极、发射极之间                                           & $x_{\mathrm{CE}}$                                  & 集电极、发射极之间                                          \\
+  $x_{\mathrm{GE}}$                                  & 栅极、发射极之间                                           & $x_{\mathrm{AK}}$                                  & 阳极、阴极之间                                            \\
+  \symboltablerule{\heavyrulewidth}
+  \multicolumn{4}{c}{\cellcolor{gray!30}\textbf{状态、特性与损耗标记}}                                                                                                                                                        \\*
+  \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{符号}} & \multicolumn{1}{c}{\cellcolor{gray!30}\textbf{含义}} \\*
+  \symboltablerule{\lightrulewidth}
+  $x_{\mathrm{on}}$                                  & 开通或通态                                              & $x_{\mathrm{off}}$                                 & 关断或断态                                              \\
+  $x_{\mathrm d}$                                    & 延迟                                                 & $x_{\mathrm r}$                                    & 上升                                                 \\
+  $x_{\mathrm f}$                                    & 下降                                                 & $x_{\mathrm q}$                                    & SCR 关断恢复                                           \\
+  $x_{\mathrm F}$                                    & 二极管正向导通                                            & $x_{\mathrm{BO}}$                                  & 正向转折                                               \\
+  $x_{\mathrm L}$                                    & SCR 锁定                                             & $x_{\mathrm H}$                                    & SCR 维持                                             \\
+  $x_{y(\mathrm{sat})}$                              & 饱和状态                                               & $x_{y(\mathrm{th})}$                               & 阈值条件                                               \\
+  $x_{\mathrm{rr}}$                                  & 反向恢复                                               & $x_{\mathrm{stg}}$                                 & 存储阶段                                               \\
+  $x_{\mathrm{cond}}$                                & 通态损耗                                               & $x_{\mathrm{sw}}$                                  & 开关损耗                                               \\
+  $x_{\mathrm{drv}}$                                 & 栅极驱动损耗                                             & $x_{\mathrm{loss}}$                                & 总损耗                                                \\
+  \symboltablerule{\heavyrulewidth}
+\end{longtable}
+
+\endgroup
 
 \end{document}

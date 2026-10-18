@@ -241,14 +241,12 @@
     \def\xperiod{10.5}
     \def\xend{11.8}
     \def\ytiming{5.85}
-    % 两个开关状态的时间分段；竖直参考线贯穿上下两幅波形
     \draw[guide] (\xduty,0.35) -- (\xduty,\ytiming);
     \draw[guide] (\xperiod,0.35) -- (\xperiod,\ytiming);
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
     (\xzero,\ytiming) -- node[above] {$DT_{\mathrm{s}}$} (\xduty,\ytiming);
     \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}, line width=0.5pt]
     (\xduty,\ytiming) -- node[above] {$D'T_{\mathrm{s}}$} (\xperiod,\ytiming);
-    % Boost 电感电流纹波
     \draw[axis] (\xzero,3.55) -- (\xend,3.55) node[right] {$t$};
     \draw[axis] (\xzero,3.55) -- (\xzero,6.25)
     node[left] {$i_{\mathrm{L}}(t)$};
@@ -265,7 +263,6 @@
     \draw[guide] (\xperiod,4.20) -- (11.05,4.20);
     \draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]}, line width=0.6pt]
     (11.05,4.20) -- node[right] {$\Delta i_{\mathrm{L,pp}}$} (11.05,5.50);
-    % Boost 电容电压纹波
     \draw[axis] (\xzero,0.35) -- (\xend,0.35) node[right] {$t$};
     \draw[axis] (\xzero,0.35) -- (\xzero,2.85)
     node[left] {$v_{\mathrm{C}}(t)$};
