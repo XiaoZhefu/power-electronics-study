@@ -1,0 +1,176 @@
+% chktex-file 1
+% chktex-file 2
+% chktex-file 3
+% chktex-file 8
+% chktex-file 11
+% chktex-file 12
+% chktex-file 24
+% chktex-file 26
+% chktex-file 36
+% chktex-file 44
+
+\DefineEquation{equ0301}{
+  \begin{equation}
+    P_{\mathrm{loss}}=P_{\mathrm{cond}}+P_{\mathrm{sw}}+P_{\mathrm{drv}}.
+    \label{equ0301}
+  \end{equation}
+}
+
+\DefineEquation{equ0302}{
+  \begin{equation}
+    P_{\mathrm{cond}}=I_{\mathrm{D,rms}}^2R_{\mathrm{on}}.
+    \label{equ0302}
+  \end{equation}
+}
+
+\DefineEquation{equ0303}{
+  \begin{equation}
+    P_{\mathrm{sw}}=f_{\mathrm{s}}\bigl(E_{\mathrm{on}}+E_{\mathrm{off}}\bigr).
+    \label{equ0303}
+  \end{equation}
+}
+
+\DefineEquation{equ0304}{
+  \begin{equation}
+    P_{\mathrm{drv}}\approx f_{\mathrm{s}}V_{\mathrm{GS}}Q_{\mathrm{g}}.
+    \label{equ0304}
+  \end{equation}
+}
+
+\DefineEquation{equ0305}{
+  \begin{equation}
+    \mathrm{FOM}=R_{\mathrm{on}}Q_{\mathrm{g}}.
+    \label{equ0305}
+  \end{equation}
+}
+
+\DefineEquation{equ0306}{
+  \begin{equation}
+    D=D_{\mathrm{c}}-\frac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}.
+    \label{equ0306}
+  \end{equation}
+}
+
+\DefineEquation{equ0307}{
+  \begin{align}
+     & \left\{
+    \begin{aligned}
+      v_{\mathrm{L}}(t) & =V_{\mathrm{in}}-v_{\mathrm{out}}(t)
+      \approx V_{\mathrm{in}}-V_{\mathrm{out}},                            \\
+      i_{\mathrm{C}}(t) & =i_{\mathrm{L}}(t)-\frac{v_{\mathrm{out}}(t)}{R}
+      \approx I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}.
+    \end{aligned}
+    \right.
+    \label{equ0307} \\
+    \intertext{\qquad{}接状态 2 时，}
+     & \left\{
+    \begin{aligned}
+      v_{\mathrm{L}}(t) & =-v_{\mathrm{out}}(t)
+      \approx -V_{\mathrm{out}},                                           \\
+      i_{\mathrm{C}}(t) & =i_{\mathrm{L}}(t)-\frac{v_{\mathrm{out}}(t)}{R}
+      \approx I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}.
+    \end{aligned}
+    \right.
+    \label{equ0308}
+  \end{align}
+}
+
+\DefineEquation{equ0309}{
+  \begin{alignat}{2}
+    \phantom{\Rightarrow}
+     & \;                                                                & \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}v_{\mathrm{L}}(t)\,\mathrm{d}t
+     & \approx D(V_{\mathrm{in}}-V_{\mathrm{out}})-D'V_{\mathrm{out}}=0,
+    \label{equ0309}                                                                                                                                      \\
+    \Rightarrow
+     & \;                                                                & V_{\mathrm{out}}
+     & \approx DV_{\mathrm{in}},
+    \label{equ0310}                                                                                                                                      \\
+    \Rightarrow
+     & \;                                                                & M(D)
+     & =\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}
+    \approx D=D_{\mathrm{c}}-f_{\mathrm{s}}t_{\mathrm{rr}}.
+    \label{equ0311}                                                                                                                                      \\
+    \intertext{\qquad{}由电荷平衡，}
+    \phantom{\Rightarrow}
+     & \;                                                                & \frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{C}}(t)\,\mathrm{d}t
+     & \approx D\left(I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}\right)
+    +D'\left(I_{\mathrm{L}}-\frac{V_{\mathrm{out}}}{R}\right)=0,
+    \label{equ0312} \displaybreak[1]                                                                                                                     \\
+    \Rightarrow
+     & \;                                                                & V_{\mathrm{out}}
+     & \approx RI_{\mathrm{L}},
+    \label{equ0313}                                                                                                                                      \\
+    \Rightarrow
+     & \;                                                                & I_{\mathrm{L}}
+     & \approx\frac{V_{\mathrm{out}}}{R}
+    \approx\frac{DV_{\mathrm{in}}}{R}.
+    \label{equ0314}
+  \end{alignat}
+}
+
+\DefineEquation{equ0315}{
+  \begin{equation}
+    \begin{aligned}
+      I_{\mathrm{in}}
+       & =\frac{1}{T_{\mathrm{s}}}\int_0^{T_{\mathrm{s}}}i_{\mathrm{Q}}(t)\,\mathrm{d}t                            \\
+       & \approx\frac{DT_{\mathrm{s}}I_{\mathrm{L}}+t_{\mathrm{rr}}I_{\mathrm{L}}+Q_{\mathrm{rr}}}{T_{\mathrm{s}}} \\
+       & =DI_{\mathrm{L}}+\frac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}
+      +\frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}.
+    \end{aligned}
+    \label{equ0315}
+  \end{equation}
+}
+
+\DefineEquation{equ0316}{
+  \begin{equation}
+    \begin{aligned}
+      \Delta i_{\mathrm{L,pp}}
+       & \approx\frac{V_{\mathrm{in}}-V_{\mathrm{out}}}{L}DT_{\mathrm{s}}
+      \approx\frac{V_{\mathrm{in}}DD'T_{\mathrm{s}}}{L},                  \\
+      \Delta v_{\mathrm{out,pp}}
+       & \approx\frac{\Delta i_{\mathrm{L,pp}}T_{\mathrm{s}}}{8C}.
+    \end{aligned}
+    \label{equ0316}
+  \end{equation}
+}
+
+\DefineEquation{equ0317}{
+  \begin{align}
+    P_{\mathrm{in}}
+                     & \approx V_{\mathrm{in}}\left(DI_{\mathrm{L}}
+    +\frac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}
+    +\frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}\right),\label{equ0317}            \\
+    P_{\mathrm{out}} & \approx V_{\mathrm{out}}I_{\mathrm{L}},\label{equ0318} \\
+    P_{\mathrm{sw}}  & =P_{\mathrm{in}}-P_{\mathrm{out}}
+    \approx V_{\mathrm{in}}\left(\frac{t_{\mathrm{rr}}}{T_{\mathrm{s}}}I_{\mathrm{L}}
+    +\frac{Q_{\mathrm{rr}}}{T_{\mathrm{s}}}\right).\label{equ0319}
+  \end{align}
+}
+
+\DefineEquation{equ0320}{
+  \begin{equation}
+    \begin{aligned}
+      \eta & =\frac{P_{\mathrm{out}}}{P_{\mathrm{in}}}
+      \approx\frac{1}{1+f_{\mathrm{s}}\left(
+      \dfrac{t_{\mathrm{rr}}}{D}+\dfrac{Q_{\mathrm{rr}}R}{DV_{\mathrm{out}}}\right)} \\
+           & =\frac{1}{1+f_{\mathrm{s}}\left(
+      \dfrac{t_{\mathrm{rr}}}{D}+\dfrac{Q_{\mathrm{rr}}R}{D^2V_{\mathrm{in}}}\right)}.
+    \end{aligned}
+    \label{equ0320}
+  \end{equation}
+}
+
+\DefineEquation{equ0321}{
+  \begin{equation}
+    f_{\mathrm{s}}t_{\mathrm{rr}}\ll D,\quad
+    f_{\mathrm{s}}Q_{\mathrm{rr}}\ll DI_{\mathrm{L}}.
+    \label{equ0321}
+  \end{equation}
+}
+
+\DefineEquation{equ0322}{
+  \begin{equation}
+    P_{\mathrm{cond}}\approx V_{\mathrm{CE(sat)}}I_{\mathrm{C,av}},
+    \label{equ0322}
+  \end{equation}
+}
