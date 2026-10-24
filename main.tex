@@ -548,7 +548,7 @@ $K<K_{\mathrm{crit}}(D)$ 或 $R>R_{\mathrm{crit}}(D)$ 时为 DCM。
 故 $v_{\mathrm{o}}(t)\approx V_{\mathrm{o}}$。
 但 $\Delta i_{\mathrm{L}}>I_{\mathrm{L}}$，故不能推出 $i_{\mathrm{L}}(t)\approx I_{\mathrm{L}}$。
 \reviewnote{“$\Delta i_{\mathrm{L}}>I_{\mathrm{L}}$”是沿用 CCM 解判断进入 DCM 的条件。
-进入 DCM 后，应重新计算实际电流波形和平均值，不能继续直接套用 CCM 的对称纹波关系。}
+  进入 DCM 后，应重新计算实际电流波形和平均值，不能继续直接套用 CCM 的对称纹波关系。}
 
 \exampletitle[exa0402]{Buck 变换器的 DCM 分析}
 
@@ -1391,8 +1391,8 @@ CCM 分析得
 \end{equation}
 发生磁饱和。
 \reviewnote{此处保留手写表述。负向饱和时应为 $B=-B_{\mathrm{sat}}$；
-$v\approx0$ 来自完全平坦的理想饱和段。实际饱和后的增量电感仍非零，
-不能据此认为实际电感在外加电压下的端电压必然为零。}
+  $v\approx0$ 来自完全平坦的理想饱和段。实际饱和后的增量电感仍非零，
+  不能据此认为实际电感在外加电压下的端电压必然为零。}
 
 \section{磁路模型}
 
@@ -1474,9 +1474,9 @@ $v\approx0$ 来自完全平坦的理想饱和段。实际饱和后的增量电�
 \end{equation}
 其中下标 $\mathrm{c}$ 表示铁芯，$\mathrm{g}$ 表示气隙。
 \reviewnote{式 \eqref{equ0522} 按手写保留中间项 $H(t)l_{\mathrm{m}}$。
-含气隙时铁芯和气隙内的 $H$ 一般不同，建议将该项写为
-$H_{\mathrm{c}}l_{\mathrm{c}}+H_{\mathrm{g}}l_{\mathrm{g}}$；截图 16 直接写
-$F_{\mathrm{c}}+F_{\mathrm{g}}=ni$。}
+  含气隙时铁芯和气隙内的 $H$ 一般不同，建议将该项写为
+  $H_{\mathrm{c}}l_{\mathrm{c}}+H_{\mathrm{g}}l_{\mathrm{g}}$；截图 16 直接写
+  $F_{\mathrm{c}}+F_{\mathrm{g}}=ni$。}
 
 \begin{figure}[!htbp]
   \centering
@@ -1914,5 +1914,651 @@ $F_{\mathrm{c}}+F_{\mathrm{g}}=ni$。}
   \caption{计及两侧漏感的耦合电感等效模型}
   \label{pic0514}
 \end{figure}
+
+\chapter{功率变换器的衍变}
+
+\section{反向连接}
+
+反向连接，即源载互换。以 Buck 与 Boost 为例，交换电源和负载后，
+同一开关网络可以实现相反方向的功率传输。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{subfigure}[c]{0.48\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.95]
+      \draw (0,0) to[V,l_=$V_1$] (0,2.4) -- (1.55,2.4);
+      \draw (1.55,1.65) -- (1.55,0);
+      \draw (2.4,2.4) -- (1.75,1.9);
+      \draw (2.4,2.4) to[L,l=$L$] (4.15,2.4) -- (5.3,2.4);
+      \draw (4.15,2.4) to[C,l_=$C$] (4.15,0);
+      \draw (5.3,2.4) to[european resistor,l_=$R$] (5.3,0) -- (0,0);
+      \foreach \p in {(1.55,2.4),(1.55,1.65),(2.4,2.4)} {\node[ocirc] at \p {};}
+      \foreach \p in {(1.55,0),(4.15,0),(4.15,2.4)} {\node[circ] at \p {};}
+      \node[above] at (1.55,2.4) {$1$};\node[left] at (1.55,1.65) {$2$};
+      \node[right] at (5.3,2.4) {$+$};\node[right] at (5.3,0) {$-$};
+      \node[right=9pt] at (5.3,1.2) {$V_2$};
+    \end{notescircuit}
+    \caption{Buck：左侧供电}
+    \label{pic0601a}
+  \end{subfigure}\hfill
+  \begin{subfigure}[c]{0.48\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.95]
+      \draw (0,2.4) to[european resistor,l_=$R$] (0,0) -- (5.3,0);
+      \draw (1.1,2.4) to[C,l_=$C$] (1.1,0);
+      \draw (0,2.4) -- (2.1,2.4);
+      \draw (2.1,1.65) -- (2.1,0);
+      \draw (2.95,2.4) -- (2.3,1.9);
+      \draw (2.95,2.4) to[L,l=$L$] (4.5,2.4) -- (5.3,2.4);
+      \draw (5.3,0) to[V,l_=$V_2$] (5.3,2.4);
+      \foreach \p in {(2.1,2.4),(2.1,1.65),(2.95,2.4)} {\node[ocirc] at \p {};}
+      \foreach \p in {(1.1,0),(1.1,2.4),(2.1,0)} {\node[circ] at \p {};}
+      \node[above] at (2.1,2.4) {$1$};\node[left] at (2.1,1.65) {$2$};
+      \node[left] at (0,2.4) {$+$};\node[left] at (0,0) {$-$};
+      \node[left=9pt] at (0,1.2) {$V_1$};
+    \end{notescircuit}
+    \caption{Boost：右侧供电}
+    \label{pic0601b}
+  \end{subfigure}
+  \caption{Buck 与 Boost 的源载互换}
+  \label{pic0601}
+\end{figure}
+
+Buck 中，
+\begin{equation}
+  V_2=DV_1.
+  \label{equ0601}
+\end{equation}
+反向连接为 Boost 后，
+\begin{equation}
+  V_1=\frac{1}{D}V_2.
+  \label{equ0602}
+\end{equation}
+这里的 $D$ 指接 1 端口的时长，与前文的 $D'$ 等价。
+\reviewnote{“时长”按手写保留，严格说应为接通位置 1 的时长占开关周期的比例。
+  此处与前文 $D'$ 的对应，针对 Boost 的占空比定义；不能将全章的 $D$ 与 $D'$ 一概互换。
+  源载互换还需开关器件允许相应方向的电流，不能仅交换普通单向 Buck 的电源与负载。}
+
+采用带反并联二极管的开关，可构成图 \ref{pic0602} 所示的双向传输电路。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.95]
+    \ctikzset{tripoles/nigbt/base width=0.32,tripoles/nigbt/gate width=0.40}
+    \node[nigbt,nogate,rotate=90,anchor=center] (qone) at (2.7,2.5) {};
+    \node[nigbt,nogate,anchor=C] (qtwo) at (4.3,2.5) {};
+    \draw (qone.nogate) -- ++(0,-0.28);
+    \draw (qtwo.nogate) -- ++(-0.28,0);
+    \draw (0,2.5) -- (qone.C);
+    \draw (qone.E) -- (4.3,2.5) to[L,l=$L$] (7.1,2.5) -- (8.1,2.5);
+    \draw (qtwo.E) -- (4.3,0);
+    \draw (qone.E) |- (3.45,3.45) to[D-] (1.95,3.45) -| (qone.C);
+    \draw (4.3,0) -- (5.1,0) to[D-] (5.1,2.5);
+    \draw (1.0,2.5) to[C] (1.0,0);
+    \draw (8.1,0) to[battery1,l_=$V_{\mathrm{bat}}$] (8.1,2.5);
+    \draw (0,0) -- (8.1,0);
+    \node[ocirc] at (0,0) {};\node[ocirc] at (0,2.5) {};
+    \foreach \p in {(1,0),(1,2.5),(4.3,0),(4.3,2.5),(5.1,2.5)} {\node[circ] at \p {};}
+    \node[left] at (0,2.5) {$+$};\node[left] at (0,0) {$-$};
+    \node[left] at (0,1.25) {$V_{\mathrm{bus}}$};
+    \node[below=5pt] at (qone.center) {$\mathrm Q_1$};
+    \node[left=5pt] at (qtwo.center) {$\mathrm Q_2$};
+    \draw[{Latex[length=1.5mm]}-{Latex[length=1.5mm]}] (5.6,3.3) -- (7.4,3.3)
+    node[midway,above] {双向传输};
+  \end{notescircuit}
+  \caption{直流母线与电池之间的双向变换电路}
+  \label{pic0602}
+\end{figure}
+
+\section{级联连接}
+
+两个变换器级联，变换器 1 的输出作为变换器 2 的输入，有
+\begin{align}
+  \frac{V_1}{V_{\mathrm{in}}} & =M_1(D),\label{equ0603} \\
+  \frac{V_{\mathrm{o}}}{V_1}  & =M_2(D).\label{equ0604}
+\end{align}
+因此，总变换比为
+\begin{equation}
+  \frac{V_{\mathrm{o}}}{V_{\mathrm{in}}}=M(D)=M_1(D)M_2(D).
+  \label{equ0605}
+\end{equation}
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.95]
+    \draw (1.5,0.4) rectangle (4.2,2.8);
+    \draw (6.2,0.4) rectangle (8.9,2.8);
+    \node[align=center] at (2.85,1.65) {变换器 1\\[5pt]$\dfrac{V_1}{V_{\mathrm{in}}}=M_1(D)$};
+    \node[align=center] at (7.55,1.65) {变换器 2\\[5pt]$\dfrac{V_{\mathrm{o}}}{V_1}=M_2(D)$};
+    \draw (0,0.9) to[V,l_=$V_{\mathrm{in}}$] (0,2.3) -- (1.5,2.3);
+    \draw (0,0.9) -- (1.5,0.9);
+    \draw (4.2,2.3) -- (6.2,2.3);\draw (4.2,0.9) -- (6.2,0.9);
+    \draw (8.9,2.3) -- (10.5,2.3) to[european resistor,l_=$R$] (10.5,0.9) -- (8.9,0.9);
+    \node at (5.2,2.6) {$+$};\node at (5.2,0.65) {$-$};\node at (5.2,1.6) {$V_1$};
+    \node[right] at (10.5,2.3) {$+$};\node[right] at (10.5,0.9) {$-$};
+    \node[right=9pt] at (10.5,1.6) {$V_{\mathrm{o}}$};
+    \draw (5.2,-0.75) node[below] {$D$} -- (5.2,-0.25);
+    \draw[-{Latex[length=1.6mm]}] (5.2,-0.25) -| (2.85,0.4);
+    \draw[-{Latex[length=1.6mm]}] (5.2,-0.25) -| (7.55,0.4);
+    \node[circ] at (5.2,-0.25) {};
+  \end{notescircuit}
+  \caption{两个变换器的级联连接}
+  \label{pic0603}
+\end{figure}
+
+以 Buck 与 Boost 级联为例，
+\begin{align}
+  \frac{V_1}{V_{\mathrm{in}}}            & =D,\label{equ0606}            \\
+  \frac{V_{\mathrm{o}}}{V_1}             & =\frac{1}{D'},\label{equ0607} \\
+  \frac{V_{\mathrm{o}}}{V_{\mathrm{in}}} & =\frac{D}{D'}.\label{equ0608}
+\end{align}
+这里沿用 $D'=1-D$。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.95]
+    \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,2.5) -- (1.5,2.5);
+    \draw (1.5,1.7) -- (1.5,0);
+    \draw (2.35,2.5) -- (1.7,1.95);
+    \draw (2.35,2.5) to[L,l=$L_1$] (4.2,2.5) to[L,l=$L_2$] (6.2,2.5);
+    \draw (4.2,2.5) to[C,l_=$C_1$] (4.2,0);
+    \draw (6.2,2.5) -- (6.85,1.95);
+    \draw (7.05,1.7) -- (7.05,0);
+    \draw (7.05,2.5) -- (9.65,2.5);
+    \draw (8.4,2.5) to[C,l_=$C_2$] (8.4,0);
+    \draw (9.65,2.5) to[european resistor,l_=$R$] (9.65,0) -- (0,0);
+    \foreach \p in {(1.5,2.5),(1.5,1.7),(2.35,2.5),(6.2,2.5),(7.05,2.5),(7.05,1.7)} {\node[ocirc] at \p {};}
+    \foreach \p in {(1.5,0),(4.2,0),(4.2,2.5),(7.05,0),(8.4,0),(8.4,2.5)} {\node[circ] at \p {};}
+    \node[above] at (1.5,2.5) {$1$};\node[left] at (1.5,1.7) {$2$};
+    \node[above] at (7.05,2.5) {$2$};\node[right] at (7.05,1.7) {$1$};
+    \node[right] at (4.35,1.8) {$+$};\node[right] at (4.35,0.7) {$-$};
+    \node[right=8pt] at (4.35,1.25) {$V_1$};
+    \node[right] at (9.65,2.5) {$+$};\node[right] at (9.65,0) {$-$};
+    \node[right=9pt] at (9.65,1.25) {$V_{\mathrm{o}}$};
+    \node at (2.2,-0.55) {Buck};\node at (7.4,-0.55) {Boost};
+  \end{notescircuit}
+  \caption{Buck 与 Boost 级联的开关电路}
+  \label{pic0604}
+\end{figure}
+
+移除 $C$，合并 $L$，再合并开关。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.95]
+    \draw (0,1) to[L,l=$L_1$] (1.8,1) to[L,l=$L_2$] (3.6,1);
+    \draw (0,0) -- (3.6,0);
+    \node at (4.7,0.5) {$\Longrightarrow$};
+    \draw (5.8,1) to[L,l=$L$] (9.4,1);\draw (5.8,0) -- (9.4,0);
+  \end{notescircuit}
+  \caption{移除中间电容后的串联电感合并示意}
+  \label{pic0605}
+\end{figure}
+
+手写稿给出的合并后电路为 Buck--Boost，其变换比为
+\begin{equation}
+  \frac{V_{\mathrm{o}}}{V_{\mathrm{in}}}=-\frac{D}{D'}.
+  \label{equ0609}
+\end{equation}
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.95]
+    \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,3.0) -- (2.0,3.0);
+    \draw (2.5,2.2) -- (2.1,2.8);
+    \draw (2.5,2.2) to[L,l_=$L$] (2.5,0);
+    \draw (3.0,3.0) -- (6.8,3.0);
+    \draw (5.5,3.0) to[C,l_=$C$] (5.5,0);
+    \draw (6.8,3.0) to[european resistor,l_=$R$] (6.8,0) -- (0,0);
+    \foreach \p in {(2,3),(3,3),(2.5,2.2)} {\node[ocirc] at \p {};}
+    \foreach \p in {(2.5,0),(5.5,0),(5.5,3)} {\node[circ] at \p {};}
+    \node[above] at (2,3) {$1$};\node[above] at (3,3) {$2$};
+    \node[right] at (6.8,3) {$+$};\node[right] at (6.8,0) {$-$};
+    \node[right=9pt] at (6.8,1.5) {$V_{\mathrm{o}}$};
+  \end{notescircuit}
+  \caption{手写稿所示的反相 Buck--Boost 合并结果}
+  \label{pic0606}
+\end{figure}
+\reviewnote{“移除 $C$”中的 $C$ 对应级联电路的中间电容 $C_1$，不是输出电容 $C_2$。
+  无互感的串联电感可合并为 $L=L_1+L_2$，但移除储能元件会改变动态特性。
+  原稿先得到正变换比 $D/D'$，后又写为 $-D/D'$；仅合并电感和同步开关不能直接改变输出极性，
+  还需说明端口重接或输出参考方向的改变。图 \ref{pic0606} 与式 \eqref{equ0609} 保留手写的反相结果，
+  不应据此视为与图 \ref{pic0604} 在原端口定义下完全等效。}
+
+\section{差分连接}
+
+两个变换器共用输入电源，负载接在两个输出端之间。
+变换器 1 由 $D$ 控制，变换器 2 由 $D'$ 控制。手写框图中的关系为
+\begin{align}
+  V_1 & =M(D)V_{\mathrm{in}},\label{equ0610}  \\
+  V_1 & =M(D')V_{\mathrm{in}}.\label{equ0611}
+\end{align}
+\reviewnote{下方变换器框内的电压下标暂识别为 $1$，按原稿保留在式 \eqref{equ0611} 和框图中；
+  但该输出端标为 $V_2$，结合后续差分关系，疑应为 $V_2=M(D')V_{\mathrm{in}}$。}
+负载电压为
+\begin{equation}
+  V_{\mathrm{o}}=V_1-V_2.
+  \label{equ0612}
+\end{equation}
+正负性与 $|V_1|$、$|V_2|$ 相关。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.95]
+    \draw (2,3.1) rectangle (5.2,5.1);\draw (2,0) rectangle (5.2,2);
+    \node[align=center] at (3.6,4.1) {变换器 1\\[4pt]$V_1=M(D)V_{\mathrm{in}}$};
+    \node[align=center] at (3.6,1.0) {变换器 2\\[4pt]$V_1=M(D')V_{\mathrm{in}}$};
+    \draw (0,1.5) to[V,l_=$V_{\mathrm{in}}$] (0,3.0) -- (1.0,3.0);
+    \draw (0,1.5) -- (0,1.1) node[ground] {};
+    \draw (1.0,1.5) -- (1.0,4.6) -- (2,4.6);
+    \draw (1.0,1.5) -- (2,1.5);\node[circ] at (1,3) {};
+    \draw (2,3.6) -- (1.65,3.6) -- (1.65,3.25) node[ground] {};
+    \draw (2,0.5) -- (1.65,0.5) -- (1.65,0.15) node[ground] {};
+    \draw (5.2,3.6) -- (5.65,3.6) -- (5.65,3.25) node[ground] {};
+    \draw (5.2,0.5) -- (5.65,0.5) -- (5.65,0.15) node[ground] {};
+    \draw (5.2,4.6) -- (8.0,4.6) to[european resistor,l_=$R$] (8.0,1.5) -- (5.2,1.5);
+    \node at (6.25,4.5) {$+$};\node at (6.25,3.6) {$-$};\node at (6.25,4.05) {$V_1$};
+    \node at (6.25,1.4) {$+$};\node at (6.25,0.5) {$-$};\node at (6.25,0.95) {$V_2$};
+    \node[right] at (8,4.6) {$+$};\node[right] at (8,1.5) {$-$};
+    \node[right=9pt] at (8,3.05) {$V_{\mathrm{o}}$};
+    \draw[-{Latex[length=1.6mm]}] (3.6,2.45) node[below] {$D$} -- (3.6,3.1);
+    \draw[-{Latex[length=1.6mm]}] (3.6,-0.65) node[below] {$D'$} -- (3.6,0);
+  \end{notescircuit}
+  \caption{两个变换器的差分连接}
+  \label{pic0607}
+\end{figure}
+
+以两个 Buck 为例，两路输出分别为 $DV_{\mathrm{in}}$ 与 $D'V_{\mathrm{in}}$，故
+\begin{equation}
+  V_{\mathrm{o}}=DV_{\mathrm{in}}-D'V_{\mathrm{in}}=(2D-1)V_{\mathrm{in}}.
+  \label{equ0613}
+\end{equation}
+手写图由两路对地滤波电容，进一步改画为跨接在负载两端的电容。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{subfigure}[c]{0.48\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.82]
+      \draw (0,1.5) to[V,l_=$V_{\mathrm{in}}$] (0,3.0) -- (0.8,3.0);
+      \draw (0,1.5) -- (0,1.15) node[ground] {};
+      \draw (0.8,1) -- (0.8,4) -- (1.75,4);\draw (0.8,1) -- (1.75,1);
+      \node[circ] at (0.8,3) {};
+      \draw (1.75,3.3) -- (1.75,2.9) node[ground] {};
+      \draw (1.75,0.3) -- (1.75,-0.1) node[ground] {};
+      \draw (2.6,4) -- (1.95,3.5);\draw (2.6,1) -- (1.95,0.5);
+      \draw (2.6,4) to[L,l=$L_1$] (4.7,4) -- (6.1,4);
+      \draw (2.6,1) to[L,l=$L_2$] (4.7,1) -- (6.1,1);
+      \draw (4.7,4) to[C,l_=$C_1$] (4.7,2.5) node[ground] {};
+      \draw (4.7,1) to[C,l_=$C_2$] (4.7,-0.5) node[ground] {};
+      \draw (6.1,4) to[european resistor,l_=$R$] (6.1,1);
+      \foreach \p in {(1.75,4),(1.75,3.3),(2.6,4),(1.75,1),(1.75,0.3),(2.6,1)} {\node[ocirc] at \p {};}
+      \node[circ] at (4.7,4) {};\node[circ] at (4.7,1) {};
+      \node[above] at (1.75,4) {$1$};\node[left] at (1.75,3.3) {$2$};
+      \node[above] at (1.75,1) {$2$};\node[left] at (1.75,0.3) {$1$};
+      \node at (5.2,3.65) {$+$};\node at (5.2,2.6) {$-$};\node[right] at (5.2,3.1) {$V_1$};
+      \node at (5.2,0.65) {$+$};\node at (5.2,-0.4) {$-$};\node[right] at (5.2,0.1) {$V_2$};
+      \node[right] at (6.1,4) {$+$};\node[right] at (6.1,1) {$-$};
+      \node[right=9pt] at (6.1,2.5) {$V_{\mathrm{o}}$};
+    \end{notescircuit}
+    \caption{两路 Buck 输出作差}
+    \label{pic0608a}
+  \end{subfigure}\hfill
+  \begin{subfigure}[c]{0.48\textwidth}
+    \centering
+    \begin{notescircuit}[scale=0.82]
+      \draw (0,1.5) to[V,l_=$V_{\mathrm{in}}$] (0,3.0) -- (0.8,3.0);
+      \draw (0,1.5) -- (0,1.15) node[ground] {};
+      \draw (0.8,1) -- (0.8,4) -- (1.75,4);\draw (0.8,1) -- (1.75,1);
+      \node[circ] at (0.8,3) {};
+      \draw (1.75,3.3) -- (1.75,2.9) node[ground] {};
+      \draw (1.75,0.3) -- (1.75,-0.1) node[ground] {};
+      \draw (2.6,4) -- (1.95,3.5);\draw (2.6,1) -- (1.95,0.5);
+      \draw (2.6,4) to[L,l=$L_1$] (4.7,4) -- (6.1,4);
+      \draw (2.6,1) to[L,l=$L_2$] (4.7,1) -- (6.1,1);
+      \draw (4.7,4) to[C,l_=$C$] (4.7,1);
+      \draw (6.1,4) to[european resistor,l_=$R$] (6.1,1);
+      \foreach \p in {(1.75,4),(1.75,3.3),(2.6,4),(1.75,1),(1.75,0.3),(2.6,1)} {\node[ocirc] at \p {};}
+      \node[circ] at (4.7,4) {};\node[circ] at (4.7,1) {};
+      \node[above] at (1.75,4) {$1$};\node[left] at (1.75,3.3) {$2$};
+      \node[above] at (1.75,1) {$2$};\node[left] at (1.75,0.3) {$1$};
+      \node[right] at (6.1,4) {$+$};\node[right] at (6.1,1) {$-$};
+      \node[right=9pt] at (6.1,2.5) {$V_{\mathrm{o}}$};
+    \end{notescircuit}
+    \caption{电容跨接负载的差模形式}
+    \label{pic0608b}
+  \end{subfigure}
+  \caption{两个 Buck 的差分电路及手写的滤波改接过程}
+  \label{pic0608}
+\end{figure}
+\reviewnote{两只对地电容改为一只跨负载电容，只能在相应条件下讨论差模等效，
+  不能直接视为包含共模行为在内的完全等效电路；电容数值也需重新换算。
+  两个电感合并时，同样应明确其无互感及差模电流条件。}
+
+进一步将开关和滤波回路重排，可画成单相全桥形式。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.95]
+    \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,3.8) -- (9.65,3.8);
+    \draw (0,0) -- (9.65,0);
+    \draw (2.15,3.8) -- (2.15,2.9);\draw (2.15,0.7) -- (2.15,0);
+    \draw (9.65,3.8) -- (9.65,2.9);\draw (9.65,0.7) -- (9.65,0);
+    \draw (3.0,1.8) -- (2.3,0.95);\draw (8.8,1.8) -- (9.5,0.95);
+    \draw (3.0,1.8) to[L,l=$L$] (5.0,1.8);
+    \draw (5.0,1.8) -- (5.0,2.55) to[C,l=$C$] (7.4,2.55) -- (7.4,1.8) -- (8.8,1.8);
+    \draw (5.0,1.8) -- (5.0,0.95) to[european resistor,l_=$R$] (7.4,0.95) -- (7.4,1.8);
+    \foreach \p in {(2.15,2.9),(2.15,0.7),(3,1.8),(9.65,2.9),(9.65,0.7),(8.8,1.8)} {\node[ocirc] at \p {};}
+    \foreach \p in {(2.15,3.8),(2.15,0),(5,1.8),(7.4,1.8)} {\node[circ] at \p {};}
+    \node[left] at (2.15,2.9) {$1$};\node[left] at (2.15,0.7) {$2$};
+    \node[right] at (9.65,2.9) {$2$};\node[right] at (9.65,0.7) {$1$};
+    \node at (5,3.1) {$+$};\node at (7.4,3.1) {$-$};\node at (6.2,3.1) {$V_{\mathrm{o}}$};
+  \end{notescircuit}
+  \caption{差分 Buck 电路重排得到的单相全桥形式}
+  \label{pic0609}
+\end{figure}
+
+由式 \eqref{equ0613}，变换比为
+\begin{equation}
+  M(D)=2D-1.
+  \label{equ0614}
+\end{equation}
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notesplot}[x=6cm,y=1.8cm]
+    \draw[axis] (0,0) -- (1.15,0) node[right] {$D$};
+    \draw[axis] (0,-1.15) -- (0,1.2) node[left] {$M(D)$};
+    \draw[guide] (0,1) -- (1,1) -- (1,0);
+    \draw[waveform] (0,-1) -- (1,1);
+    \node[below left] at (0,0) {$0$};\node[left] at (0,1) {$1$};\node[left] at (0,-1) {$-1$};
+    \node[below right] at (0.5,0) {$0.5$};\node[below] at (1,0) {$1$};
+    \node at (0.6,1.45) {$V_{\mathrm{o}}=(2D-1)V_{\mathrm{in}}$};
+  \end{notesplot}
+  \caption{差分 Buck 的变换比与占空比关系}
+  \label{pic0610}
+\end{figure}
+
+固定 $D$ 时，即为 DC--DC 变换，可调极性，但不可放大（两个 Buck）。
+改变 $D$ 时，尤其是在正、负区域改变时，可得逆变器（DC--AC）。
+\reviewnote{“不可放大”针对理想双 Buck 差分电路的输出电压幅值，即 $|V_{\mathrm{o}}|\leq V_{\mathrm{in}}$，
+  不宜推广为所有差分连接的性质。原稿“正、负区域”应指 $M(D)$ 或输出电压的正、负，
+  而非占空比 $D$ 取负值；相应分界为 $D=0.5$。}
+
+\subsection{三相逆变器}
+
+三相逆变器（截图 1、2）。将差分连接推广到三个变换器，即可得到三相逆变器。
+三个变换器共用直流电源，输出端接三相交流负载；各变换器的输出为
+$V_1=M(D_1)V_{\mathrm{in}}$、$V_2=M(D_2)V_{\mathrm{in}}$ 和 $V_3=M(D_3)V_{\mathrm{in}}$。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.92]
+    \draw (0,2.8) to[V,l_=$V_{\mathrm{in}}$] (0,4.15) -- (1,4.15);
+    \draw (0,2.8) -- (0,2.45) node[ground] {};
+    \draw (1,1.35) -- (1,6.95);\node[circ] at (1,4.15) {};
+    \foreach \base/\j in {5.6/1,2.8/2,0/3} {
+    \draw (2,\base) rectangle (5,{\base+1.8});
+    \node[align=center] at (3.5,{\base+0.95}) {变换器 $\j$\\[4pt]$V_{\j}=M(D_{\j})V_{\mathrm{in}}$};
+    \draw (1,{\base+1.35}) -- (2,{\base+1.35});
+    \draw (2,{\base+0.4}) -- (1.65,{\base+0.4}) -- (1.65,{\base+0.05}) node[ground] {};
+    \draw (5,{\base+0.4}) -- (5.35,{\base+0.4}) -- (5.35,{\base+0.05}) node[ground] {};
+    \draw[-{Latex[length=1.5mm]}] (3.5,{\base-0.6}) node[below] {$D_{\j}$} -- (3.5,\base);
+    \node at (5.95,{\base+1.15}) {$+$};\node at (5.95,{\base+0.25}) {$-$};
+    \node at (5.95,{\base+0.7}) {$V_{\j}$};
+    }
+    \draw (5,6.95) -- (10.7,6.95) to[european resistor] (9.2,4.15);
+    \draw (5,4.15) -- (7.3,4.15) to[european resistor] (9.2,4.15);
+    \draw (5,1.35) -- (10.7,1.35) to[european resistor] (9.2,4.15);
+    \node[circ] at (9.2,4.15) {};\node[right=4pt] at (9.2,4.15) {$V_n$};
+    \node[right] at (10.6,6.55) {$+$};\node[left] at (9.45,4.7) {$-$};
+    \node[right] at (10.25,5.6) {$V_{an}$};
+    \node[below] at (7.35,4.15) {$+$};\node[below] at (8.95,4.15) {$-$};
+    \node[above] at (8.1,4.15) {$V_{bn}$};
+    \node[right] at (10.6,1.75) {$+$};\node[left] at (9.45,3.6) {$-$};
+    \node[right] at (10.25,2.7) {$V_{cn}$};
+    \node[above] at (0,4.65) {直流电源};\node at (9.1,7.65) {三相交流负载};
+  \end{notescircuit}
+  \caption{通过差分连接获得三相逆变器}
+  \label{pic0611}
+\end{figure}
+
+对于平衡三相负载，中性点电压为
+\begin{equation}
+  V_n=\frac13(V_1+V_2+V_3).
+  \label{equ0615}
+\end{equation}
+各相电压为
+\begin{align}
+  V_{an} & =V_1-V_n,\label{equ0616} \\
+  V_{bn} & =V_2-V_n,\label{equ0617} \\
+  V_{cn} & =V_3-V_n.\label{equ0618}
+\end{align}
+控制各变换器，使其输出电压包含相同的直流偏置。
+该直流偏置会出现在中性点电压 $V_n$ 中，并在计算各相电压时相消，
+因此相电压不含直流偏置。
+\reviewnote{上述关系对应截图中的平衡星形负载，且中性点未固定连接到直流参考点。
+  此处大写 $V_1,V_2,V_3,V_n$ 沿用截图；用于逆变器时，宜明确它们表示相应时刻的电压或开关周期平均电压，
+  不能将全部量都理解为恒定直流值。}
+
+基于三个 Buck 变换器的三相逆变器，为清晰起见可重画为图 \ref{pic0612}。
+这种电路称为“电压源型逆变器”，也称由 Buck 衍生的三相逆变器。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}[scale=0.95]
+    \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,5.4) -- (6.1,5.4);
+    \draw (0,0) -- (6.1,0);
+    \foreach \x in {2.3,4.2,6.1} {
+        \draw (\x,5.4) -- (\x,4.8);
+        \draw (\x,4.8) -- ({\x+0.23},4.05);
+        \draw (\x,3.9) -- (\x,1.25);
+        \draw (\x,1.25) -- ({\x+0.23},0.5);
+        \draw (\x,0.35) -- (\x,0);
+        \foreach \y in {4.8,3.9,1.25,0.35} {\node[ocirc] at (\x,\y) {};}
+      }
+    \draw (2.3,3.5) -- (4.08,3.5) arc[start angle=180,end angle=0,radius=0.12]
+    -- (5.98,3.5) arc[start angle=180,end angle=0,radius=0.12]
+    -- (7.1,3.5) to[L] (8.5,3.5) -- (8.9,3.5) -- (8.9,4.65) -- (10.8,4.65)
+    to[european resistor] (10.0,2.9);
+    \draw (4.2,2.9) -- (5.98,2.9) arc[start angle=180,end angle=0,radius=0.12]
+    -- (7.1,2.9) to[L] (8.5,2.9) to[european resistor] (10.0,2.9);
+    \draw (6.1,2.3) -- (7.1,2.3) to[L] (8.5,2.3) -- (8.9,2.3) -- (8.9,1.15) -- (10.8,1.15)
+    to[european resistor] (10.0,2.9);
+    \foreach \p in {(2.3,0),(2.3,5.4),(4.2,0),(4.2,5.4),(2.3,3.5),(4.2,2.9),(6.1,2.3),(10,2.9)} {\node[circ] at \p {};}
+    \node[right=4pt] at (10,2.9) {$V_n$};
+    \node[right] at (10.75,4.45) {$+$};\node[left] at (10.1,3.3) {$-$};
+    \node[right] at (10.65,3.8) {$V_{an}$};
+    \node[above] at (9.25,2.9) {$V_{bn}$};
+    \node[below] at (8.6,2.9) {$+$};\node[below] at (9.85,2.9) {$-$};
+    \node[right] at (10.75,1.35) {$+$};\node[left] at (10.1,2.5) {$-$};
+    \node[right] at (10.65,2.0) {$V_{cn}$};
+    \node at (3.0,5.85) {直流电源};\node at (9.5,5.35) {三相交流负载};
+  \end{notescircuit}
+  \caption{基于三个 Buck 变换器的三相电压源型逆变器}
+  \label{pic0612}
+\end{figure}
+
+\section{开关网络旋转}
+
+\subsection{三端开关网络}
+
+将电感与单刀双掷开关组成三端单元，其端口记为 $a,b,c$；
+外部输入端、输出端与公共端分别记为 $A,B,C$，如图 \ref{pic0613} 所示。
+改变三端单元与外部端口的连接关系，可得到不同的变换器。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}
+    \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,3.2) -- (2.6,3.2);
+    \draw (3.4,3.2) -- (4.0,3.2) to[L,l=$L$] (5.7,3.2) -- (9,3.2);
+    \draw (3.4,3.2) -- (2.75,2.88);
+    \draw (3.0,2.25) -- (3.0,0);
+    \draw (0,0) -- (9,0);
+    \draw (7.4,3.2) to[C] (7.4,0);
+    \draw (9,3.2) to[european resistor] (9,0);
+    \foreach \p in {(2.6,3.2),(3.4,3.2),(3,2.25)} {\node[ocirc] at \p {};}
+    \foreach \p in {(1.3,3.2),(6.6,3.2),(3,0),(7.4,3.2),(7.4,0)} {\node[circ] at \p {};}
+    \node[above=4pt] at (1.3,3.2) {$A$};\node[above=4pt] at (2.15,3.2) {$a$};
+    \node[above=4pt] at (5.95,3.2) {$b$};\node[above=4pt] at (6.6,3.2) {$B$};
+    \node[left=4pt] at (3,1.3) {$c$};\node[below=4pt] at (3,0) {$C$};
+    \node[above left=2pt] at (2.6,3.2) {$1$};\node[left=4pt] at (3,2.25) {$2$};
+    \draw[densely dashed,line width=0.4pt] (1.85,0.75) rectangle (6.2,3.95);
+    \node[above] at (4.0,3.95) {三端单元};
+    \node at (9.6,2.9) {$+$};\node at (9.6,1.6) {$V_{\mathrm{o}}$};\node at (9.6,0.3) {$-$};
+  \end{notescircuit}
+  \caption{电感与单刀双掷开关组成的三端网络}
+  \label{pic0613}
+\end{figure}
+
+三种连接方式为：$a$--$A$、$b$--$B$、$c$--$C$ 对应 Buck；
+$a$--$C$、$b$--$A$、$c$--$B$ 对应 Boost；
+$a$--$A$、$b$--$C$、$c$--$B$ 对应 Buck--Boost。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}
+    \draw (0,2.0) node[ocirc,label=left:$a$] {} -- (1.6,2.0);
+    \draw (2.4,2.0) -- (3.0,2.0) to[L,l=$L$] (4.7,2.0) -- (5.5,2.0) node[ocirc,label=right:$b$] {};
+    \draw (2.4,2.0) -- (1.75,1.68);
+    \draw (2.0,1.05) -- (2.0,0) node[ocirc,label=below:$c$] {};
+    \foreach \p in {(1.6,2),(2.4,2),(2,1.05)} {\node[ocirc] at \p {};}
+    \node[above=4pt] at (1.6,2) {$1$};\node[left=4pt] at (2,1.05) {$2$};
+    \node at (3.0,1.45) {$+$};\node at (3.85,1.45) {$v_{\mathrm{L}}$};\node at (4.7,1.45) {$-$};
+  \end{notescircuit}
+  \caption{三端开关单元及电感电压的参考方向}
+  \label{pic0614}
+\end{figure}
+
+接位置 1 时，
+\begin{equation}
+  v_{\mathrm{L}}=V_{ab}.
+  \label{equ0619}
+\end{equation}
+接位置 2 时，
+\begin{equation}
+  v_{\mathrm{L}}=V_{cb}.
+  \label{equ0620}
+\end{equation}
+由电感伏秒平衡，
+\begin{equation}
+  DV_{ab}+D'V_{cb}=0.
+  \label{equ0621}
+\end{equation}
+
+\subsubsection{接法一：$a$--$A$、$b$--$B$、$c$--$C$}
+
+\begin{equation}
+  \begin{cases}
+    V_{ab}=V_{AB}=V_{\mathrm{in}}-V_{\mathrm{o}}, \\
+    V_{cb}=V_{CB}=-V_{\mathrm{o}}.
+  \end{cases}
+  \label{equ0622}
+\end{equation}
+\begin{align}
+  \Rightarrow\quad & D(V_{\mathrm{in}}-V_{\mathrm{o}})+D'(-V_{\mathrm{o}})=0,
+  \label{equ0623}                                                             \\
+  \Rightarrow\quad & V_{\mathrm{o}}=DV_{\mathrm{in}}.\label{equ0624}
+\end{align}
+此时为 Buck 变换器。
+
+\subsubsection{接法二：$a$--$C$、$b$--$A$、$c$--$B$}
+
+\begin{equation}
+  \begin{cases}
+    V_{ab}=V_{CA}=-V_{\mathrm{in}}, \\
+    V_{cb}=V_{BA}=V_{\mathrm{o}}-V_{\mathrm{in}}.
+  \end{cases}
+  \label{equ0625}
+\end{equation}
+\begin{align}
+  \Rightarrow\quad & D(-V_{\mathrm{in}})+D'(V_{\mathrm{o}}-V_{\mathrm{in}})=0,
+  \label{equ0626}                                                               \\
+  \Rightarrow\quad & V_{\mathrm{o}}=\frac{1}{D'}V_{\mathrm{in}}.\label{equ0627}
+\end{align}
+此时为 Boost 变换器。
+\reviewnote{手写式 \eqref{equ0627} 的分母有涂改，此处按最终字迹识别为 $D'$；
+  这一读法也与式 \eqref{equ0626} 一致。}
+
+\subsubsection{接法三：$a$--$A$、$b$--$C$、$c$--$B$}
+
+\begin{equation}
+  \begin{cases}
+    V_{ab}=V_{AC}=V_{\mathrm{in}}, \\
+    V_{cb}=V_{BC}=V_{\mathrm{o}}.
+  \end{cases}
+  \label{equ0628}
+\end{equation}
+\begin{align}
+  \Rightarrow\quad & DV_{\mathrm{in}}+D'V_{\mathrm{o}}=0,
+  \label{equ0629}                                                                \\
+  \Rightarrow\quad & V_{\mathrm{o}}=-\frac{D}{D'}V_{\mathrm{in}}.\label{equ0630}
+\end{align}
+此时为 Buck--Boost 变换器。
+\reviewnote{上述推导以 $D'=1-D$ 为前提，电压变换关系采用理想器件、周期稳态和连续导通的两状态模型。
+  “旋转”表示三端单元与外部端口重新配接，电压下标与参考极性需随接法一并核对。}
+
+\subsection{对偶三端网络}
+
+电容与单刀双掷开关也可组成三端单元，得到对偶三端网络，
+如图 \ref{pic0615} 所示。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}
+    \draw (0,0) to[V,l_=$V_{\mathrm{in}}$] (0,3.2)
+    to[L] (1.8,3.2) -- (3.6,3.2);
+    \draw (4.4,3.2) -- (6.2,3.2) to[L] (7.9,3.2) -- (9.5,3.2);
+    \draw (4.4,3.2) -- (3.75,2.88);
+    \draw (4.0,2.25) -- (4.0,0);
+    \draw (3.1,3.2) to[C] (3.1,1.6) -- (4.0,1.6);
+    \draw (0,0) -- (9.5,0);
+    \draw (8.1,3.2) to[C] (8.1,0);
+    \draw (9.5,3.2) to[european resistor] (9.5,0);
+    \foreach \p in {(3.6,3.2),(4.4,3.2),(4,2.25)} {\node[ocirc] at \p {};}
+    \foreach \p in {(2.1,3.2),(3.1,3.2),(4,1.6),(4,0),(6.1,3.2),(8.1,3.2),(8.1,0)} {\node[circ] at \p {};}
+    \node[above=4pt] at (2.1,3.2) {$A$};\node[above=4pt] at (2.9,3.2) {$a$};
+    \node[above=4pt] at (5.3,3.2) {$b$};\node[above=4pt] at (6.1,3.2) {$B$};
+    \node[right=4pt] at (4,1.15) {$c$};\node[below=4pt] at (4,0) {$C$};
+    \node[above=4pt] at (3.6,3.2) {$1$};\node[right=4pt] at (4,2.25) {$2$};
+    \draw[densely dashed,line width=0.4pt] (2.55,0.75) rectangle (5.65,3.95);
+    \node[above] at (4.1,3.95) {三端单元};
+    \node at (10.1,2.9) {$+$};\node at (10.1,1.6) {$V_{\mathrm{o}}$};\node at (10.1,0.3) {$-$};
+  \end{notescircuit}
+  \caption{电容与单刀双掷开关组成的对偶三端网络}
+  \label{pic0615}
+\end{figure}
+
+三种连接方式及对应电路为：
+\begin{enumerate}
+  \item $a$--$A$、$b$--$B$、$c$--$C$：带 $L$--$C$ 输入滤波的 Buck；
+  \item $a$--$C$、$b$--$A$、$c$--$B$：带 $L$--$C$ 输出滤波的 Boost；
+  \item $a$--$A$、$b$--$C$、$c$--$B$：Ćuk。
+\end{enumerate}
+
+采用电流源表示两侧电感电流，可得到图 \ref{pic0616} 所示的等效电路。
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{notescircuit}
+    \draw (0,0) to[I,l_=$I_1$] (0,2.8) -- (2.4,2.8);
+    \draw (3.2,2.8) -- (5.5,2.8);
+    \draw (5.5,0) to[I,l=$I_2$] (5.5,2.8);
+    \draw (0,0) -- (5.5,0);
+    \draw (3.2,2.8) -- (2.55,2.48);
+    \draw (2.8,1.85) -- (2.8,0);
+    \draw (1.7,2.8) to[C] (1.7,1.2) -- (2.8,1.2);
+    \foreach \p in {(2.4,2.8),(3.2,2.8),(2.8,1.85)} {\node[ocirc] at \p {};}
+    \foreach \p in {(1.7,2.8),(2.8,1.2),(2.8,0)} {\node[circ] at \p {};}
+    \node[above=4pt] at (2.4,2.8) {$1$};\node[right=4pt] at (2.8,1.85) {$2$};
+  \end{notescircuit}
+  \caption{对偶三端单元的电流源等效表示}
+  \label{pic0616}
+\end{figure}
+\reviewnote{右侧电流源的下标较模糊，此处暂识别为 $2$，需与原稿确认。
+  两个电流源的箭头均按手写保留为向上；它们是电流参考方向，
+  实际传能分析时应核对各电流的正负，不能同时默认两者均为流入单元的正电流。
+  以电流源代替电感还需明确电流纹波的近似条件。}
 
 \end{document}
