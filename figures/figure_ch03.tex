@@ -1335,7 +1335,7 @@
           \begin{scope}[scale around={1.15:(1.8,0)},transform shape]
             \coordinate (scr-left) at (1.1,0);
             \coordinate (scr-right) at (2.5,0);
-            \draw (scr-left) to[stroke thyristor,name=scr] (scr-right);
+            \draw (scr-left) to[stroke thyristor,mirror,name=scr] (scr-right);
             \draw (scr.G) -- ++(0,-0.22) coordinate (gate);
           \end{scope}
           \draw (0,0) node[ocirc] {} -- (scr-left);
